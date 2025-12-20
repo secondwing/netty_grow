@@ -1,0 +1,36 @@
+.app {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+  font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
+}
+
+.app__header {
+  margin-bottom: 3rem;
+}
+
+.app__title {
+  font-size: 3rem;
+  font-weight: 800;
+  margin: 0;
+  background: linear-gradient(to right, #646cff, #9089fc);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.app__subtitle {
+  font-size: 1.2rem;
+  color: #666;
+  margin-top: 0.5rem;
+}
+
+.app__main {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.app__section {
+  width: 100%;
+}

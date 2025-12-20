@@ -1,0 +1,51 @@
+.contribution-graph {
+    background: white;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    margin-bottom: 2rem;
+    border: 1px solid #f0f0f0;
+}
+
+.contribution-graph__stats {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.contribution-graph__stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.contribution-graph__stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #333;
+}
+
+.contribution-graph__stat-label {
+    font-size: 0.9rem;
+    color: #888;
+    margin-top: 0.25rem;
+}
+
+.contribution-graph__calendar {
+    display: flex;
+    justify-content: center;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+}
+
+/* Custom scrollbar for horizontal scroll if needed */
+.contribution-graph__calendar::-webkit-scrollbar {
+    height: 6px;
+}
+
+.contribution-graph__calendar::-webkit-scrollbar-thumb {
+    background: #ddd;
+    border-radius: 3px;
+}
