@@ -18,10 +18,11 @@ function Header({ isLoggedIn, onLogout }) {
                 <nav className="header__nav">
                     {isLoggedIn ? (
                         <>
-                            <Link to="/growth" className="header__link">나성장</Link>
-                            <Link to="/board" className="header__link">게시판</Link>
+                            <Link to="/" className="header__link">홈</Link>
                             <a href="/#brand" className="header__link">브랜드 소개</a>
                             <a href="/#people" className="header__link">함께하는 사람들</a>
+                            <Link to="/daily-record" className="header__link">일상 기록</Link>
+                            <Link to="/growth" className="header__link">성장 기록</Link>
                             <Link to="/mypage" className="header__link">마이페이지</Link>
                             <button onClick={handleLogout} className="header__button header__button--logout">
                                 로그아웃

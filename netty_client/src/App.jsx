@@ -1,22 +1,27 @@
 import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import ScrollToTop from './components/Common/ScrollToTop';
 import './App.css';
 
 import Layout from './components/Layout/Layout';
 import Home from './pages/Home/Home';
 import Login from './pages/Auth/Login';
 import Signup from './pages/Auth/Signup';
-import GrowthPage from './pages/Growth/GrowthPage';
+import DailyRecordPage from './pages/DailyRecord/DailyRecordPage';
 import BoardPage from './pages/Board/BoardPage';
+import GrowthRecordPage from './pages/GrowthRecord/GrowthRecordPage';
 
 import AdminPage from './pages/Admin/AdminPage';
 import MyPage from './pages/MyPage/MyPage';
 
-function App() {
+import { NotificationProvider, useNotification } from './contexts/NotificationContext';
+
+function AppContent() {
   // TODO: Replace with real auth state management (Context/Redux)
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true); // Add loading state
+  const { showNotification } = useNotification();
 
   useEffect(() => {
     const checkLoginStatus = async () => {
@@ -52,8 +57,10 @@ function App() {
       });
       setIsLoggedIn(false);
       setCurrentUser(null);
+      showNotification('로그아웃 되었습니다.', 'success');
     } catch (error) {
       console.error('Logout failed', error);
+      showNotification('로그아웃 중 오류가 발생했습니다.', 'error');
     }
   };
 
@@ -61,6 +68,7 @@ function App() {
 
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<Layout isLoggedIn={isLoggedIn} onLogout={handleLogout} />}>
           <Route index element={<Home />} />
@@ -71,13 +79,22 @@ function App() {
           <Route path="signup" element={!isLoggedIn ? <Signup /> : <Navigate to="/" />} />
 
           {/* Protected Routes */}
-          <Route path="growth" element={isLoggedIn ? <GrowthPage /> : <Navigate to="/login" />} />
+          <Route path="daily-record" element={isLoggedIn ? <DailyRecordPage /> : <Navigate to="/login" />} />
+          <Route path="growth" element={isLoggedIn ? <GrowthRecordPage /> : <Navigate to="/login" />} />
           <Route path="board" element={isLoggedIn ? <BoardPage /> : <Navigate to="/login" />} />
           <Route path="mypage" element={isLoggedIn ? <MyPage currentUser={currentUser} /> : <Navigate to="/login" />} />
           <Route path="admin" element={isLoggedIn ? <AdminPage /> : <Navigate to="/login" />} />
         </Route>
       </Routes>
     </BrowserRouter>
+  );
+}
+
+function App() {
+  return (
+    <NotificationProvider>
+      <AppContent />
+    </NotificationProvider>
   );
 }
 

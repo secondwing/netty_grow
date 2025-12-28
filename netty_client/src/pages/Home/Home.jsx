@@ -12,7 +12,7 @@ function Home() {
                     성장은 확실하게
                 </h1>
                 <p className="home__subtitle">
-                    흩어진 생각들을 모아, 단단한 커리어로<br />
+                    흩어진 생각들을 모아 단단한 커리어로<br />
                     Netty와 함께 기록의 가치를 발견하세요.
                 </p>
                 <div className="home__actions">

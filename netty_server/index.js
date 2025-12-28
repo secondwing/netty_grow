@@ -25,11 +25,16 @@ mongoose.connect(MONGODB_URI)
     .catch(err => console.error('MongoDB connection error:', err));
 
 // Routes
+// Routes
 const authRouter = require('./routes/auth');
 const recordsRouter = require('./routes/records');
+const postsRouter = require('./routes/posts');
+const growthRouter = require('./routes/growth');
 
 app.use('/api/auth', authRouter);
 app.use('/api/records', recordsRouter);
+app.use('/api/posts', postsRouter);
+app.use('/api/growth', growthRouter);
 
 app.get('/', (req, res) => {
     res.send('Netty Server is running');

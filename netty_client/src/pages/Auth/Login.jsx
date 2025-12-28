@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useNotification } from '../../contexts/NotificationContext';
 import './Auth.css';
 
 function Login({ onLogin }) {
@@ -13,6 +14,8 @@ function Login({ onLogin }) {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
     };
+
+    const { showNotification } = useNotification();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -32,13 +35,14 @@ function Login({ onLogin }) {
             if (response.ok) {
                 // TODO: Store token/user info properly
                 onLogin(formData.username);
+                showNotification('로그인 성공!', 'success');
                 navigate('/');
             } else {
-                alert(data.message || '로그인 실패');
+                showNotification(data.message || '로그인 실패', 'error');
             }
         } catch (error) {
             console.error('Login error:', error);
-            alert('서버 오류가 발생했습니다.');
+            showNotification('서버 오류가 발생했습니다.', 'error');
         }
     };
 

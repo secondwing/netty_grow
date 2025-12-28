@@ -48,13 +48,13 @@ router.post('/login', async (req, res) => {
         // Find user
         const user = await User.findOne({ username });
         if (!user) {
-            return res.status(400).json({ message: 'Invalid credentials' });
+            return res.status(400).json({ message: '아이디 또는 비밀번호가 올바르지 않습니다' });
         }
 
         // Check password
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            return res.status(400).json({ message: 'Invalid credentials' });
+            return res.status(400).json({ message: '아이디 또는 비밀번호가 올바르지 않습니다' });
         }
 
         // Successful login - Generate JWT

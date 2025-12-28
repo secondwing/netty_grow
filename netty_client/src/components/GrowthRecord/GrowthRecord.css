@@ -1,0 +1,268 @@
+.growth-record-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    color: #333;
+}
+
+.growth-record__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.growth-record__title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1a1a1a;
+}
+
+.growth-record__controls {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.growth-select {
+    padding: 0.5rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+}
+
+.growth-tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 1rem;
+    overflow-x: auto;
+}
+
+.growth-tab {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    background: none;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #666;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.growth-tab:hover {
+    background: #f5f5f5;
+    color: #333;
+}
+
+.growth-tab.active {
+    background: #eef2ff;
+    color: #4f46e5;
+    font-weight: 600;
+}
+
+/* Section Styles */
+.growth-section {
+    animation: fadeIn 0.3s ease-out;
+}
+
+.growth-section__title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: #1a1a1a;
+}
+
+.growth-section__desc {
+    color: #666;
+    margin-bottom: 1.5rem;
+}
+
+.growth-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    margin-bottom: 1.5rem;
+}
+
+.growth-card__title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+.growth-card__subtitle {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 0.5rem;
+}
+
+/* Input Styles */
+.growth-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.growth-input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+    box-sizing: border-box;
+}
+
+.growth-input:focus {
+    outline: none;
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+.growth-textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    font-size: 1rem;
+    min-height: 100px;
+    resize: vertical;
+    box-sizing: border-box;
+}
+
+.growth-textarea--large {
+    min-height: 200px;
+}
+
+/* Goal Items */
+.growth-goals {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.growth-goal-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
+    background: #f9fafb;
+    border-radius: 8px;
+}
+
+.growth-goal-item__title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #4b5563;
+    margin-bottom: 0.5rem;
+}
+
+/* Buttons */
+.growth-btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.growth-btn--save {
+    background: #4f46e5;
+    color: white;
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.growth-btn--save:hover {
+    background: #4338ca;
+}
+
+.growth-btn--add {
+    background: #f3f4f6;
+    color: #374151;
+    width: 100%;
+    border: 1px dashed #d1d5db;
+}
+
+.growth-btn--add:hover {
+    background: #e5e7eb;
+    border-color: #9ca3af;
+}
+
+.growth-btn-icon {
+    background: none;
+    border: none;
+    color: #9ca3af;
+    cursor: pointer;
+    font-size: 1.25rem;
+    padding: 0.25rem;
+}
+
+.growth-btn-icon:hover {
+    color: #ef4444;
+}
+
+/* Monthly Tasks */
+.monthly-tasks {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.monthly-task-item {
+    padding: 1rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    transition: all 0.2s;
+}
+
+.monthly-task-item--completed {
+    background-color: #f0fdf4;
+    border-color: #86efac;
+}
+
+.monthly-task-item--incomplete {
+    background-color: #fef2f2;
+    border-color: #fca5a5;
+}
+
+.monthly-task-item__header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.monthly-task-checkbox {
+    width: 1.25rem;
+    height: 1.25rem;
+    cursor: pointer;
+}
+
+.monthly-task-content {
+    flex: 1;
+}
+
+.monthly-task-log {
+    min-height: 60px;
+    font-size: 0.9rem;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

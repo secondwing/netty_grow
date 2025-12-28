@@ -1,46 +1,51 @@
-.growth-page {
+.daily-record-page {
     max-width: 1200px;
     margin: 0 auto;
+    padding: 0 2rem;
 }
 
-.growth-page__header {
+.daily-record-page__header {
     text-align: center;
     margin-bottom: 2rem;
 }
 
-.growth-page__title {
+.daily-record-page__title {
     font-size: 2rem;
     font-weight: 700;
-    margin-bottom: 0.5rem;
+    margin-bottom: 2rem;
     color: #333;
 }
 
-.growth-page__subtitle {
+.daily-record-page__subtitle {
     color: #666;
 }
 
-.growth-page__content {
+.daily-record-page__content {
     display: flex;
     flex-direction: column;
     gap: 2rem;
+    margin-top: 2rem;
 }
 
 @media (min-width: 768px) {
-    .growth-page__content {
+    .daily-record-page__content {
         flex-direction: row;
         align-items: flex-start;
     }
 }
 
-.growth-page__left {
+.daily-record-page__left {
     flex: 1;
 }
 
-.growth-page__right {
+.daily-record-page__right {
     flex: 1.5;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
 }
 
-.growth-page__calendar-wrapper {
+.daily-record-page__calendar-wrapper {
     background-color: white;
     padding: 1.5rem;
     border-radius: 12px;

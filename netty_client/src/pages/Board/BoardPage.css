@@ -1,0 +1,179 @@
+.board-page {
+    padding: 0 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.board__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.board__title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 0;
+}
+
+.board__description {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 0;
+}
+
+.board__write-btn {
+    padding: 0.6rem 1.2rem;
+    background-color: #646cff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.board__write-btn:hover {
+    background-color: #535bf2;
+}
+
+/* Post List Styles */
+.post-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.post-item {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s;
+}
+
+.post-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.post-item__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.post-item__title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #333;
+    margin: 0;
+}
+
+.post-item__meta {
+    font-size: 0.9rem;
+    color: #888;
+    display: flex;
+    gap: 1rem;
+}
+
+.post-item__content {
+    font-size: 1rem;
+    color: #555;
+    line-height: 1.6;
+    white-space: pre-wrap;
+}
+
+.post-item__actions {
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+}
+
+.post-item__btn {
+    padding: 0.5rem 1rem;
+    border: 1px solid #eee;
+    background: white;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.post-item__btn:hover {
+    background: #f9f9f9;
+    color: #333;
+}
+
+.post-item__btn--delete {
+    color: #ff4d4f;
+    border-color: #ffccc7;
+}
+
+.post-item__btn--delete:hover {
+    background: #fff1f0;
+    color: #ff4d4f;
+}
+
+/* Post Form Styles */
+.post-form {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.post-form__group {
+    margin-bottom: 1.5rem;
+}
+
+.post-form__label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.post-form__input,
+.post-form__textarea {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+}
+
+.post-form__textarea {
+    min-height: 200px;
+    resize: vertical;
+}
+
+.post-form__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+.post-form__btn {
+    padding: 0.8rem 2rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+}
+
+.post-form__btn--cancel {
+    background: #f5f5f5;
+    color: #666;
+}
+
+.post-form__btn--submit {
+    background: #646cff;
+    color: white;
+}

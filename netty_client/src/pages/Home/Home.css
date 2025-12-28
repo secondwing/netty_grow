@@ -51,6 +51,14 @@
     -webkit-text-fill-color: transparent;
     /* Add subtle shadow to help text pop */
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+
+    /* Added individual background */
+    background-color: #ffffff;
+    padding: 1rem 2rem;
+    border-radius: 16px;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .home__subtitle {
@@ -60,6 +68,14 @@
     line-height: 1.6;
     margin-bottom: 2.5rem;
     font-weight: 500;
+
+    /* Added individual background */
+    background-color: #ffffff;
+    padding: 1rem 2rem;
+    border-radius: 16px;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .home__actions {
