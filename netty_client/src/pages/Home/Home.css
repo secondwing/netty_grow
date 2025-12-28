@@ -1,11 +1,27 @@
 .home {
+    /* Removed fixed height and scroll snap for natural scrolling */
     display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 60vh;
-    text-align: center;
+    flex-direction: column;
+    width: 100%;
 }
 
+/* Sections */
+.home__hero,
+#brand,
+#people {
+    /* Subtract estimated header height (approx 80px) */
+    min-height: calc(100vh - 80px);
+    /* Keep full height for "page" feel */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    /* Removed padding: 4rem 0; to prevent overflow */
+}
+
+/* Hero Specifics */
 .home__title {
     font-size: 3.5rem;
     font-weight: 800;

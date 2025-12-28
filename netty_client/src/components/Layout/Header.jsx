@@ -20,8 +20,8 @@ function Header({ isLoggedIn, onLogout }) {
                         <>
                             <Link to="/growth" className="header__link">나성장</Link>
                             <Link to="/board" className="header__link">게시판</Link>
-                            <Link to="/brand" className="header__link">브랜드 소개</Link>
-                            <Link to="/people" className="header__link">함께하는 사람들</Link>
+                            <a href="/#brand" className="header__link">브랜드 소개</a>
+                            <a href="/#people" className="header__link">함께하는 사람들</a>
                             <Link to="/mypage" className="header__link">마이페이지</Link>
                             <button onClick={handleLogout} className="header__button header__button--logout">
                                 로그아웃
@@ -29,8 +29,8 @@ function Header({ isLoggedIn, onLogout }) {
                         </>
                     ) : (
                         <>
-                            <Link to="/brand" className="header__link">브랜드 소개</Link>
-                            <Link to="/people" className="header__link">함께하는 사람들</Link>
+                            <a href="/#brand" className="header__link">브랜드 소개</a>
+                            <a href="/#people" className="header__link">함께하는 사람들</a>
                             <Link to="/login" className="header__link">로그인</Link>
                             <Link to="/signup" className="header__button header__button--signup">
                                 회원가입

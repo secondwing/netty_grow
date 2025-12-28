@@ -8,8 +8,7 @@ import Login from './pages/Auth/Login';
 import Signup from './pages/Auth/Signup';
 import GrowthPage from './pages/Growth/GrowthPage';
 import BoardPage from './pages/Board/BoardPage';
-import BrandPage from './pages/Brand/BrandPage';
-import PeoplePage from './pages/People/PeoplePage';
+
 import AdminPage from './pages/Admin/AdminPage';
 import MyPage from './pages/MyPage/MyPage';
 
@@ -65,8 +64,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout isLoggedIn={isLoggedIn} onLogout={handleLogout} />}>
           <Route index element={<Home />} />
-          <Route path="brand" element={<BrandPage />} />
-          <Route path="people" element={<PeoplePage />} />
+
 
           {/* Public Only Routes */}
           <Route path="login" element={!isLoggedIn ? <Login onLogin={handleLogin} /> : <Navigate to="/" />} />

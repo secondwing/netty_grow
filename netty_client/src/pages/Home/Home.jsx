@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom';
 import './Home.css';
+import BrandPage from '../Brand/BrandPage';
+import PeoplePage from '../People/PeoplePage';
 
 function Home() {
     return (
@@ -17,10 +19,16 @@ function Home() {
                     <Link to="/signup" className="home__button home__button--primary">
                         시작하기
                     </Link>
-                    <Link to="/brand" className="home__button home__button--secondary">
+                    <a href="#brand" className="home__button home__button--secondary">
                         더 알아보기
-                    </Link>
+                    </a>
                 </div>
+            </div>
+            <div id="brand">
+                <BrandPage />
+            </div>
+            <div id="people">
+                <PeoplePage />
             </div>
         </div>
     );
