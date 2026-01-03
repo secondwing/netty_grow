@@ -7,9 +7,8 @@ import Layout from './components/Layout/Layout';
 import Home from './pages/Home/Home';
 import Login from './pages/Auth/Login';
 import Signup from './pages/Auth/Signup';
-import DailyRecordPage from './pages/DailyRecord/DailyRecordPage';
+import RecordPage from './pages/Record/RecordPage';
 import BoardPage from './pages/Board/BoardPage';
-import GrowthRecordPage from './pages/GrowthRecord/GrowthRecordPage';
 
 import AdminPage from './pages/Admin/AdminPage';
 import MyPage from './pages/MyPage/MyPage';
@@ -79,8 +78,7 @@ function AppContent() {
           <Route path="signup" element={!isLoggedIn ? <Signup /> : <Navigate to="/" />} />
 
           {/* Protected Routes */}
-          <Route path="daily-record" element={isLoggedIn ? <DailyRecordPage /> : <Navigate to="/login" />} />
-          <Route path="growth" element={isLoggedIn ? <GrowthRecordPage /> : <Navigate to="/login" />} />
+          <Route path="record" element={isLoggedIn ? <RecordPage /> : <Navigate to="/login" />} />
           <Route path="board" element={isLoggedIn ? <BoardPage /> : <Navigate to="/login" />} />
           <Route path="mypage" element={isLoggedIn ? <MyPage currentUser={currentUser} /> : <Navigate to="/login" />} />
           <Route path="admin" element={isLoggedIn ? <AdminPage /> : <Navigate to="/login" />} />
