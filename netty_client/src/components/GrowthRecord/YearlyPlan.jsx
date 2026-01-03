@@ -1,96 +1,152 @@
 import React, { useState, useEffect } from 'react';
-import './GrowthRecord.css';
 
 function YearlyPlan({ plan, onUpdate }) {
-    const [desiredSelf, setDesiredSelf] = useState(['', '', '']);
-    const [goals, setGoals] = useState([
-        { goal: '', action: '', motivation: '' },
-        { goal: '', action: '', motivation: '' },
-        { goal: '', action: '', motivation: '' }
-    ]);
+    const [localPlan, setLocalPlan] = useState(plan);
 
     useEffect(() => {
-        if (plan) {
-            setDesiredSelf(plan.desiredSelf || ['', '', '']);
-            setGoals(plan.goals || [
-                { goal: '', action: '', motivation: '' },
-                { goal: '', action: '', motivation: '' },
-                { goal: '', action: '', motivation: '' }
-            ]);
-        }
+        setLocalPlan(plan);
     }, [plan]);
 
-    const handleDesiredSelfChange = (index, value) => {
-        const newDesiredSelf = [...desiredSelf];
-        newDesiredSelf[index] = value;
-        setDesiredSelf(newDesiredSelf);
+    const handleItemChange = (index, field, value) => {
+        const newItems = [...localPlan.items];
+        newItems[index][field] = value;
+        setLocalPlan({ ...localPlan, items: newItems });
     };
 
-    const handleGoalChange = (index, field, value) => {
-        const newGoals = [...goals];
-        newGoals[index] = { ...newGoals[index], [field]: value };
-        setGoals(newGoals);
+    const handleActivityChange = (itemIndex, activityIndex, value) => {
+        const newItems = [...localPlan.items];
+        newItems[itemIndex].activities[activityIndex].content = value;
+        setLocalPlan({ ...localPlan, items: newItems });
+    };
+
+    const handleAddItem = () => {
+        const newItem = {
+            desiredSelf: '',
+            goal: '',
+            motivation: '',
+            activities: [{ content: '', outcome: '' }, { content: '', outcome: '' }, { content: '', outcome: '' }]
+        };
+        setLocalPlan({ ...localPlan, items: [...localPlan.items, newItem] });
+    };
+
+    const handleRemoveItem = (index) => {
+        const newItems = localPlan.items.filter((_, i) => i !== index);
+        setLocalPlan({ ...localPlan, items: newItems });
+    };
+
+    const handleAddActivity = (itemIndex) => {
+        const newItems = [...localPlan.items];
+        newItems[itemIndex].activities.push({ content: '', outcome: '' });
+        setLocalPlan({ ...localPlan, items: newItems });
+    };
+
+    const handleRemoveActivity = (itemIndex, activityIndex) => {
+        const newItems = [...localPlan.items];
+        newItems[itemIndex].activities = newItems[itemIndex].activities.filter((_, i) => i !== activityIndex);
+        setLocalPlan({ ...localPlan, items: newItems });
     };
 
     const handleSave = () => {
-        onUpdate({ desiredSelf, goals });
+        onUpdate(localPlan);
     };
 
+    if (!localPlan) return null;
+
     return (
-        <div className="growth-section">
-            <h2 className="growth-section__title">나의 성장계획</h2>
-
-            <div className="growth-card">
-                <h3 className="growth-card__title">0000년에 원하는 나의 모습 3가지</h3>
-                <div className="growth-input-group">
-                    {desiredSelf.map((item, index) => (
-                        <input
-                            key={index}
-                            type="text"
-                            className="growth-input"
-                            placeholder={`${index + 1}. 원하는 모습`}
-                            value={item}
-                            onChange={(e) => handleDesiredSelfChange(index, e.target.value)}
-                        />
-                    ))}
+        <div className="growth-content">
+            <div className="growth-section">
+                <div className="growth-section__header">
+                    <h2 className="growth-section__title">나의 성장계획</h2>
+                    <button className="growth-btn growth-btn--save" onClick={handleSave}>
+                        저장하기
+                    </button>
                 </div>
-            </div>
 
-            <div className="growth-card">
-                <h3 className="growth-card__title">1년간 성장목표 (하고싶은일/ 필요한일 / 활동동기)</h3>
-                <div className="growth-goals">
-                    {goals.map((item, index) => (
-                        <div key={index} className="growth-goal-item">
-                            <h4 className="growth-goal-item__title">목표 {index + 1}</h4>
-                            <input
-                                type="text"
-                                className="growth-input"
-                                placeholder="하고싶은 일 / 필요한 일"
-                                value={item.goal}
-                                onChange={(e) => handleGoalChange(index, 'goal', e.target.value)}
-                            />
-                            <input
-                                type="text"
-                                className="growth-input"
-                                placeholder="필요한 활동 (구체적 행동)"
-                                value={item.action}
-                                onChange={(e) => handleGoalChange(index, 'action', e.target.value)}
-                            />
-                            <input
-                                type="text"
-                                className="growth-input"
-                                placeholder="활동 동기"
-                                value={item.motivation}
-                                onChange={(e) => handleGoalChange(index, 'motivation', e.target.value)}
-                            />
+                <div className="growth-items">
+                    {localPlan.items.map((item, itemIndex) => (
+                        <div key={item._id || itemIndex} className="growth-item-card">
+                            <div className="growth-item-card__header">
+                                <h3>성장 목표 {itemIndex + 1}</h3>
+                                <button
+                                    className="growth-btn growth-btn--delete"
+                                    onClick={() => handleRemoveItem(itemIndex)}
+                                >
+                                    삭제
+                                </button>
+                            </div>
+
+                            <div className="growth-form-group">
+                                <label>원하는 나 (가치/방향)</label>
+                                <input
+                                    type="text"
+                                    className="growth-input"
+                                    value={item.desiredSelf}
+                                    onChange={(e) => handleItemChange(itemIndex, 'desiredSelf', e.target.value)}
+                                    placeholder="예: 건강하고 활기찬 나"
+                                />
+                            </div>
+
+                            <div className="growth-form-group">
+                                <label>성장목표 (하고 싶은 일)</label>
+                                <input
+                                    type="text"
+                                    className="growth-input"
+                                    value={item.goal}
+                                    onChange={(e) => handleItemChange(itemIndex, 'goal', e.target.value)}
+                                    placeholder="예: 체지방 15% 달성"
+                                />
+                            </div>
+
+                            <div className="growth-form-group">
+                                <label>성장활동 (필요한 일)</label>
+                                <div className="growth-activities-list">
+                                    {item.activities.map((activity, activityIndex) => (
+                                        <div key={activity._id || activityIndex} className="growth-activity-row">
+                                            <input
+                                                type="text"
+                                                className="growth-input"
+                                                value={activity.content}
+                                                onChange={(e) => handleActivityChange(itemIndex, activityIndex, e.target.value)}
+                                                placeholder="구체적인 활동 내용"
+                                            />
+                                            <button
+                                                className="growth-btn-icon"
+                                                onClick={() => handleRemoveActivity(itemIndex, activityIndex)}
+                                                title="활동 삭제"
+                                            >
+                                                ×
+                                            </button>
+                                        </div>
+                                    ))}
+                                    <button
+                                        className="growth-btn growth-btn--add-sub"
+                                        onClick={() => handleAddActivity(itemIndex)}
+                                    >
+                                        + 활동 추가
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div className="growth-form-group">
+                                <label>성장동기 (하고 싶은 이유)</label>
+                                <textarea
+                                    className="growth-textarea"
+                                    value={item.motivation}
+                                    onChange={(e) => handleItemChange(itemIndex, 'motivation', e.target.value)}
+                                    placeholder="이 목표를 달성하고 싶은 이유를 적어주세요"
+                                    rows={3}
+                                />
+                            </div>
                         </div>
                     ))}
                 </div>
-            </div>
 
-            <button className="growth-btn growth-btn--save" onClick={handleSave}>
-                저장하기
-            </button>
+                <div className="growth-actions">
+                    <button className="growth-btn growth-btn--add" onClick={handleAddItem}>
+                        + 성장 목표 추가
+                    </button>
+                </div>
+            </div>
         </div>
     );
 }

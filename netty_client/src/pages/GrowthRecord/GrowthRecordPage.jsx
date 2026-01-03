@@ -6,7 +6,9 @@ import { useNotification } from '../../contexts/NotificationContext';
 import YearlyPlan from '../../components/GrowthRecord/YearlyPlan';
 import MonthlyIndicator from '../../components/GrowthRecord/MonthlyIndicator';
 import MonthlyAnalysis from '../../components/GrowthRecord/MonthlyAnalysis';
+import YearlyOverview from '../../components/GrowthRecord/YearlyOverview';
 import GrowthResult from '../../components/GrowthRecord/GrowthResult';
+import GrowthReflection from '../../components/GrowthRecord/GrowthReflection';
 import '../../components/GrowthRecord/GrowthRecord.css';
 
 function GrowthRecordPage() {
@@ -99,15 +101,21 @@ function GrowthRecordPage() {
     };
 
     const renderContent = () => {
+        if (!plan) return <div>Loading...</div>;
+
         switch (activeTab) {
             case 'plan':
                 return <YearlyPlan plan={plan} onUpdate={handleUpdatePlan} />;
             case 'indicator':
                 return <MonthlyIndicator plan={plan} log={log} month={month} onUpdateLog={handleUpdateLog} />;
             case 'analysis':
-                return <MonthlyAnalysis log={log} onUpdateLog={handleUpdateLog} />;
+                return <MonthlyAnalysis plan={plan} log={log} onUpdateLog={handleUpdateLog} />;
+            case 'overview':
+                return <YearlyOverview plan={plan} onUpdate={handleUpdatePlan} />;
             case 'result':
                 return <GrowthResult plan={plan} onUpdate={handleUpdatePlan} />;
+            case 'reflection':
+                return <GrowthReflection plan={plan} onUpdate={handleUpdatePlan} />;
             default:
                 return null;
         }
@@ -128,6 +136,7 @@ function GrowthRecordPage() {
                     >
                         <option value={2024}>2024년</option>
                         <option value={2025}>2025년</option>
+                        <option value={2026}>2026년</option>
                     </select>
                     {(activeTab === 'indicator' || activeTab === 'analysis') && (
                         <select
@@ -148,7 +157,7 @@ function GrowthRecordPage() {
                     className={`growth-tab ${activeTab === 'plan' ? 'active' : ''}`}
                     onClick={() => setActiveTab('plan')}
                 >
-                    나의 성장계획
+                    성장 계획
                 </button>
                 <button
                     className={`growth-tab ${activeTab === 'indicator' ? 'active' : ''}`}
@@ -163,10 +172,22 @@ function GrowthRecordPage() {
                     월 성장분석
                 </button>
                 <button
+                    className={`growth-tab ${activeTab === 'overview' ? 'active' : ''}`}
+                    onClick={() => setActiveTab('overview')}
+                >
+                    {year}년 한눈에 정리
+                </button>
+                <button
                     className={`growth-tab ${activeTab === 'result' ? 'active' : ''}`}
                     onClick={() => setActiveTab('result')}
                 >
-                    성장결과
+                    연 결과보고서
+                </button>
+                <button
+                    className={`growth-tab ${activeTab === 'reflection' ? 'active' : ''}`}
+                    onClick={() => setActiveTab('reflection')}
+                >
+                    성장소감
                 </button>
             </div>
 

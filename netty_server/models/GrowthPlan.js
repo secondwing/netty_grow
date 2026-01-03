@@ -11,22 +11,23 @@ const growthPlanSchema = new mongoose.Schema({
         required: true,
         default: () => new Date().getFullYear()
     },
-    desiredSelf: [{
-        type: String,
-        trim: true
+    items: [{
+        desiredSelf: { type: String, default: '' },
+        goal: { type: String, default: '' },
+        motivation: { type: String, default: '' },
+        activities: [{
+            content: { type: String, default: '' },
+            outcome: { type: String, default: '' } // For Yearly Result
+        }]
     }],
-    goals: [{
-        goal: String,
-        action: String,
-        motivation: String
+    yearlyOverview: [{
+        month: Number,
+        content: { type: String, default: '' },
+        summary: { type: String, default: '' }
     }],
-    result: {
-        type: String,
-        default: ''
-    },
     reflection: {
-        type: String,
-        default: ''
+        summary: { type: String, default: '' },
+        detail: { type: String, default: '' }
     },
     createdAt: {
         type: Date,

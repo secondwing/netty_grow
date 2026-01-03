@@ -1,84 +1,87 @@
 import React, { useState, useEffect } from 'react';
-import './GrowthRecord.css';
 
 function MonthlyIndicator({ plan, log, month, onUpdateLog }) {
-    const [tasks, setTasks] = useState([]);
+    const [localLog, setLocalLog] = useState(log);
 
     useEffect(() => {
-        if (log && log.tasks) {
-            setTasks(log.tasks);
-        } else if (plan && plan.goals) {
-            // Auto-fill from yearly goals if log is empty
-            const initialTasks = plan.goals.map(g => ({
-                content: g.action || '',
-                isCompleted: false,
-                log: ''
-            })).filter(t => t.content); // Only add if action exists
-            setTasks(initialTasks);
+        setLocalLog(log);
+    }, [log]);
+
+    const handleLogChange = (activityId, value) => {
+        if (!localLog) return;
+
+        const newActivityLogs = [...(localLog.activityLogs || [])];
+        const existingLogIndex = newActivityLogs.findIndex(l => l.activityId === activityId);
+
+        if (existingLogIndex >= 0) {
+            newActivityLogs[existingLogIndex].log = value;
+        } else {
+            newActivityLogs.push({ activityId, log: value });
         }
-    }, [log, plan]);
 
-    const handleTaskChange = (index, field, value) => {
-        const newTasks = [...tasks];
-        newTasks[index] = { ...newTasks[index], [field]: value };
-        setTasks(newTasks);
+        setLocalLog({ ...localLog, activityLogs: newActivityLogs });
     };
 
-    const handleAddTask = () => {
-        setTasks([...tasks, { content: '', isCompleted: false, log: '' }]);
-    };
-
-    const handleRemoveTask = (index) => {
-        const newTasks = tasks.filter((_, i) => i !== index);
-        setTasks(newTasks);
+    const getLogValue = (activityId) => {
+        if (!localLog || !localLog.activityLogs) return '';
+        const activityLog = localLog.activityLogs.find(l => l.activityId === activityId);
+        return activityLog ? activityLog.log : '';
     };
 
     const handleSave = () => {
-        onUpdateLog({ tasks });
+        onUpdateLog(localLog);
     };
 
-    return (
-        <div className="growth-section">
-            <h2 className="growth-section__title">{month}월 성장지표</h2>
-            <p className="growth-section__desc">성장계획에서 작성한 내용이 자동 기입됩니다. 수정 가능합니다.</p>
+    if (!plan || !localLog) return <div>Loading...</div>;
 
-            <div className="growth-card">
-                <div className="monthly-tasks">
-                    {tasks.map((task, index) => (
-                        <div key={index} className={`monthly-task-item ${task.isCompleted ? 'monthly-task-item--completed' : 'monthly-task-item--incomplete'}`}>
-                            <div className="monthly-task-item__header">
-                                <input
-                                    type="checkbox"
-                                    checked={task.isCompleted}
-                                    onChange={(e) => handleTaskChange(index, 'isCompleted', e.target.checked)}
-                                    className="monthly-task-checkbox"
-                                />
-                                <input
-                                    type="text"
-                                    className="growth-input monthly-task-content"
-                                    placeholder="활동 내용 (예: 모임 가입하기)"
-                                    value={task.content}
-                                    onChange={(e) => handleTaskChange(index, 'content', e.target.value)}
-                                />
-                                <button className="growth-btn-icon" onClick={() => handleRemoveTask(index)}>×</button>
+    return (
+        <div className="growth-content">
+            <div className="growth-section">
+                <div className="growth-section__header">
+                    <h2 className="growth-section__title">{month}월 성장지표</h2>
+                    <button className="growth-btn growth-btn--save" onClick={handleSave}>
+                        저장하기
+                    </button>
+                </div>
+
+                <div className="growth-items">
+                    {plan.items.map((item, itemIndex) => (
+                        <div key={item._id || itemIndex} className="growth-item-card">
+                            <div className="growth-item-header">
+                                <div className="growth-item-header__info">
+                                    <span className="growth-label">원하는 나:</span>
+                                    <span className="growth-value">{item.desiredSelf}</span>
+                                </div>
+                                <div className="growth-item-header__info">
+                                    <span className="growth-label">성장목표:</span>
+                                    <span className="growth-value">{item.goal}</span>
+                                </div>
                             </div>
-                            <textarea
-                                className="growth-textarea monthly-task-log"
-                                placeholder="활동 일지 (달성/미달성 사유 등)"
-                                value={task.log}
-                                onChange={(e) => handleTaskChange(index, 'log', e.target.value)}
-                            />
+
+                            <div className="growth-activities-log">
+                                {item.activities.map((activity, activityIndex) => (
+                                    <div key={activity._id || activityIndex} className="growth-activity-log-row">
+                                        <div className="growth-activity-content">
+                                            <span className="growth-activity-badge">활동 {activityIndex + 1}</span>
+                                            <p>{activity.content}</p>
+                                        </div>
+                                        <div className="growth-log-input-wrapper">
+                                            <label>활동일지 (실천방안 및 소감)</label>
+                                            <textarea
+                                                className="growth-textarea"
+                                                value={getLogValue(activity._id)}
+                                                onChange={(e) => handleLogChange(activity._id, e.target.value)}
+                                                placeholder="이번 달 활동 내용을 기록해주세요"
+                                                rows={3}
+                                            />
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     ))}
                 </div>
-                <button className="growth-btn growth-btn--add" onClick={handleAddTask}>
-                    + 활동 추가
-                </button>
             </div>
-
-            <button className="growth-btn growth-btn--save" onClick={handleSave}>
-                저장하기
-            </button>
         </div>
     );
 }

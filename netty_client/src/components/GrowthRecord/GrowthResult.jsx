@@ -1,48 +1,72 @@
 import React, { useState, useEffect } from 'react';
-import './GrowthRecord.css';
 
 function GrowthResult({ plan, onUpdate }) {
-    const [result, setResult] = useState('');
-    const [reflection, setReflection] = useState('');
+    const [localPlan, setLocalPlan] = useState(plan);
 
     useEffect(() => {
-        if (plan) {
-            setResult(plan.result || '');
-            setReflection(plan.reflection || '');
-        }
+        setLocalPlan(plan);
     }, [plan]);
 
-    const handleSave = () => {
-        onUpdate({ result, reflection });
+    const handleOutcomeChange = (itemIndex, activityIndex, value) => {
+        const newItems = [...localPlan.items];
+        newItems[itemIndex].activities[activityIndex].outcome = value;
+        setLocalPlan({ ...localPlan, items: newItems });
     };
 
+    const handleSave = () => {
+        onUpdate(localPlan);
+    };
+
+    if (!localPlan) return null;
+
     return (
-        <div className="growth-section">
-            <h2 className="growth-section__title">성장 결과</h2>
+        <div className="growth-content">
+            <div className="growth-section">
+                <div className="growth-section__header">
+                    <h2 className="growth-section__title">연 결과보고서</h2>
+                    <button className="growth-btn growth-btn--save" onClick={handleSave}>
+                        저장하기
+                    </button>
+                </div>
 
-            <div className="growth-card">
-                <h3 className="growth-card__title">활동 성과 보고</h3>
-                <textarea
-                    className="growth-textarea growth-textarea--large"
-                    value={result}
-                    onChange={(e) => setResult(e.target.value)}
-                    placeholder="1년간의 활동 성과를 작성해주세요."
-                />
+                <div className="growth-items">
+                    {localPlan.items.map((item, itemIndex) => (
+                        <div key={item._id || itemIndex} className="growth-item-card">
+                            <div className="growth-item-header">
+                                <div className="growth-item-header__info">
+                                    <span className="growth-label">원하는 나:</span>
+                                    <span className="growth-value">{item.desiredSelf}</span>
+                                </div>
+                                <div className="growth-item-header__info">
+                                    <span className="growth-label">성장목표:</span>
+                                    <span className="growth-value">{item.goal}</span>
+                                </div>
+                            </div>
+
+                            <div className="growth-activities-log">
+                                {item.activities.map((activity, activityIndex) => (
+                                    <div key={activity._id || activityIndex} className="growth-activity-log-row">
+                                        <div className="growth-activity-content">
+                                            <span className="growth-activity-badge">활동 {activityIndex + 1}</span>
+                                            <p>{activity.content}</p>
+                                        </div>
+                                        <div className="growth-log-input-wrapper">
+                                            <label>성장 활동성과 (이뤄낸 일)</label>
+                                            <textarea
+                                                className="growth-textarea"
+                                                value={activity.outcome}
+                                                onChange={(e) => handleOutcomeChange(itemIndex, activityIndex, e.target.value)}
+                                                placeholder="1년 동안의 성과를 기록해주세요"
+                                                rows={3}
+                                            />
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    ))}
+                </div>
             </div>
-
-            <div className="growth-card">
-                <h3 className="growth-card__title">성장 소감</h3>
-                <textarea
-                    className="growth-textarea"
-                    value={reflection}
-                    onChange={(e) => setReflection(e.target.value)}
-                    placeholder="1년간의 성장 소감을 작성해주세요."
-                />
-            </div>
-
-            <button className="growth-btn growth-btn--save" onClick={handleSave}>
-                저장하기
-            </button>
         </div>
     );
 }

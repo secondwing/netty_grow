@@ -12,15 +12,27 @@ router.get('/plan/:year', auth, async (req, res) => {
 
         if (!plan) {
             // Create a new empty plan if not exists
+            // Default: 3 items, each with 3 activities
+            const defaultItems = Array(3).fill(null).map(() => ({
+                desiredSelf: '',
+                goal: '',
+                motivation: '',
+                activities: Array(3).fill(null).map(() => ({ content: '', outcome: '' }))
+            }));
+
+            // Default: 12 months for yearly overview
+            const defaultOverview = Array.from({ length: 12 }, (_, i) => ({
+                month: i + 1,
+                content: '',
+                summary: ''
+            }));
+
             plan = new GrowthPlan({
                 userId: req.user.id,
                 year,
-                desiredSelf: ['', '', ''],
-                goals: [
-                    { goal: '', action: '', motivation: '' },
-                    { goal: '', action: '', motivation: '' },
-                    { goal: '', action: '', motivation: '' }
-                ]
+                items: defaultItems,
+                yearlyOverview: defaultOverview,
+                reflection: { summary: '', detail: '' }
             });
             await plan.save();
         }
@@ -35,11 +47,11 @@ router.get('/plan/:year', auth, async (req, res) => {
 // Update Growth Plan
 router.put('/plan/:id', auth, async (req, res) => {
     try {
-        const { desiredSelf, goals, result, reflection } = req.body;
+        const { items, yearlyOverview, reflection } = req.body;
 
         const plan = await GrowthPlan.findOneAndUpdate(
             { _id: req.params.id, userId: req.user.id },
-            { desiredSelf, goals, result, reflection },
+            { items, yearlyOverview, reflection },
             { new: true }
         );
 
@@ -72,8 +84,8 @@ router.get('/log/:year/:month', auth, async (req, res) => {
                 planId: plan._id,
                 year,
                 month,
-                tasks: [],
-                analysis: { positive: '', negative: '', improvement: '' }
+                activityLogs: [],
+                itemAnalyses: []
             });
             await log.save();
         }
@@ -88,11 +100,11 @@ router.get('/log/:year/:month', auth, async (req, res) => {
 // Update Monthly Log
 router.put('/log/:id', auth, async (req, res) => {
     try {
-        const { tasks, analysis } = req.body;
+        const { activityLogs, itemAnalyses } = req.body;
 
         const log = await MonthlyLog.findOneAndUpdate(
             { _id: req.params.id, userId: req.user.id },
-            { tasks, analysis },
+            { activityLogs, itemAnalyses },
             { new: true }
         );
 

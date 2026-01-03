@@ -21,19 +21,16 @@ const monthlyLogSchema = new mongoose.Schema({
         min: 1,
         max: 12
     },
-    tasks: [{
-        content: String,
-        isCompleted: {
-            type: Boolean,
-            default: false
-        },
-        log: String // Activity log for this task
+    activityLogs: [{
+        activityId: mongoose.Schema.Types.ObjectId, // Refers to activity in GrowthPlan
+        log: { type: String, default: '' }
     }],
-    analysis: {
-        positive: { type: String, default: '' }, // Action Result (+)
-        negative: { type: String, default: '' }, // Action Result (-)
-        improvement: { type: String, default: '' } // Improvement Plan
-    },
+    itemAnalyses: [{
+        itemId: mongoose.Schema.Types.ObjectId, // Refers to item in GrowthPlan
+        strength: { type: String, default: '' },
+        weakness: { type: String, default: '' },
+        supplement: { type: String, default: '' }
+    }],
     createdAt: {
         type: Date,
         default: Date.now
