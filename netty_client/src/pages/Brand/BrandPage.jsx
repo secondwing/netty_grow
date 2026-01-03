@@ -1,5 +1,5 @@
 import './BrandPage.css';
-import { PenTool, BarChart2, Users } from 'lucide-react';
+import { PenTool, BarChart2, Users, ChevronDown } from 'lucide-react';
 
 function BrandPage() {
     return (
@@ -46,6 +46,10 @@ function BrandPage() {
                     </p>
                 </div>
             </div>
+
+            <a href="#people" className="brand__scroll-down" aria-label="Scroll to People section">
+                <ChevronDown size={48} strokeWidth={1.5} />
+            </a>
         </div>
     );
 }
