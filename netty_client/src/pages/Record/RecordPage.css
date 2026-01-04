@@ -1,11 +1,11 @@
 .record-page {
-    padding: 2rem;
+    /* padding: 2rem; */
     max-width: 1200px;
     margin: 0 auto;
 }
 
 .record-page__header {
-    margin-bottom: 2rem;
+    margin-bottom: 0.5rem;
 }
 
 .record-page__title {
@@ -19,14 +19,13 @@
     display: flex;
     gap: 1rem;
     border-bottom: 1px solid var(--border-color);
-    margin-bottom: 2rem;
 }
 
 .record-page__tab {
-    padding: 0.75rem 1.5rem;
+    padding: 0.5rem 1rem;
     border: none;
     background: none;
-    font-size: 1rem;
+    font-size: 1.1rem;
     font-weight: 600;
     color: var(--text-secondary);
     cursor: pointer;

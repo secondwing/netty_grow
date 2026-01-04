@@ -9,13 +9,13 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 2rem;
 }
 
 .growth-record__title {
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: 700;
     color: #1a1a1a;
+    margin: 0;
 }
 
 .growth-record__controls {
@@ -34,9 +34,9 @@
 .growth-tabs {
     display: flex;
     gap: 1rem;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
     border-bottom: 1px solid #eee;
-    padding-bottom: 1rem;
+    padding-bottom: 0.5rem;
     overflow-x: auto;
 }
 
