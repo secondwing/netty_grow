@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
+import { PDFDownloadLink } from '@react-pdf/renderer';
 import { useNotification } from '../../contexts/NotificationContext';
 import YearlyPlan from '../../components/GrowthRecord/YearlyPlan';
 import MonthlyIndicator from '../../components/GrowthRecord/MonthlyIndicator';
@@ -9,6 +8,7 @@ import MonthlyAnalysis from '../../components/GrowthRecord/MonthlyAnalysis';
 import YearlyOverview from '../../components/GrowthRecord/YearlyOverview';
 import GrowthResult from '../../components/GrowthRecord/GrowthResult';
 import GrowthReflection from '../../components/GrowthRecord/GrowthReflection';
+import GrowthReportDocument from '../../components/PDF/GrowthReportDocument';
 import '../../components/GrowthRecord/GrowthRecord.css';
 
 function GrowthRecordPage() {
@@ -17,10 +17,14 @@ function GrowthRecordPage() {
     const [month, setMonth] = useState(new Date().getMonth() + 1);
     const [plan, setPlan] = useState(null);
     const [log, setLog] = useState(null);
+    const [allMonthlyLogs, setAllMonthlyLogs] = useState([]);
+    const [user, setUser] = useState(null);
     const { showNotification } = useNotification();
 
     useEffect(() => {
         fetchPlan();
+        fetchAllLogs();
+        fetchUser();
     }, [year]);
 
     useEffect(() => {
@@ -28,6 +32,17 @@ function GrowthRecordPage() {
             fetchLog();
         }
     }, [year, month, activeTab]);
+
+    const fetchUser = async () => {
+        try {
+            const res = await axios.get('http://localhost:5000/api/auth/me', {
+                withCredentials: true
+            });
+            setUser(res.data);
+        } catch (err) {
+            console.error('Error fetching user:', err);
+        }
+    };
 
     const fetchPlan = async () => {
         try {
@@ -53,6 +68,17 @@ function GrowthRecordPage() {
         }
     };
 
+    const fetchAllLogs = async () => {
+        try {
+            const res = await axios.get(`http://localhost:5000/api/growth/logs/${year}`, {
+                withCredentials: true
+            });
+            setAllMonthlyLogs(res.data);
+        } catch (err) {
+            console.error('Error fetching all logs:', err);
+        }
+    };
+
     const handleUpdatePlan = async (data) => {
         try {
             const res = await axios.put(`http://localhost:5000/api/growth/plan/${plan._id}`, data, {
@@ -72,31 +98,12 @@ function GrowthRecordPage() {
                 withCredentials: true
             });
             setLog(res.data);
+            // Also update allMonthlyLogs to keep PDF data fresh
+            fetchAllLogs();
             showNotification('저장되었습니다.', 'success');
         } catch (err) {
             console.error('Error updating log:', err);
             showNotification('저장에 실패했습니다.', 'error');
-        }
-    };
-
-    const handleDownloadPDF = async () => {
-        const element = document.querySelector('.growth-record-page');
-        if (!element) return;
-
-        try {
-            showNotification('PDF 생성 중입니다...', 'info');
-            const canvas = await html2canvas(element, { scale: 2 });
-            const imgData = canvas.toDataURL('image/png');
-            const pdf = new jsPDF('p', 'mm', 'a4');
-            const pdfWidth = pdf.internal.pageSize.getWidth();
-            const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-
-            pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-            pdf.save(`growth-record-${year}-${activeTab}.pdf`);
-            showNotification('PDF가 다운로드되었습니다.', 'success');
-        } catch (err) {
-            console.error('PDF generation error:', err);
-            showNotification('PDF 생성에 실패했습니다.', 'error');
         }
     };
 
@@ -126,9 +133,20 @@ function GrowthRecordPage() {
             <div className="growth-record__header">
                 <h1 className="growth-record__title">성장 기록</h1>
                 <div className="growth-record__controls">
-                    <button className="growth-btn growth-btn--add" onClick={handleDownloadPDF} style={{ width: 'auto' }}>
-                        PDF 다운로드
-                    </button>
+                    {plan && (
+                        <PDFDownloadLink
+                            document={<GrowthReportDocument plan={plan} monthlyLogs={allMonthlyLogs} user={user} />}
+                            fileName={`growth-record-${year}.pdf`}
+                            style={{ textDecoration: 'none' }}
+                        >
+                            {({ blob, url, loading, error }) => (
+                                <button className="growth-btn growth-btn--add" style={{ width: 'auto' }} disabled={loading}>
+                                    {loading ? 'PDF 생성 중...' : '전체 리포트 다운로드'}
+                                </button>
+                            )}
+                        </PDFDownloadLink>
+                    )}
+
                     <select
                         className="growth-select"
                         value={year}

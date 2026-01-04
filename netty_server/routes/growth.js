@@ -97,6 +97,18 @@ router.get('/log/:year/:month', auth, async (req, res) => {
     }
 });
 
+// Get All Monthly Logs for a Year (for PDF Report)
+router.get('/logs/:year', auth, async (req, res) => {
+    try {
+        const { year } = req.params;
+        const logs = await MonthlyLog.find({ userId: req.user.id, year }).sort({ month: 1 });
+        res.json(logs);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Server Error' });
+    }
+});
+
 // Update Monthly Log
 router.put('/log/:id', auth, async (req, res) => {
     try {

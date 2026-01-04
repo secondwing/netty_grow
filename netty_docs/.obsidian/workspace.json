@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "dev_plan(260104).md",
+                "file": "pdf_enhancement_plan.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "dev_plan(260104)"
+              "title": "pdf_enhancement_plan"
             }
           }
         ],
@@ -200,8 +200,9 @@
   },
   "active": "6d5359ab57ca92ee",
   "lastOpenFiles": [
-    "dev_plan(260103).md",
     "dev_plan(260104).md",
+    "pdf_enhancement_plan.md",
+    "dev_plan(260103).md",
     "Netty_요구사항.md"
   ]
 }
