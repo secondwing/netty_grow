@@ -7,11 +7,12 @@ import SectionMonthly from './SectionMonthly';
 import SectionYearly from './SectionYearly';
 
 // Register Korean Font
+// Register Korean Font
 Font.register({
     family: 'NotoSansKR',
     fonts: [
-        { src: '/fonts/NotoSansKR-Variable.ttf', fontWeight: 400, format: 'truetype' }, // Regular
-        { src: '/fonts/NotoSansKR-Variable.ttf', fontWeight: 700, format: 'truetype' }, // Bold
+        { src: '/fonts/NotoSansKR-Regular.ttf', fontWeight: 400, format: 'truetype' }, // Regular
+        { src: '/fonts/NotoSansKR-Bold.ttf', fontWeight: 700, format: 'truetype' }, // Bold
     ]
 });
 
