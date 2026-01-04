@@ -2,10 +2,12 @@ const express = require('express');
 const router = express.Router();
 const Record = require('../models/Record');
 
-// GET all records
-router.get('/', async (req, res) => {
+const auth = require('../middleware/auth');
+
+// GET all records for the logged-in user
+router.get('/', auth, async (req, res) => {
     try {
-        const records = await Record.find().sort({ createdAt: -1 });
+        const records = await Record.find({ userId: req.user.id }).sort({ createdAt: -1 });
         res.json(records);
     } catch (err) {
         res.status(500).json({ message: err.message });
@@ -13,7 +15,7 @@ router.get('/', async (req, res) => {
 });
 
 // POST new record (Simple Text)
-router.post('/', async (req, res) => {
+router.post('/', auth, async (req, res) => {
     const { content, date } = req.body;
 
     if (!content) {
@@ -21,7 +23,7 @@ router.post('/', async (req, res) => {
     }
 
     const record = new Record({
-        userId: 'mock-user', // TODO: Use actual logged-in user ID
+        userId: req.user.id,
         content: content,
         date: date || Date.now()
     });
@@ -35,15 +37,15 @@ router.post('/', async (req, res) => {
 });
 
 // PUT update record
-router.put('/:id', async (req, res) => {
+router.put('/:id', auth, async (req, res) => {
     try {
         const { content } = req.body;
         if (!content) {
             return res.status(400).json({ message: 'Content is required' });
         }
 
-        const updatedRecord = await Record.findByIdAndUpdate(
-            req.params.id,
+        const updatedRecord = await Record.findOneAndUpdate(
+            { _id: req.params.id, userId: req.user.id },
             { content },
             { new: true }
         );
@@ -59,9 +61,9 @@ router.put('/:id', async (req, res) => {
 });
 
 // DELETE record
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', auth, async (req, res) => {
     try {
-        const deletedRecord = await Record.findByIdAndDelete(req.params.id);
+        const deletedRecord = await Record.findOneAndDelete({ _id: req.params.id, userId: req.user.id });
         if (!deletedRecord) {
             return res.status(404).json({ message: 'Record not found' });
         }

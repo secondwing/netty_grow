@@ -22,20 +22,26 @@ const DailyRecordPage = () => {
 
     const fetchRecords = async () => {
         try {
-            const response = await fetch('http://localhost:5000/api/records');
+            const response = await fetch('http://localhost:5000/api/records', {
+                credentials: 'include'
+            });
+            if (!response.ok) {
+                throw new Error('Failed to fetch records');
+            }
             const data = await response.json();
             setRecords(data);
         } catch (error) {
             console.error('Error fetching records:', error);
+            setRecords([]); // Ensure records is an array on error
         }
     };
 
     const filterRecordsByDate = (selectedDate) => {
         const dateString = selectedDate.toLocaleDateString('en-CA'); // YYYY-MM-DD
-        const filtered = records.filter(record => {
+        const filtered = Array.isArray(records) ? records.filter(record => {
             const recordDate = new Date(record.date).toLocaleDateString('en-CA');
             return recordDate === dateString;
-        });
+        }) : [];
         setSelectedDateRecords(filtered);
     };
 
@@ -54,6 +60,7 @@ const DailyRecordPage = () => {
         try {
             const response = await fetch(`http://localhost:5000/api/records/${id}`, {
                 method: 'DELETE',
+                credentials: 'include'
             });
             if (response.ok) {
                 setRecords(records.filter(record => record._id !== id));
@@ -75,6 +82,7 @@ const DailyRecordPage = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                credentials: 'include',
                 body: JSON.stringify({ content: newContent }),
             });
             if (response.ok) {

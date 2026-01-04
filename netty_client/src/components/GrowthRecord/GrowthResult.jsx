@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import LoadingButton from '../Common/LoadingButton';
 
 function GrowthResult({ plan, onUpdate }) {
     const [localPlan, setLocalPlan] = useState(plan);
@@ -11,6 +12,41 @@ function GrowthResult({ plan, onUpdate }) {
         const newItems = [...localPlan.items];
         newItems[itemIndex].activities[activityIndex].outcome = value;
         setLocalPlan({ ...localPlan, items: newItems });
+    };
+
+    const handleDraftAI = async (itemIndex, activityIndex, activityContent) => {
+        try {
+            // We need activityId to be precise, but for now let's pass content.
+            // Actually, we have the activity object in the map loop.
+            // But wait, the server route expects `activityId` to filter logs.
+            // Let's pass activityId.
+            const activityId = localPlan.items[itemIndex].activities[activityIndex]._id;
+
+            const response = await fetch('http://localhost:5000/api/ai/draft/yearly-result', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    userId: plan.userId,
+                    year: plan.year,
+                    activityContent: activityContent,
+                    activityId: activityId
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error('AI drafting failed');
+            }
+
+            const data = await response.json();
+            if (data.draft) {
+                handleOutcomeChange(itemIndex, activityIndex, data.draft);
+            }
+        } catch (error) {
+            console.error('AI Draft Error:', error);
+            alert('AI 초안 작성에 실패했습니다.');
+        }
     };
 
     const handleSave = () => {
@@ -51,7 +87,14 @@ function GrowthResult({ plan, onUpdate }) {
                                             <p>{activity.content}</p>
                                         </div>
                                         <div className="growth-log-input-wrapper">
-                                            <label>성장 활동성과 (이뤄낸 일)</label>
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                                                <label style={{ margin: 0 }}>성장 활동성과 (이뤄낸 일)</label>
+                                                <LoadingButton
+                                                    className="growth-btn growth-btn--ai"
+                                                    onClick={() => handleDraftAI(itemIndex, activityIndex, activity.content)}
+                                                    style={{ fontSize: '0.8rem', padding: '0.25rem 0.75rem', background: '#e0e7ff', color: '#4f46e5' }}
+                                                />
+                                            </div>
                                             <textarea
                                                 className="growth-textarea"
                                                 value={activity.outcome}

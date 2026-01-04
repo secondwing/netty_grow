@@ -16,6 +16,7 @@ function RecordInput({ onRecordCreated }) {
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                credentials: 'include',
                 body: JSON.stringify({
                     content,
                     date: new Date().toISOString() // Ensure date is sent if needed by backend, though backend defaults to now

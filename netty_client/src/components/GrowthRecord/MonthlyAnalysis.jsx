@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import AutoResizeTextarea from '../Common/AutoResizeTextarea';
+import LoadingButton from '../Common/LoadingButton';
 
 function MonthlyAnalysis({ plan, log, onUpdateLog }) {
     const [localLog, setLocalLog] = useState(log);
@@ -28,6 +30,58 @@ function MonthlyAnalysis({ plan, log, onUpdateLog }) {
         if (!localLog || !localLog.itemAnalyses) return '';
         const analysis = localLog.itemAnalyses.find(a => a.itemId === itemId);
         return analysis ? analysis[field] : '';
+    };
+
+    const handleDraftAI = async (itemId, field, itemGoal) => {
+        try {
+            // Collect activity logs for this item
+            // We need to find which activities belong to this item.
+            // plan.items has activities.
+            const item = plan.items.find(i => i._id === itemId);
+            if (!item) return;
+
+            const activityIds = item.activities.map(a => a._id);
+
+            // Get logs from localLog that match these activityIds
+            const relevantLogs = (localLog.activityLogs || [])
+                .filter(l => activityIds.includes(l.activityId))
+                .map(l => {
+                    const activity = item.activities.find(a => a._id === l.activityId);
+                    return `[${activity.content}] ${l.log}`;
+                });
+
+            if (relevantLogs.length === 0) {
+                alert('작성된 월간 활동 기록이 없어 AI 초안을 작성할 수 없습니다.');
+                return;
+            }
+
+            const response = await fetch('http://localhost:5000/api/ai/draft/monthly-analysis', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    userId: plan.userId,
+                    year: plan.year,
+                    month: log.month,
+                    type: field,
+                    itemGoal: itemGoal,
+                    activityLogs: relevantLogs
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error('AI drafting failed');
+            }
+
+            const data = await response.json();
+            if (data.draft) {
+                handleAnalysisChange(itemId, field, data.draft);
+            }
+        } catch (error) {
+            console.error('AI Draft Error:', error);
+            alert('AI 초안 작성에 실패했습니다.');
+        }
     };
 
     const handleSave = () => {
@@ -62,33 +116,54 @@ function MonthlyAnalysis({ plan, log, onUpdateLog }) {
 
                             <div className="growth-analysis-grid">
                                 <div className="growth-analysis-item">
-                                    <label>행동결과 (강점)</label>
-                                    <textarea
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                                        <label style={{ margin: 0 }}>행동결과 (강점)</label>
+                                        <LoadingButton
+                                            className="growth-btn growth-btn--ai"
+                                            onClick={() => handleDraftAI(item._id, 'strength', item.goal)}
+                                            style={{ fontSize: '0.8rem', padding: '0.25rem 0.75rem', background: '#e0e7ff', color: '#4f46e5' }}
+                                        />
+                                    </div>
+                                    <AutoResizeTextarea
                                         className="growth-textarea"
                                         value={getAnalysisValue(item._id, 'strength')}
                                         onChange={(e) => handleAnalysisChange(item._id, 'strength', e.target.value)}
                                         placeholder="잘한 점, 성과 등을 기록해주세요"
-                                        rows={3}
+                                        minHeight="100px"
                                     />
                                 </div>
                                 <div className="growth-analysis-item">
-                                    <label>행동결과 (약점)</label>
-                                    <textarea
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                                        <label style={{ margin: 0 }}>행동결과 (약점)</label>
+                                        <LoadingButton
+                                            className="growth-btn growth-btn--ai"
+                                            onClick={() => handleDraftAI(item._id, 'weakness', item.goal)}
+                                            style={{ fontSize: '0.8rem', padding: '0.25rem 0.75rem', background: '#e0e7ff', color: '#4f46e5' }}
+                                        />
+                                    </div>
+                                    <AutoResizeTextarea
                                         className="growth-textarea"
                                         value={getAnalysisValue(item._id, 'weakness')}
                                         onChange={(e) => handleAnalysisChange(item._id, 'weakness', e.target.value)}
                                         placeholder="아쉬운 점, 부족한 점을 기록해주세요"
-                                        rows={3}
+                                        minHeight="100px"
                                     />
                                 </div>
                                 <div className="growth-analysis-item full-width">
-                                    <label>행동보완 (성장 환경조성)</label>
-                                    <textarea
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                                        <label style={{ margin: 0 }}>행동보완 (성장 환경조성)</label>
+                                        <LoadingButton
+                                            className="growth-btn growth-btn--ai"
+                                            onClick={() => handleDraftAI(item._id, 'supplement', item.goal)}
+                                            style={{ fontSize: '0.8rem', padding: '0.25rem 0.75rem', background: '#e0e7ff', color: '#4f46e5' }}
+                                        />
+                                    </div>
+                                    <AutoResizeTextarea
                                         className="growth-textarea"
                                         value={getAnalysisValue(item._id, 'supplement')}
                                         onChange={(e) => handleAnalysisChange(item._id, 'supplement', e.target.value)}
                                         placeholder="개선할 점, 앞으로의 계획을 기록해주세요"
-                                        rows={3}
+                                        minHeight="100px"
                                     />
                                 </div>
                             </div>

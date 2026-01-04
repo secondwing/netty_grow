@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import LoadingButton from '../Common/LoadingButton';
 
 function YearlyOverview({ plan, onUpdate }) {
     const [localPlan, setLocalPlan] = useState(plan);
@@ -28,6 +29,35 @@ function YearlyOverview({ plan, onUpdate }) {
         return overview ? overview[field] : '';
     };
 
+    const handleDraftAI = async (month) => {
+        try {
+            const response = await fetch('http://localhost:5000/api/ai/draft/yearly-overview', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    userId: plan.userId,
+                    year: plan.year,
+                    targetMonth: month
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error('AI drafting failed');
+            }
+
+            const data = await response.json();
+            if (data.content || data.summary) {
+                if (data.content) handleOverviewChange(month, 'content', data.content);
+                if (data.summary) handleOverviewChange(month, 'summary', data.summary);
+            }
+        } catch (error) {
+            console.error('AI Draft Error:', error);
+            alert('AI 초안 작성에 실패했습니다.');
+        }
+    };
+
     const handleSave = () => {
         onUpdate(localPlan);
     };
@@ -47,8 +77,13 @@ function YearlyOverview({ plan, onUpdate }) {
                 <div className="growth-overview-grid">
                     {Array.from({ length: 12 }, (_, i) => i + 1).map(month => (
                         <div key={month} className="growth-overview-card">
-                            <div className="growth-overview-header">
+                            <div className="growth-overview-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                 <h3>{month}월</h3>
+                                <LoadingButton
+                                    className="growth-btn growth-btn--ai"
+                                    onClick={() => handleDraftAI(month)}
+                                    style={{ fontSize: '0.8rem', padding: '0.25rem 0.75rem', background: '#e0e7ff', color: '#4f46e5' }}
+                                />
                             </div>
                             <div className="growth-overview-body">
                                 <div className="growth-form-group">
