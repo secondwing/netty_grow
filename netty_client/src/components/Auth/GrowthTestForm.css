@@ -1,0 +1,95 @@
+.growth-test-container {
+    width: 100%;
+}
+
+.growth-test-item {
+    margin-bottom: 3rem;
+    background: #f9fafb;
+    padding: 2rem;
+    border-radius: 12px;
+}
+
+.growth-test-item h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    color: #1f2937;
+}
+
+.growth-test-desc {
+    color: #6b7280;
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+.growth-test-options {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.growth-radio-label {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.growth-radio-label:hover {
+    border-color: #4f46e5;
+    background: #eef2ff;
+}
+
+.growth-radio-label.read-only {
+    cursor: default;
+}
+
+.growth-radio-label.read-only:hover {
+    border-color: #e5e7eb;
+    background: white;
+}
+
+.growth-radio-label input[type="radio"] {
+    width: 1.2rem;
+    height: 1.2rem;
+    accent-color: #4f46e5;
+}
+
+/* Table Styles */
+.growth-test-table-wrapper {
+    overflow-x: auto;
+}
+
+.growth-test-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    font-size: 0.9rem;
+}
+
+.growth-test-table th,
+.growth-test-table td {
+    border: 1px solid #e5e7eb;
+    padding: 1rem;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.growth-test-table th {
+    background: #f3f4f6;
+    font-weight: 600;
+    color: #374151;
+}
+
+.growth-test-table td {
+    color: #4b5563;
+    line-height: 1.4;
+}
+
+.text-center {
+    text-align: center;
+}

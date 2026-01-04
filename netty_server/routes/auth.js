@@ -3,10 +3,24 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 
+// Helper to calculate growth stage
+const calculateGrowthStage = (results) => {
+    if (!results || !results.test1 || !results.test2 || !results.test3) return 'growth_01';
+
+    const totalScore = results.test1 + results.test2 + results.test3;
+
+    if (totalScore <= 4) return 'growth_01';
+    if (totalScore <= 7) return 'growth_02';
+    if (totalScore <= 10) return 'growth_03';
+    if (totalScore <= 12) return 'growth_04';
+    return 'growth_05'; // 13+
+    // growth_06 is manually set by admin
+};
+
 // Signup
 router.post('/signup', async (req, res) => {
     try {
-        const { username, password, name, gender, birthDate, phone } = req.body;
+        const { username, password, name, gender, birthDate, phone, location, affiliation, consent, growthTestResults } = req.body;
 
         // Check if user already exists (username or phone)
         const existingUser = await User.findOne({ $or: [{ username }, { phone }] });
@@ -18,6 +32,9 @@ router.post('/signup', async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
+        // Calculate initial growth stage
+        const growthStage = calculateGrowthStage(growthTestResults);
+
         // Create new user
         const newUser = new User({
             username,
@@ -25,7 +42,12 @@ router.post('/signup', async (req, res) => {
             name,
             gender,
             birthDate,
-            phone
+            phone,
+            location,
+            affiliation,
+            consent,
+            growthTestResults,
+            growthStage
         });
 
         await newUser.save();
@@ -37,8 +59,6 @@ router.post('/signup', async (req, res) => {
 
 const jwt = require('jsonwebtoken');
 const auth = require('../middleware/auth');
-
-// ... (Signup remains same)
 
 // Login
 router.post('/login', async (req, res) => {
@@ -115,10 +135,27 @@ router.get('/user/:username', async (req, res) => {
 // PUT update user info
 router.put('/user/:username', async (req, res) => {
     try {
-        const { name, phone, gender, birthDate } = req.body;
+        const { name, phone, gender, birthDate, location, affiliation, growthTestResults } = req.body;
+
+        // Create update object
+        const updateData = { name, phone, gender, birthDate };
+        if (location !== undefined) updateData.location = location;
+        if (affiliation !== undefined) updateData.affiliation = affiliation;
+
+        if (growthTestResults !== undefined) {
+            updateData.growthTestResults = growthTestResults;
+
+            // Recalculate stage if test results are updated
+            // Only update if not already at stage 6 (admin set)
+            const currentUser = await User.findOne({ username: req.params.username });
+            if (currentUser && currentUser.growthStage !== 'growth_06') {
+                updateData.growthStage = calculateGrowthStage(growthTestResults);
+            }
+        }
+
         const updatedUser = await User.findOneAndUpdate(
             { username: req.params.username },
-            { name, phone, gender, birthDate },
+            updateData,
             { new: true }
         ).select('-password');
 

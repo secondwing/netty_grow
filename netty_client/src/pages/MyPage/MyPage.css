@@ -38,32 +38,6 @@
 }
 
 .my-page__subtitle {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: #333;
-    margin: 0;
-}
-
-.my-page__avatar {
-    width: 100px;
-    height: 100px;
-    background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(10px);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 3rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-    border: 3px solid rgba(255, 255, 255, 0.5);
-}
-
-.my-page__identity {
-    text-align: center;
-}
-
-.my-page__name {
     font-size: 1.5rem;
     font-weight: 700;
     margin: 0;
@@ -184,4 +158,71 @@ label {
     padding: 3rem;
     font-size: 1.2rem;
     color: #666;
+}
+
+/* Growth Test Results */
+.my-page__growth-results {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #eee;
+}
+
+.my-page__section-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 1.5rem;
+}
+
+.my-page__result-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #f9fafb;
+}
+
+.my-page__result-item:last-child {
+    border-bottom: none;
+}
+
+.my-page__result-label {
+    color: #666;
+    font-weight: 500;
+}
+
+.my-page__result-value {
+    color: #4f46e5;
+    font-weight: 600;
+}
+
+.my-page__link-button {
+    display: inline-block;
+    font-size: 0.9rem;
+    color: #666;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.my-page__link-button:hover {
+    color: #4f46e5;
+}
+
+/* Avatar Image */
+.my-page__avatar-wrapper {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: #f3f4f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.my-page__avatar-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }

@@ -31,7 +31,9 @@ const MyPage = ({ currentUser }) => {
                 name: data.name,
                 phone: data.phone,
                 gender: data.gender,
-                birthDate: data.birthDate ? data.birthDate.split('T')[0] : ''
+                birthDate: data.birthDate ? data.birthDate.split('T')[0] : '',
+                location: data.location || '',
+                affiliation: data.affiliation || 'student'
             });
         } catch (err) {
             setError(err.message);
@@ -76,9 +78,47 @@ const MyPage = ({ currentUser }) => {
             name: userInfo.name,
             phone: userInfo.phone,
             gender: userInfo.gender,
-            birthDate: userInfo.birthDate ? userInfo.birthDate.split('T')[0] : ''
+            birthDate: userInfo.birthDate ? userInfo.birthDate.split('T')[0] : '',
+            location: userInfo.location || '',
+            affiliation: userInfo.affiliation || 'student'
         });
     };
+
+    const getAffiliationLabel = (value) => {
+        const map = {
+            student: '학생',
+            job_seeker: '취준생',
+            worker: '직장인',
+            freelancer: '프리랜서',
+            entrepreneur: '창업자',
+            pre_entrepreneur: '예비창업자'
+        };
+        return map[value] || value;
+    };
+
+    const calculateGrowthStage = (results) => {
+        if (!results || !results.test1 || !results.test2 || !results.test3) return 'growth_01';
+        const total = results.test1 + results.test2 + results.test3;
+        if (total <= 4) return 'growth_01';
+        if (total <= 7) return 'growth_02';
+        if (total <= 10) return 'growth_03';
+        if (total <= 12) return 'growth_04';
+        return 'growth_05';
+    };
+
+    const currentStage = (() => {
+        // 1. If explicitly set to Admin stage (growth_06), use it.
+        if (userInfo?.growthStage === 'growth_06') return 'growth_06';
+
+        // 2. If we have test results, calculate the stage dynamically.
+        // This ensures that even if the DB has a default 'growth_01', the actual score is reflected.
+        if (userInfo?.growthTestResults) {
+            return calculateGrowthStage(userInfo.growthTestResults);
+        }
+
+        // 3. Fallback to stored stage or default.
+        return userInfo?.growthStage || 'growth_01';
+    })();
 
     if (loading) return <div className="my-page__loading">Loading...</div>;
     if (error) return <div className="my-page__error">Error: {error}</div>;
@@ -90,8 +130,16 @@ const MyPage = ({ currentUser }) => {
 
                 <div className="my-page__card">
                     <div className="my-page__header">
-                        <div className="my-page__avatar">
-                            {userInfo?.name ? userInfo.name[0] : 'U'}
+                        <div className="my-page__avatar-wrapper">
+                            <img
+                                src={`/growth/${currentStage}.png`}
+                                alt="Growth Stage"
+                                className="my-page__avatar-image"
+                                onError={(e) => {
+                                    e.target.onerror = null;
+                                    e.target.src = '/growth/growth_01.png'; // Fallback
+                                }}
+                            />
                         </div>
                         <div className="my-page__identity">
                             <h3 className="my-page__name">{userInfo?.name}</h3>
@@ -144,6 +192,32 @@ const MyPage = ({ currentUser }) => {
                                         className="my-page__input"
                                     />
                                 </div>
+                                <div className="my-page__field">
+                                    <label>사는 지역</label>
+                                    <input
+                                        type="text"
+                                        name="location"
+                                        value={formData.location}
+                                        onChange={handleChange}
+                                        className="my-page__input"
+                                    />
+                                </div>
+                                <div className="my-page__field">
+                                    <label>소속</label>
+                                    <select
+                                        name="affiliation"
+                                        value={formData.affiliation}
+                                        onChange={handleChange}
+                                        className="my-page__input"
+                                    >
+                                        <option value="student">학생</option>
+                                        <option value="job_seeker">취준생</option>
+                                        <option value="worker">직장인</option>
+                                        <option value="freelancer">프리랜서</option>
+                                        <option value="entrepreneur">창업자</option>
+                                        <option value="pre_entrepreneur">예비창업자</option>
+                                    </select>
+                                </div>
 
                                 <div className="my-page__actions">
                                     <button type="button" className="my-page__button my-page__button--cancel" onClick={handleCancel}>
@@ -176,16 +250,47 @@ const MyPage = ({ currentUser }) => {
                                         {userInfo?.birthDate ? new Date(userInfo.birthDate).toLocaleDateString() : '-'}
                                     </span>
                                 </div>
+                                <div className="my-page__row">
+                                    <span className="my-page__label">사는 지역</span>
+                                    <span className="my-page__value">{userInfo?.location || '-'}</span>
+                                </div>
+                                <div className="my-page__row">
+                                    <span className="my-page__label">소속</span>
+                                    <span className="my-page__value">{getAffiliationLabel(userInfo?.affiliation)}</span>
+                                </div>
 
                                 <button className="my-page__button my-page__button--edit" onClick={() => setIsEditing(true)}>
                                     프로필 수정
                                 </button>
+
+                                {userInfo?.growthTestResults && (
+                                    <div className="my-page__growth-results">
+                                        <h3 className="my-page__section-title">성장 테스트 결과</h3>
+                                        <div className="my-page__result-item">
+                                            <span className="my-page__result-label">Test 1. 거주지 인식</span>
+                                            <span className="my-page__result-value">{userInfo.growthTestResults.test1}점</span>
+                                        </div>
+                                        <div className="my-page__result-item">
+                                            <span className="my-page__result-label">Test 2. 자아 원동력</span>
+                                            <span className="my-page__result-value">{userInfo.growthTestResults.test2}점</span>
+                                        </div>
+                                        <div className="my-page__result-item">
+                                            <span className="my-page__result-label">Test 3. 성장 단계</span>
+                                            <span className="my-page__result-value">{userInfo.growthTestResults.test3}단계 ({userInfo.growthTestResults.test3}점)</span>
+                                        </div>
+                                        <div style={{ marginTop: '1rem', textAlign: 'right' }}>
+                                            <a href="/growth-test" className="my-page__link-button">
+                                                성장 테스트 다시 보기
+                                            </a>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         )}
                     </div>
-                </div>
-            </div>
-        </div>
+                </div >
+            </div >
+        </div >
     );
 };
 

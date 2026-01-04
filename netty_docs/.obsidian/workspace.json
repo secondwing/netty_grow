@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "dev_plan(260103).md",
+                "file": "dev_plan(260104).md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "dev_plan(260103)"
+              "title": "dev_plan(260104)"
             }
           }
         ],
@@ -93,8 +93,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200,
-    "collapsed": true
+    "width": 200
   },
   "right": {
     "id": "d4502d052c0dbad2",
@@ -110,7 +109,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "dev_plan(260103).md",
+                "file": "dev_plan(260104).md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -120,7 +119,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks for dev_plan(260103)"
+              "title": "Backlinks for dev_plan(260104)"
             }
           },
           {
@@ -129,12 +128,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "dev_plan(260103).md",
+                "file": "dev_plan(260104).md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Outgoing links from dev_plan(260103)"
+              "title": "Outgoing links from dev_plan(260104)"
             }
           },
           {
@@ -172,13 +171,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "dev_plan(260103).md",
+                "file": "dev_plan(260104).md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of dev_plan(260103)"
+              "title": "Outline of dev_plan(260104)"
             }
           }
         ]
@@ -202,6 +201,7 @@
   "active": "6d5359ab57ca92ee",
   "lastOpenFiles": [
     "dev_plan(260103).md",
+    "dev_plan(260104).md",
     "Netty_요구사항.md"
   ]
 }
