@@ -19,7 +19,7 @@ function Header({ isLoggedIn, onLogout }) {
                     {isLoggedIn ? (
                         <>
                             <Link to="/" className="header__link">홈</Link>
-                            <Link to="/record" className="header__link">기록</Link>
+                            <Link to="/record" className="header__link">나성장</Link>
                             <Link to="/mypage" className="header__link">마이페이지</Link>
                             <button onClick={handleLogout} className="header__button header__button--logout">
                                 로그아웃

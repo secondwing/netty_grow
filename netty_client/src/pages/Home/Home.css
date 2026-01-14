@@ -23,9 +23,7 @@
 }
 
 /* Sections */
-.home__hero,
-#brand,
-#people {
+.home__hero {
     /* Subtract estimated header height (approx 80px) */
     min-height: calc(100vh - 80px);
     /* Keep full height for "page" feel */
@@ -35,6 +33,18 @@
     align-items: center;
     text-align: center;
     width: 100%;
+}
+
+.home__brand-images {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.home__brand-image {
+    width: 100%;
+    height: auto;
+    display: block;
 }
 
 /* Hero Specifics */
