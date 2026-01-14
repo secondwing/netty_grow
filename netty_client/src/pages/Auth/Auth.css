@@ -47,10 +47,21 @@
 .auth-form {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 2.5rem;
     text-align: left;
-    max-width: 500px;
+    max-width: 600px;
     margin: 0 auto;
+}
+
+.auth-step {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+
+.auth-step.active {
+    display: block;
 }
 
 /* Step 2 (Growth Test) needs full width */
@@ -91,6 +102,17 @@
     font-size: 1rem;
     width: 100%;
     box-sizing: border-box;
+    font-family: inherit;
+    /* Ensure font consistency */
+    color: #333;
+    /* Ensure text color consistency */
+}
+
+/* Specific style for date input to fix text issues */
+input[type="date"].auth-form__input {
+    font-family: inherit;
+    color: #333;
+    appearance: none;
 }
 
 .auth-buttons {
@@ -101,7 +123,7 @@
 
 .auth-form__button {
     flex: 1;
-    padding: 1rem;
+    padding: 0.8rem;
     background-color: #4f46e5;
     color: white;
     border: none;
@@ -110,6 +132,7 @@
     font-weight: 600;
     cursor: pointer;
     transition: background-color 0.2s;
+    margin-top: 1rem;
 }
 
 .auth-form__button:hover {
@@ -123,6 +146,70 @@
 
 .auth-form__button--secondary:hover {
     background-color: #e5e7eb;
+}
+
+/* Terms and Conditions Section */
+.terms-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-top: 1rem;
+    border-top: 1px solid #eee;
+    padding-top: 1.5rem;
+}
+
+.terms-all-agree {
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 0.5rem;
+}
+
+.terms-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.terms-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.terms-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.terms-checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    color: #555;
+}
+
+.terms-checkbox-label--all {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.terms-box {
+    width: 100%;
+    height: 120px;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background-color: #f9fafb;
+    overflow-y: auto;
+    font-size: 0.85rem;
+    color: #555;
+    line-height: 1.5;
+    box-sizing: border-box;
 }
 
 /* Growth Test Styles */

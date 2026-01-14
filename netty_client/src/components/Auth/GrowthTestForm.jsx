@@ -11,6 +11,9 @@ function GrowthTestForm({ values, onChange, readOnly = false }) {
         <div className="growth-test-container">
             <div className="growth-test-item">
                 <h3>Test 1. '나'는 어디에 살고 있을까요?</h3>
+                <p className="growth-test-desc">
+                    또 다른 ‘나’가 있다고 가정할 때, 그 존재는 현재 어디에 살고 있을까요?
+                </p>
                 <div className="growth-test-options">
                     {[
                         { val: 1, text: '모르겠다.' },
@@ -42,7 +45,7 @@ function GrowthTestForm({ values, onChange, readOnly = false }) {
                 <div className="growth-test-options">
                     {[
                         { val: 1, text: '모르겠다.' },
-                        { val: 2, text: '세상에 나 혼자 남는다면 살아갈 자신이 없다.' },
+                        { val: 2, text: '세상에 나 혼자 남는다면 삶의 의미가 없을 것 같다.' },
                         { val: 3, text: '자신의 건강을 위한 루틴(기상, 요리, 청소, 운동 등)이 있다.' },
                         { val: 4, text: '내가 있는 곳, 함께 하는 사람이 최고라고 생각한다.' }
                     ].map(opt => (
@@ -71,23 +74,15 @@ function GrowthTestForm({ values, onChange, readOnly = false }) {
                     <table className="growth-test-table">
                         <thead>
                             <tr>
-                                <th>1단계 (1점)</th>
-                                <th>2단계 (2점)</th>
-                                <th>3단계 (3점)</th>
-                                <th>4단계 (4점)</th>
-                                <th>5단계 (5점)</th>
-                                <th>6단계 (6점)</th>
+                                <th>땅</th>
+                                <th>씨앗</th>
+                                <th>새싹</th>
+                                <th>꽃</th>
+                                <th>꽃다발</th>
+                                <th>정원</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>땅</td>
-                                <td>씨앗</td>
-                                <td>새싹</td>
-                                <td>꽃</td>
-                                <td>꽃다발</td>
-                                <td>정원</td>
-                            </tr>
                             <tr>
                                 <td>나와 본적없는 사이</td>
                                 <td>나와 본적있는 사이</td>

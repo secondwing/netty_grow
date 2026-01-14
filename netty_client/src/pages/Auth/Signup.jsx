@@ -15,7 +15,9 @@ function Signup() {
         phone: '',
         location: '',
         affiliation: 'student',
-        consent: false,
+        affiliation: 'student',
+        termsAgreed: false,
+        privacyAgreed: false,
         growthTestResults: {
             test1: null,
             test2: null,
@@ -48,8 +50,8 @@ function Signup() {
             alert('비밀번호가 일치하지 않습니다.');
             return;
         }
-        if (!formData.consent) {
-            alert('개인정보 수집 및 활용에 동의해주세요.');
+        if (!formData.termsAgreed || !formData.privacyAgreed) {
+            alert('이용약관 및 개인정보처리방침에 모두 동의해주세요.');
             return;
         }
         setStep(2);
@@ -203,17 +205,73 @@ function Signup() {
                     <option value="pre_entrepreneur">예비창업자</option>
                 </select>
             </div>
-            <div className="auth-form__group auth-form__group--checkbox">
-                <label className="auth-checkbox-label">
-                    <input
-                        type="checkbox"
-                        name="consent"
-                        checked={formData.consent}
-                        onChange={handleChange}
-                        required
-                    />
-                    개인정보 수집 및 활용 동의
-                </label>
+            <div className="terms-section">
+                <div className="terms-all-agree">
+                    <label className="terms-checkbox-label terms-checkbox-label--all">
+                        <input
+                            type="checkbox"
+                            checked={formData.termsAgreed && formData.privacyAgreed}
+                            onChange={(e) => {
+                                const checked = e.target.checked;
+                                setFormData(prev => ({
+                                    ...prev,
+                                    termsAgreed: checked,
+                                    privacyAgreed: checked
+                                }));
+                            }}
+                        />
+                        이용약관 및 개인정보수집 및 이용에 모두 동의합니다.
+                    </label>
+                </div>
+
+                <div className="terms-group">
+                    <div className="terms-header">
+                        <span className="terms-title">[필수] 이용약관 동의</span>
+                        <label className="terms-checkbox-label">
+                            <input
+                                type="checkbox"
+                                name="termsAgreed"
+                                checked={formData.termsAgreed}
+                                onChange={handleChange}
+                                required
+                            />
+                            동의함
+                        </label>
+                    </div>
+                    <div className="terms-box">
+                        1. 이 약관의 내용은 회원 가입과 동시에 서비스 화면에 게시하거나 기타의 방법으로 회원에게 공지함으로써 효력을 발생합니다.<br />
+                        2. 회사는 이 규정을 변경할 수 있으며, 규정을 변경할 경우 제1항과 같은 방법으로 사전에 공지함으로써 효력을 발생합니다.<br />
+                        <br />
+                        제3조 약관의 준칙<br />
+                        본 약관에 명시되지 않은 사항은 전기통신기본법, 전기통신사업법, 정보통신윤리위원회 심의규정, 정보통신 윤리강령, 프로그램보호법 및 기타 관련 법령의 규정에 의합니다.
+                    </div>
+                </div>
+
+                <div className="terms-group">
+                    <div className="terms-header">
+                        <span className="terms-title">[필수] 개인정보처리방침 동의</span>
+                        <label className="terms-checkbox-label">
+                            <input
+                                type="checkbox"
+                                name="privacyAgreed"
+                                checked={formData.privacyAgreed}
+                                onChange={handleChange}
+                                required
+                            />
+                            동의함
+                        </label>
+                    </div>
+                    <div className="terms-box">
+                        ① 개인정보의 수집 및 이용 목적<br />
+                        회사는 수집한 개인정보를 다음의 목적을 위해 활용합니다.<br />
+                        - 서비스 제공에 관한 계약 이행 및 서비스 제공에 따른 요금정산<br />
+                        - 회원 관리: 회원제 서비스 이용에 따른 본인확인, 개인식별, 불량회원의 부정 이용 방지와 비인가 사용 방지, 가입 의사 확인, 연령확인<br />
+                        <br />
+                        ② 수집하는 개인정보 항목<br />
+                        회사는 회원가입, 상담, 서비스 신청 등등을 위해 아래와 같은 개인정보를 수집하고 있습니다.<br />
+                        - 수집항목 : 이름, 생년월일, 성별, 로그인ID, 비밀번호, 자택 전화번호, 자택 주소, 휴대전화번호, 이메일, 직업, 주민등록번호, 접속 로그, 쿠키, 접속 IP 정보
+                    </div>
+                </div>
             </div>
             <button type="button" onClick={handleNext} className="auth-form__button">다음 단계로</button>
         </div>
