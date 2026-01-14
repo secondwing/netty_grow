@@ -20,6 +20,10 @@ function YearlyPlan({ plan, onUpdate }) {
     };
 
     const handleAddItem = () => {
+        if (localPlan.items.length >= 3) {
+            alert('성장 목표는 최대 3개까지만 등록할 수 있습니다.');
+            return;
+        }
         const newItem = {
             desiredSelf: '',
             goal: '',
@@ -142,9 +146,11 @@ function YearlyPlan({ plan, onUpdate }) {
                 </div>
 
                 <div className="growth-actions">
-                    <button className="growth-btn growth-btn--add" onClick={handleAddItem}>
-                        + 성장 목표 추가
-                    </button>
+                    {localPlan.items.length < 3 && (
+                        <button className="growth-btn growth-btn--add" onClick={handleAddItem}>
+                            + 성장 목표 추가
+                        </button>
+                    )}
                 </div>
             </div>
         </div>
