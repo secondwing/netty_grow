@@ -15,9 +15,13 @@ const growthPlanSchema = new mongoose.Schema({
         desiredSelf: { type: String, default: '' },
         goal: { type: String, default: '' },
         motivation: { type: String, default: '' },
+        isDeleted: { type: Boolean, default: false },
+        deletedAt: { type: Date },
         activities: [{
             content: { type: String, default: '' },
-            outcome: { type: String, default: '' } // For Yearly Result
+            outcome: { type: String, default: '' }, // For Yearly Result
+            isDeleted: { type: Boolean, default: false },
+            deletedAt: { type: Date }
         }]
     }],
     yearlyOverview: [{

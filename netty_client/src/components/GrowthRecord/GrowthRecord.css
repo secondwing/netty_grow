@@ -85,7 +85,7 @@
 /* Growth Items (Plan) */
 .growth-items {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     gap: 1.5rem;
     flex-wrap: wrap;
 }
@@ -112,6 +112,7 @@
 .growth-item-card__header h3 {
     font-size: 1.25rem;
     font-weight: 600;
+
     color: #111827;
     margin: 0;
 }

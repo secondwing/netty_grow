@@ -81,48 +81,97 @@ function MonthlyIndicator({ plan, log, month, onUpdateLog }) {
                 </div>
 
                 <div className="growth-items">
-                    {plan.items.map((item, itemIndex) => (
-                        <div key={item._id || itemIndex} className="growth-item-card">
-                            <div className="growth-item-header">
-                                <div className="growth-item-header__info">
-                                    <span className="growth-label">원하는 나:</span>
-                                    <span className="growth-value">{item.desiredSelf}</span>
-                                </div>
-                                <div className="growth-item-header__info">
-                                    <span className="growth-label">성장목표:</span>
-                                    <span className="growth-value">{item.goal}</span>
-                                </div>
-                            </div>
+                    {plan.items.map((item, itemIndex) => {
+                        // Logic to determine if ITEM should be shown
+                        // 1. Not deleted
+                        // 2. Deleted, but deleted AFTER the end of this month (was active during this month)
+                        // 3. Deleted, but has at least one activity with a log entry for this month
 
-                            <div className="growth-activities-log">
-                                {item.activities.map((activity, activityIndex) => (
-                                    <div key={activity._id || activityIndex} className="growth-activity-log-row">
-                                        <div className="growth-activity-content">
-                                            <span className="growth-activity-badge">활동 {activityIndex + 1}</span>
-                                            <p>{activity.content}</p>
-                                        </div>
-                                        <div className="growth-log-input-wrapper">
-                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                                                <label style={{ margin: 0 }}>활동일지 (실천방안 및 소감)</label>
-                                                <LoadingButton
-                                                    className="growth-btn growth-btn--ai"
-                                                    onClick={() => handleDraftAI(activity._id, activity.content)}
-                                                    style={{ fontSize: '0.8rem', padding: '0.25rem 0.75rem', background: '#e0e7ff', color: '#4f46e5' }}
-                                                />
-                                            </div>
-                                            <textarea
-                                                className="growth-textarea"
-                                                value={getLogValue(activity._id)}
-                                                onChange={(e) => handleLogChange(activity._id, e.target.value)}
-                                                placeholder="이번 달 활동 내용을 기록해주세요"
-                                                rows={3}
-                                            />
-                                        </div>
+                        const isItemDeleted = item.isDeleted;
+                        const itemDeletedAt = item.deletedAt ? new Date(item.deletedAt) : null;
+                        const currentMonthEnd = new Date(plan.year, month, 0);
+
+                        // Check if any activity in this item has a log
+                        const hasAnyActivityLog = item.activities.some(activity => getLogValue(activity._id) !== '');
+
+                        let shouldShowItem = !isItemDeleted;
+
+                        if (isItemDeleted) {
+                            if (hasAnyActivityLog) {
+                                shouldShowItem = true;
+                            } else if (itemDeletedAt && itemDeletedAt > currentMonthEnd) {
+                                shouldShowItem = true;
+                            }
+                        }
+
+                        if (!shouldShowItem) return null;
+
+                        return (
+                            <div key={item._id || itemIndex} className="growth-item-card">
+                                <div className="growth-item-header">
+                                    <div className="growth-item-header__info">
+                                        <span className="growth-label">원하는 나:</span>
+                                        <span className="growth-value">{item.desiredSelf}</span>
                                     </div>
-                                ))}
+                                    <div className="growth-item-header__info">
+                                        <span className="growth-label">성장목표:</span>
+                                        <span className="growth-value">{item.goal}</span>
+                                    </div>
+                                </div>
+
+                                <div className="growth-activities-log">
+                                    {item.activities.map((activity, activityIndex) => {
+                                        // Logic to determine if activity should be shown
+                                        // 1. Not deleted
+                                        // 2. Deleted, but deleted AFTER the end of this month (was active during this month)
+                                        // 3. Deleted, but has a log entry for this month (historical record)
+
+                                        const isDeleted = activity.isDeleted;
+                                        const deletedAt = activity.deletedAt ? new Date(activity.deletedAt) : null;
+                                        const hasLog = getLogValue(activity._id) !== '';
+
+                                        let shouldShow = !isDeleted;
+
+                                        if (isDeleted) {
+                                            if (hasLog) {
+                                                shouldShow = true;
+                                            } else if (deletedAt && deletedAt > currentMonthEnd) {
+                                                shouldShow = true;
+                                            }
+                                        }
+
+                                        if (!shouldShow) return null;
+
+                                        return (
+                                            <div key={activity._id || activityIndex} className="growth-activity-log-row">
+                                                <div className="growth-activity-content">
+                                                    <span className="growth-activity-badge">활동 {activityIndex + 1}</span>
+                                                    <p>{activity.content}</p>
+                                                </div>
+                                                <div className="growth-log-input-wrapper">
+                                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                                                        <label style={{ margin: 0 }}>활동일지 (실천방안 및 소감)</label>
+                                                        <LoadingButton
+                                                            className="growth-btn growth-btn--ai"
+                                                            onClick={() => handleDraftAI(activity._id, activity.content)}
+                                                            style={{ fontSize: '0.8rem', padding: '0.25rem 0.75rem', background: '#e0e7ff', color: '#4f46e5' }}
+                                                        />
+                                                    </div>
+                                                    <textarea
+                                                        className="growth-textarea"
+                                                        value={getLogValue(activity._id)}
+                                                        onChange={(e) => handleLogChange(activity._id, e.target.value)}
+                                                        placeholder="이번 달 활동 내용을 기록해주세요"
+                                                        rows={3}
+                                                    />
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
             </div>
         </div>
