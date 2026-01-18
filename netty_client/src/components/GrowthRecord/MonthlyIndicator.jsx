@@ -74,7 +74,7 @@ function MonthlyIndicator({ plan, log, month, onUpdateLog }) {
         <div className="growth-content">
             <div className="growth-section">
                 <div className="growth-section__header">
-                    <h2 className="growth-section__title">{month}월 성장지표</h2>
+                    <h2 className="growth-section__title">{month}월 성장일지</h2>
                     <button className="growth-btn growth-btn--save" onClick={handleSave}>
                         저장하기
                     </button>

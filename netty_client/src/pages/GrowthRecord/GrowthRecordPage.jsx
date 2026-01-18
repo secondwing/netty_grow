@@ -181,7 +181,7 @@ function GrowthRecordPage() {
                     className={`growth-tab ${activeTab === 'indicator' ? 'active' : ''}`}
                     onClick={() => setActiveTab('indicator')}
                 >
-                    월 성장지표
+                    월 성장일지
                 </button>
                 <button
                     className={`growth-tab ${activeTab === 'analysis' ? 'active' : ''}`}
