@@ -23,7 +23,14 @@ const monthlyLogSchema = new mongoose.Schema({
     },
     activityLogs: [{
         activityId: mongoose.Schema.Types.ObjectId, // Refers to activity in GrowthPlan
-        log: { type: String, default: '' }
+        log: { type: String, default: '' }, // Legacy field
+        actionPlans: [{ type: String }], // New: List of action plans
+        reflections: [{ type: String }], // New: List of reflections
+        status: {
+            type: String,
+            enum: ['achieved', 'unachieved', 'neutral'],
+            default: 'neutral'
+        }
     }],
     itemAnalyses: [{
         itemId: mongoose.Schema.Types.ObjectId, // Refers to item in GrowthPlan

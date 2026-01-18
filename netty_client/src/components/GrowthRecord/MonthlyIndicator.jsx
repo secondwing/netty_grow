@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import LoadingButton from '../Common/LoadingButton';
+import AutoResizeTextarea from '../Common/AutoResizeTextarea';
 
 function MonthlyIndicator({ plan, log, month, onUpdateLog }) {
     const [localLog, setLocalLog] = useState(log);
@@ -8,60 +9,102 @@ function MonthlyIndicator({ plan, log, month, onUpdateLog }) {
         setLocalLog(log);
     }, [log]);
 
-    const handleLogChange = (activityId, value) => {
+    // Helper to get or create activity log object
+    const getOrCreateActivityLog = (activityLogs, activityId) => {
+        const index = activityLogs.findIndex(l => l.activityId === activityId);
+        if (index >= 0) {
+            return { logObj: activityLogs[index], index, isNew: false };
+        }
+        return { logObj: { activityId, actionPlans: [], reflections: [], status: 'neutral' }, index: -1, isNew: true };
+    };
+
+    const updateActivityLog = (activityId, updater) => {
         if (!localLog) return;
-
         const newActivityLogs = [...(localLog.activityLogs || [])];
-        const existingLogIndex = newActivityLogs.findIndex(l => l.activityId === activityId);
+        const { logObj, index, isNew } = getOrCreateActivityLog(newActivityLogs, activityId);
 
-        if (existingLogIndex >= 0) {
-            newActivityLogs[existingLogIndex].log = value;
+        const updatedLogObj = updater(logObj);
+
+        if (isNew) {
+            newActivityLogs.push(updatedLogObj);
         } else {
-            newActivityLogs.push({ activityId, log: value });
+            newActivityLogs[index] = updatedLogObj;
         }
 
         setLocalLog({ ...localLog, activityLogs: newActivityLogs });
     };
 
-    const getLogValue = (activityId) => {
-        if (!localLog || !localLog.activityLogs) return '';
-        const activityLog = localLog.activityLogs.find(l => l.activityId === activityId);
-        return activityLog ? activityLog.log : '';
+    // --- Status Handlers ---
+    const handleStatusChange = (activityId, status) => {
+        updateActivityLog(activityId, (logObj) => ({ ...logObj, status }));
     };
 
-    const handleDraftAI = async (activityId, activityContent) => {
-        try {
-            // Assuming we have access to userId from somewhere, or we can get it from plan.userId?
-            // plan.userId is an ObjectId.
-            // But wait, we need the current logged in user ID. 
-            // The parent component (GrowthRecordPage) fetches plan, so it knows.
-            // But MonthlyIndicator receives `plan`. `plan.userId` should be correct.
+    // --- Action Plan Handlers ---
+    const handleAddActionPlan = (activityId) => {
+        updateActivityLog(activityId, (logObj) => ({
+            ...logObj,
+            actionPlans: [...(logObj.actionPlans || []), '']
+        }));
+    };
 
-            const response = await fetch('http://localhost:5000/api/ai/draft/monthly-indicator', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    userId: plan.userId,
-                    year: plan.year,
-                    month: month,
-                    activityContent: activityContent
-                })
-            });
+    const handleActionPlanChange = (activityId, index, value) => {
+        updateActivityLog(activityId, (logObj) => {
+            const newPlans = [...(logObj.actionPlans || [])];
+            newPlans[index] = value;
+            return { ...logObj, actionPlans: newPlans };
+        });
+    };
 
-            if (!response.ok) {
-                throw new Error('AI drafting failed');
-            }
+    const handleRemoveActionPlan = (activityId, index) => {
+        updateActivityLog(activityId, (logObj) => {
+            const newPlans = [...(logObj.actionPlans || [])];
+            newPlans.splice(index, 1);
+            return { ...logObj, actionPlans: newPlans };
+        });
+    };
 
-            const data = await response.json();
-            if (data.draft) {
-                handleLogChange(activityId, data.draft);
-            }
-        } catch (error) {
-            console.error('AI Draft Error:', error);
-            alert('AI 초안 작성에 실패했습니다.');
+    // --- Reflection Handlers ---
+    const handleAddReflection = (activityId) => {
+        updateActivityLog(activityId, (logObj) => ({
+            ...logObj,
+            reflections: [...(logObj.reflections || []), '']
+        }));
+    };
+
+    const handleReflectionChange = (activityId, index, value) => {
+        updateActivityLog(activityId, (logObj) => {
+            const newReflections = [...(logObj.reflections || [])];
+            newReflections[index] = value;
+            return { ...logObj, reflections: newReflections };
+        });
+    };
+
+    const handleRemoveReflection = (activityId, index) => {
+        updateActivityLog(activityId, (logObj) => {
+            const newReflections = [...(logObj.reflections || [])];
+            newReflections.splice(index, 1);
+            return { ...logObj, reflections: newReflections };
+        });
+    };
+
+    // --- Data Accessors (with Legacy Support) ---
+    const getActivityLogData = (activityId) => {
+        if (!localLog || !localLog.activityLogs) return { actionPlans: [], reflections: [], status: 'neutral' };
+        const logObj = localLog.activityLogs.find(l => l.activityId === activityId);
+        if (!logObj) return { actionPlans: [], reflections: [], status: 'neutral' };
+
+        let { actionPlans, reflections, status, log: legacyLog } = logObj;
+
+        // Legacy Support: If no structured data but legacy log exists, treat it as the first reflection
+        if ((!reflections || reflections.length === 0) && legacyLog) {
+            reflections = [legacyLog];
         }
+
+        return {
+            actionPlans: actionPlans || [],
+            reflections: reflections || [],
+            status: status || 'neutral'
+        };
     };
 
     const handleSave = () => {
@@ -82,17 +125,15 @@ function MonthlyIndicator({ plan, log, month, onUpdateLog }) {
 
                 <div className="growth-items growth-items--vertical">
                     {plan.items.map((item, itemIndex) => {
-                        // Logic to determine if ITEM should be shown
-                        // 1. Not deleted
-                        // 2. Deleted, but deleted AFTER the end of this month (was active during this month)
-                        // 3. Deleted, but has at least one activity with a log entry for this month
-
                         const isItemDeleted = item.isDeleted;
                         const itemDeletedAt = item.deletedAt ? new Date(item.deletedAt) : null;
                         const currentMonthEnd = new Date(plan.year, month, 0);
 
-                        // Check if any activity in this item has a log
-                        const hasAnyActivityLog = item.activities.some(activity => getLogValue(activity._id) !== '');
+                        // Check if any activity in this item has a log (legacy or new)
+                        const hasAnyActivityLog = item.activities.some(activity => {
+                            const data = getActivityLogData(activity._id);
+                            return data.actionPlans.length > 0 || data.reflections.length > 0;
+                        });
 
                         let shouldShowItem = !isItemDeleted;
 
@@ -121,14 +162,10 @@ function MonthlyIndicator({ plan, log, month, onUpdateLog }) {
 
                                 <div className="growth-activities-log">
                                     {item.activities.map((activity, activityIndex) => {
-                                        // Logic to determine if activity should be shown
-                                        // 1. Not deleted
-                                        // 2. Deleted, but deleted AFTER the end of this month (was active during this month)
-                                        // 3. Deleted, but has a log entry for this month (historical record)
-
                                         const isDeleted = activity.isDeleted;
                                         const deletedAt = activity.deletedAt ? new Date(activity.deletedAt) : null;
-                                        const hasLog = getLogValue(activity._id) !== '';
+                                        const { actionPlans, reflections, status } = getActivityLogData(activity._id);
+                                        const hasLog = actionPlans.length > 0 || reflections.length > 0;
 
                                         let shouldShow = !isDeleted;
 
@@ -148,22 +185,101 @@ function MonthlyIndicator({ plan, log, month, onUpdateLog }) {
                                                     <span className="growth-activity-badge">활동 {activityIndex + 1}</span>
                                                     <p>{activity.content}</p>
                                                 </div>
-                                                <div className="growth-log-input-wrapper">
-                                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                                                        <label style={{ margin: 0 }}>활동일지 (실천방안 및 소감)</label>
-                                                        <LoadingButton
-                                                            className="growth-btn growth-btn--ai"
-                                                            onClick={() => handleDraftAI(activity._id, activity.content)}
-                                                            style={{ fontSize: '0.8rem', padding: '0.25rem 0.75rem', background: '#e0e7ff', color: '#4f46e5' }}
-                                                        />
+
+                                                {/* Status Selector */}
+                                                <div className="growth-log-section">
+                                                    <div className="growth-status-selector">
+                                                        <label className={`growth-status-label ${status === 'achieved' ? 'active' : ''}`}>
+                                                            <input
+                                                                type="radio"
+                                                                name={`status-${activity._id}`}
+                                                                value="achieved"
+                                                                checked={status === 'achieved'}
+                                                                onChange={() => handleStatusChange(activity._id, 'achieved')}
+                                                            />
+                                                            달성
+                                                        </label>
+                                                        <label className={`growth-status-label ${status === 'unachieved' ? 'active' : ''}`}>
+                                                            <input
+                                                                type="radio"
+                                                                name={`status-${activity._id}`}
+                                                                value="unachieved"
+                                                                checked={status === 'unachieved'}
+                                                                onChange={() => handleStatusChange(activity._id, 'unachieved')}
+                                                            />
+                                                            미달성
+                                                        </label>
+                                                        <label className={`growth-status-label ${status === 'neutral' ? 'active' : ''}`}>
+                                                            <input
+                                                                type="radio"
+                                                                name={`status-${activity._id}`}
+                                                                value="neutral"
+                                                                checked={status === 'neutral'}
+                                                                onChange={() => handleStatusChange(activity._id, 'neutral')}
+                                                            />
+                                                            진행중
+                                                        </label>
                                                     </div>
-                                                    <textarea
-                                                        className="growth-textarea"
-                                                        value={getLogValue(activity._id)}
-                                                        onChange={(e) => handleLogChange(activity._id, e.target.value)}
-                                                        placeholder="이번 달 활동 내용을 기록해주세요"
-                                                        rows={3}
-                                                    />
+                                                </div>
+
+                                                {/* Action Plans */}
+                                                <div className="growth-log-section">
+                                                    <label className="growth-log-label">실천방안</label>
+                                                    <div className="growth-log-list">
+                                                        {actionPlans.map((plan, idx) => (
+                                                            <div key={idx} className="growth-log-item">
+                                                                <AutoResizeTextarea
+                                                                    className="growth-textarea"
+                                                                    value={plan}
+                                                                    onChange={(e) => handleActionPlanChange(activity._id, idx, e.target.value)}
+                                                                    placeholder="구체적인 실천 방안을 입력하세요"
+                                                                    minHeight="60px"
+                                                                />
+                                                                <button
+                                                                    className="growth-btn-icon"
+                                                                    onClick={() => handleRemoveActionPlan(activity._id, idx)}
+                                                                >
+                                                                    ×
+                                                                </button>
+                                                            </div>
+                                                        ))}
+                                                        <button
+                                                            className="growth-btn growth-btn--add-sub"
+                                                            onClick={() => handleAddActionPlan(activity._id)}
+                                                        >
+                                                            + 실천방안 추가
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+                                                {/* Reflections */}
+                                                <div className="growth-log-section">
+                                                    <label className="growth-log-label">활동소감</label>
+                                                    <div className="growth-log-list">
+                                                        {reflections.map((reflection, idx) => (
+                                                            <div key={idx} className="growth-log-item">
+                                                                <AutoResizeTextarea
+                                                                    className="growth-textarea"
+                                                                    value={reflection}
+                                                                    onChange={(e) => handleReflectionChange(activity._id, idx, e.target.value)}
+                                                                    placeholder="활동 후 느낀 점이나 소감을 입력하세요"
+                                                                    minHeight="60px"
+                                                                />
+                                                                <button
+                                                                    className="growth-btn-icon"
+                                                                    onClick={() => handleRemoveReflection(activity._id, idx)}
+                                                                >
+                                                                    ×
+                                                                </button>
+                                                            </div>
+                                                        ))}
+                                                        <button
+                                                            className="growth-btn growth-btn--add-sub"
+                                                            onClick={() => handleAddReflection(activity._id)}
+                                                        >
+                                                            + 활동소감 추가
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         );

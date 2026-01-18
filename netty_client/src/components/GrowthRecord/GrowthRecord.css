@@ -370,3 +370,66 @@
         transform: translateY(0);
     }
 }
+
+/* Structured Monthly Log Styles */
+.growth-log-section {
+    margin-bottom: 1rem;
+}
+
+.growth-log-label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #4b5563;
+    margin-bottom: 0.5rem;
+}
+
+.growth-log-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.growth-log-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+}
+
+.growth-log-item .growth-textarea {
+    flex: 1;
+}
+
+.growth-status-selector {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.growth-status-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #4b5563;
+    transition: all 0.2s;
+}
+
+.growth-status-label:hover {
+    background-color: #f3f4f6;
+}
+
+.growth-status-label.active {
+    background-color: #eef2ff;
+    border-color: #4f46e5;
+    color: #4f46e5;
+    font-weight: 600;
+}
+
+.growth-status-label input {
+    display: none;
+}
