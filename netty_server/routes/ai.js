@@ -116,6 +116,7 @@ router.post('/draft/monthly-analysis', async (req, res) => {
         const systemPrompt = `
 You are a helpful growth coach.
 Based on the user's monthly activity logs for a specific goal, draft a short analysis.
+The logs now include "Action Plans" (실천방안), "Reflections" (활동소감), and "Status" (achieved/unachieved/neutral).
 Type of analysis: ${type} (Strength: 잘한 점, Weakness: 아쉬운 점, Supplement: 보완할 점).
 Write in Korean, objective and helpful tone.
 `;
@@ -160,7 +161,13 @@ router.post('/draft/yearly-overview', async (req, res) => {
         // Gather all activity logs and analyses
         let context = "Activity Logs:\n";
         monthlyLog.activityLogs.forEach(l => {
-            if (l.log) context += `- ${l.log}\n`;
+            if (l.entries && l.entries.length > 0) {
+                l.entries.forEach(e => {
+                    context += `- (Status: ${e.status}) Action: ${e.actionPlan}, Reflection: ${e.reflection}\n`;
+                });
+            } else if (l.log) {
+                context += `- ${l.log}\n`;
+            }
         });
 
         context += "\nAnalyses:\n";
@@ -172,7 +179,7 @@ router.post('/draft/yearly-overview', async (req, res) => {
 
         const systemPrompt = `
 You are a helpful assistant.
-Summarize the user's growth for this month based on their logs and analyses.
+Summarize the user's growth for this month based on their logs (Action Plans, Reflections, Status) and analyses.
 Your output must be a valid JSON object with two fields:
 1. "content": A detailed summary of activities (3-5 sentences).
 2. "summary": A very concise one-line summary (under 20 characters).
@@ -240,8 +247,13 @@ router.post('/draft/yearly-result', async (req, res) => {
         if (activityId) {
             monthlyLogs.forEach(ml => {
                 const log = ml.activityLogs.find(al => al.activityId.toString() === activityId);
-                if (log && log.log) {
-                    relevantLogs.push(`[${ml.month}월] ${log.log}`);
+                if (log) {
+                    if (log.entries && log.entries.length > 0) {
+                        const entriesText = log.entries.map(e => `(Status: ${e.status}) Action: ${e.actionPlan}, Reflection: ${e.reflection}`).join("; ");
+                        relevantLogs.push(`[${ml.month}월] ${entriesText}`);
+                    } else if (log.log) {
+                        relevantLogs.push(`[${ml.month}월] ${log.log}`);
+                    }
                 }
             });
         } else {

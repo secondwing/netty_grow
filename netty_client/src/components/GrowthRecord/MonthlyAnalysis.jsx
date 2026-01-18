@@ -47,6 +47,15 @@ function MonthlyAnalysis({ plan, log, onUpdateLog }) {
                 .filter(l => activityIds.includes(l.activityId))
                 .map(l => {
                     const activity = item.activities.find(a => a._id === l.activityId);
+
+                    // Handle new entries structure
+                    if (l.entries && l.entries.length > 0) {
+                        return l.entries.map(e =>
+                            `[${activity.content}] (Status: ${e.status}) Action: ${e.actionPlan}, Reflection: ${e.reflection}`
+                        ).join('\n');
+                    }
+
+                    // Handle legacy log
                     return `[${activity.content}] ${l.log}`;
                 });
 
