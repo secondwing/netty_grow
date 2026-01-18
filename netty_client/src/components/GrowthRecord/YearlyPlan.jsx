@@ -79,10 +79,13 @@ function YearlyPlan({ plan, onUpdate }) {
                         // Hide deleted items in Yearly Plan
                         if (item.isDeleted) return null;
 
+                        // Calculate display index (1-based) excluding deleted items
+                        const displayIndex = localPlan.items.slice(0, itemIndex).filter(i => !i.isDeleted).length + 1;
+
                         return (
                             <div key={item._id || itemIndex} className="growth-item-card">
                                 <div className="growth-item-card__header">
-                                    <h3>성장 목표 {itemIndex + 1}</h3>
+                                    <h3>성장 목표 {displayIndex}</h3>
                                     <button
                                         className="growth-btn growth-btn--delete"
                                         onClick={() => handleRemoveItem(itemIndex)}

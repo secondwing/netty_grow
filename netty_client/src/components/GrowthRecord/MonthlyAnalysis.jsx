@@ -100,7 +100,7 @@ function MonthlyAnalysis({ plan, log, onUpdateLog }) {
                     </button>
                 </div>
 
-                <div className="growth-items">
+                <div className="growth-items growth-items--vertical">
                     {plan.items.map((item, itemIndex) => (
                         <div key={item._id || itemIndex} className="growth-item-card">
                             <div className="growth-item-header">

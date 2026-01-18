@@ -80,7 +80,7 @@ function MonthlyIndicator({ plan, log, month, onUpdateLog }) {
                     </button>
                 </div>
 
-                <div className="growth-items">
+                <div className="growth-items growth-items--vertical">
                     {plan.items.map((item, itemIndex) => {
                         // Logic to determine if ITEM should be shown
                         // 1. Not deleted
