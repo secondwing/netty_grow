@@ -65,49 +65,67 @@ function GrowthResult({ plan, onUpdate }) {
                     </button>
                 </div>
 
-                <div className="growth-items">
-                    {localPlan.items.map((item, itemIndex) => (
-                        <div key={item._id || itemIndex} className="growth-item-card">
-                            <div className="growth-item-header">
-                                <div className="growth-item-header__info">
-                                    <span className="growth-label">원하는 나:</span>
-                                    <span className="growth-value">{item.desiredSelf}</span>
-                                </div>
-                                <div className="growth-item-header__info">
-                                    <span className="growth-label">성장목표:</span>
-                                    <span className="growth-value">{item.goal}</span>
-                                </div>
-                            </div>
+                <div className="growth-items growth-items--vertical">
+                    {localPlan.items.map((item, itemIndex) => {
+                        // Soft Delete Logic for Items
+                        if (item.isDeleted) {
+                            // In Yearly Result, we might want to show deleted items if they have outcomes recorded?
+                            // For consistency with Monthly Analysis, let's check if there's any outcome content.
+                            const hasOutcome = item.activities.some(a => a.outcome && a.outcome.trim() !== '');
+                            if (!hasOutcome) return null;
+                        }
 
-                            <div className="growth-activities-log">
-                                {item.activities.map((activity, activityIndex) => (
-                                    <div key={activity._id || activityIndex} className="growth-activity-log-row">
-                                        <div className="growth-activity-content">
-                                            <span className="growth-activity-badge">활동 {activityIndex + 1}</span>
-                                            <p>{activity.content}</p>
-                                        </div>
-                                        <div className="growth-log-input-wrapper">
-                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                                                <label style={{ margin: 0 }}>성장 활동성과 (이뤄낸 일)</label>
-                                                <LoadingButton
-                                                    className="growth-btn growth-btn--ai"
-                                                    onClick={() => handleDraftAI(itemIndex, activityIndex, activity.content)}
-                                                    style={{ fontSize: '0.8rem', padding: '0.25rem 0.75rem', background: '#e0e7ff', color: '#4f46e5' }}
-                                                />
-                                            </div>
-                                            <textarea
-                                                className="growth-textarea"
-                                                value={activity.outcome}
-                                                onChange={(e) => handleOutcomeChange(itemIndex, activityIndex, e.target.value)}
-                                                placeholder="1년 동안의 성과를 기록해주세요"
-                                                rows={3}
-                                            />
-                                        </div>
+                        return (
+                            <div key={item._id || itemIndex} className="growth-item-card">
+                                <div className="growth-item-header">
+                                    <div className="growth-item-header__info">
+                                        <span className="growth-label">원하는 나:</span>
+                                        <span className="growth-value">{item.desiredSelf}</span>
                                     </div>
-                                ))}
+                                    <div className="growth-item-header__info">
+                                        <span className="growth-label">성장목표:</span>
+                                        <span className="growth-value">{item.goal}</span>
+                                    </div>
+                                </div>
+
+                                <div className="growth-activities-log">
+                                    {item.activities.map((activity, activityIndex) => {
+                                        // Soft Delete Logic for Activities
+                                        if (activity.isDeleted) {
+                                            // Show if it has an outcome recorded
+                                            if (!activity.outcome || activity.outcome.trim() === '') return null;
+                                        }
+
+                                        return (
+                                            <div key={activity._id || activityIndex} className="growth-activity-log-row">
+                                                <div className="growth-activity-content">
+                                                    <span className="growth-activity-badge">활동 {activityIndex + 1}</span>
+                                                    <p>{activity.content}</p>
+                                                </div>
+                                                <div className="growth-log-input-wrapper">
+                                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                                                        <label style={{ margin: 0 }}>성장 활동성과 (이뤄낸 일)</label>
+                                                        <LoadingButton
+                                                            className="growth-btn growth-btn--ai"
+                                                            onClick={() => handleDraftAI(itemIndex, activityIndex, activity.content)}
+                                                            style={{ fontSize: '0.8rem', padding: '0.25rem 0.75rem', background: '#e0e7ff', color: '#4f46e5' }}
+                                                        />
+                                                    </div>
+                                                    <textarea
+                                                        className="growth-textarea"
+                                                        value={activity.outcome}
+                                                        onChange={(e) => handleOutcomeChange(itemIndex, activityIndex, e.target.value)}
+                                                        placeholder="1년 동안의 성과를 기록해주세요"
+                                                        rows={3}
+                                                    />
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
             </div>
         </div>

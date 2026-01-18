@@ -101,74 +101,100 @@ function MonthlyAnalysis({ plan, log, onUpdateLog }) {
                 </div>
 
                 <div className="growth-items growth-items--vertical">
-                    {plan.items.map((item, itemIndex) => (
-                        <div key={item._id || itemIndex} className="growth-item-card">
-                            <div className="growth-item-header">
-                                <div className="growth-item-header__info">
-                                    <span className="growth-label">원하는 나:</span>
-                                    <span className="growth-value">{item.desiredSelf}</span>
-                                </div>
-                                <div className="growth-item-header__info">
-                                    <span className="growth-label">성장목표:</span>
-                                    <span className="growth-value">{item.goal}</span>
-                                </div>
-                            </div>
+                    {plan.items.map((item, itemIndex) => {
+                        // Logic to determine if ITEM should be shown
+                        // 1. Not deleted
+                        // 2. Deleted, but deleted AFTER the end of this month (was active during this month)
+                        // 3. Deleted, but has at least one analysis entry for this month
 
-                            <div className="growth-analysis-grid">
-                                <div className="growth-analysis-item">
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                                        <label style={{ margin: 0 }}>행동결과 (강점)</label>
-                                        <LoadingButton
-                                            className="growth-btn growth-btn--ai"
-                                            onClick={() => handleDraftAI(item._id, 'strength', item.goal)}
-                                            style={{ fontSize: '0.8rem', padding: '0.25rem 0.75rem', background: '#e0e7ff', color: '#4f46e5' }}
-                                        />
+                        const isItemDeleted = item.isDeleted;
+                        const itemDeletedAt = item.deletedAt ? new Date(item.deletedAt) : null;
+                        const currentMonthEnd = new Date(plan.year, log.month, 0);
+
+                        // Check if this item has any analysis
+                        const hasAnalysis = ['strength', 'weakness', 'supplement'].some(field => getAnalysisValue(item._id, field) !== '');
+
+                        let shouldShowItem = !isItemDeleted;
+
+                        if (isItemDeleted) {
+                            if (hasAnalysis) {
+                                shouldShowItem = true;
+                            } else if (itemDeletedAt && itemDeletedAt > currentMonthEnd) {
+                                shouldShowItem = true;
+                            }
+                        }
+
+                        if (!shouldShowItem) return null;
+
+                        return (
+                            <div key={item._id || itemIndex} className="growth-item-card">
+                                <div className="growth-item-header">
+                                    <div className="growth-item-header__info">
+                                        <span className="growth-label">원하는 나:</span>
+                                        <span className="growth-value">{item.desiredSelf}</span>
                                     </div>
-                                    <AutoResizeTextarea
-                                        className="growth-textarea"
-                                        value={getAnalysisValue(item._id, 'strength')}
-                                        onChange={(e) => handleAnalysisChange(item._id, 'strength', e.target.value)}
-                                        placeholder="잘한 점, 성과 등을 기록해주세요"
-                                        minHeight="100px"
-                                    />
+                                    <div className="growth-item-header__info">
+                                        <span className="growth-label">성장목표:</span>
+                                        <span className="growth-value">{item.goal}</span>
+                                    </div>
                                 </div>
-                                <div className="growth-analysis-item">
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                                        <label style={{ margin: 0 }}>행동결과 (약점)</label>
-                                        <LoadingButton
-                                            className="growth-btn growth-btn--ai"
-                                            onClick={() => handleDraftAI(item._id, 'weakness', item.goal)}
-                                            style={{ fontSize: '0.8rem', padding: '0.25rem 0.75rem', background: '#e0e7ff', color: '#4f46e5' }}
+
+                                <div className="growth-analysis-grid">
+                                    <div className="growth-analysis-item">
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                                            <label style={{ margin: 0 }}>행동결과 (강점)</label>
+                                            <LoadingButton
+                                                className="growth-btn growth-btn--ai"
+                                                onClick={() => handleDraftAI(item._id, 'strength', item.goal)}
+                                                style={{ fontSize: '0.8rem', padding: '0.25rem 0.75rem', background: '#e0e7ff', color: '#4f46e5' }}
+                                            />
+                                        </div>
+                                        <AutoResizeTextarea
+                                            className="growth-textarea"
+                                            value={getAnalysisValue(item._id, 'strength')}
+                                            onChange={(e) => handleAnalysisChange(item._id, 'strength', e.target.value)}
+                                            placeholder="잘한 점, 성과 등을 기록해주세요"
+                                            minHeight="100px"
                                         />
                                     </div>
-                                    <AutoResizeTextarea
-                                        className="growth-textarea"
-                                        value={getAnalysisValue(item._id, 'weakness')}
-                                        onChange={(e) => handleAnalysisChange(item._id, 'weakness', e.target.value)}
-                                        placeholder="아쉬운 점, 부족한 점을 기록해주세요"
-                                        minHeight="100px"
-                                    />
-                                </div>
-                                <div className="growth-analysis-item full-width">
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                                        <label style={{ margin: 0 }}>행동보완 (성장 환경조성)</label>
-                                        <LoadingButton
-                                            className="growth-btn growth-btn--ai"
-                                            onClick={() => handleDraftAI(item._id, 'supplement', item.goal)}
-                                            style={{ fontSize: '0.8rem', padding: '0.25rem 0.75rem', background: '#e0e7ff', color: '#4f46e5' }}
+                                    <div className="growth-analysis-item">
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                                            <label style={{ margin: 0 }}>행동결과 (약점)</label>
+                                            <LoadingButton
+                                                className="growth-btn growth-btn--ai"
+                                                onClick={() => handleDraftAI(item._id, 'weakness', item.goal)}
+                                                style={{ fontSize: '0.8rem', padding: '0.25rem 0.75rem', background: '#e0e7ff', color: '#4f46e5' }}
+                                            />
+                                        </div>
+                                        <AutoResizeTextarea
+                                            className="growth-textarea"
+                                            value={getAnalysisValue(item._id, 'weakness')}
+                                            onChange={(e) => handleAnalysisChange(item._id, 'weakness', e.target.value)}
+                                            placeholder="아쉬운 점, 부족한 점을 기록해주세요"
+                                            minHeight="100px"
                                         />
                                     </div>
-                                    <AutoResizeTextarea
-                                        className="growth-textarea"
-                                        value={getAnalysisValue(item._id, 'supplement')}
-                                        onChange={(e) => handleAnalysisChange(item._id, 'supplement', e.target.value)}
-                                        placeholder="개선할 점, 앞으로의 계획을 기록해주세요"
-                                        minHeight="100px"
-                                    />
+                                    <div className="growth-analysis-item full-width">
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                                            <label style={{ margin: 0 }}>행동보완 (성장 환경조성)</label>
+                                            <LoadingButton
+                                                className="growth-btn growth-btn--ai"
+                                                onClick={() => handleDraftAI(item._id, 'supplement', item.goal)}
+                                                style={{ fontSize: '0.8rem', padding: '0.25rem 0.75rem', background: '#e0e7ff', color: '#4f46e5' }}
+                                            />
+                                        </div>
+                                        <AutoResizeTextarea
+                                            className="growth-textarea"
+                                            value={getAnalysisValue(item._id, 'supplement')}
+                                            onChange={(e) => handleAnalysisChange(item._id, 'supplement', e.target.value)}
+                                            placeholder="개선할 점, 앞으로의 계획을 기록해주세요"
+                                            minHeight="100px"
+                                        />
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
             </div>
         </div>
