@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import MDEditor from '@uiw/react-md-editor';
 
 function GrowthReflection({ plan, onUpdate }) {
     const [localPlan, setLocalPlan] = useState(plan);
@@ -47,13 +48,14 @@ function GrowthReflection({ plan, onUpdate }) {
 
                     <div className="growth-form-group">
                         <label>본문</label>
-                        <textarea
-                            className="growth-textarea growth-textarea--large"
-                            value={localPlan.reflection?.detail || ''}
-                            onChange={(e) => handleReflectionChange('detail', e.target.value)}
-                            placeholder="올해의 성장 과정, 느낀 점, 배운 점 등을 자유롭게 기록해주세요"
-                            rows={15}
-                        />
+                        <div data-color-mode="light">
+                            <MDEditor
+                                value={localPlan.reflection?.detail || ''}
+                                onChange={(value) => handleReflectionChange('detail', value)}
+                                height={500}
+                                preview="live"
+                            />
+                        </div>
                     </div>
                 </div>
             </div>

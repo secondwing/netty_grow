@@ -1,0 +1,69 @@
+/* Basic overrides for Milkdown to fit the theme */
+.milkdown-editor-container {
+    /* No specific styles needed for the wrapper if Milkdown handles it, 
+       but we can use this to constrain width if we want a "paper" look */
+}
+
+/* Target the Milkdown editor root */
+.milkdown .editor {
+    outline: none;
+    min-height: 500px;
+    padding: 2rem !important;
+    /* Add generous padding */
+    font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: #333;
+    max-width: 100%;
+    /* Or set a max-width for readability like 800px */
+    margin: 0 auto;
+}
+
+/* Headers */
+.milkdown h1 {
+    font-size: 2rem;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 0.5rem;
+    margin-top: 2rem;
+}
+
+.milkdown h2 {
+    font-size: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.milkdown h3 {
+    font-size: 1.25rem;
+    margin-top: 1.25rem;
+}
+
+/* Lists */
+.milkdown ul,
+.milkdown ol {
+    padding-left: 1.5rem;
+}
+
+.milkdown li {
+    margin-bottom: 0.25rem;
+}
+
+/* Blockquotes */
+.milkdown blockquote {
+    border-left: 4px solid #e5e7eb;
+    padding-left: 1rem;
+    margin-left: 0;
+    color: #6b7280;
+    font-style: italic;
+}
+
+/* Code blocks */
+.milkdown pre {
+    background: #f3f4f6;
+    padding: 1rem;
+    border-radius: 6px;
+    font-family: monospace;
+}
+
+/* Adjust Nord theme colors if necessary to match light mode better if it defaults to dark */
+/* Note: @milkdown/theme-nord might be dark by default. We might need to override or use a different theme. 
+   For now, let's see how it renders. */

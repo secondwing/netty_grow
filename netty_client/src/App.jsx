@@ -8,6 +8,7 @@ import Home from './pages/Home/Home';
 import Login from './pages/Auth/Login';
 import Signup from './pages/Auth/Signup';
 import GrowthTestPage from './pages/Auth/GrowthTestPage';
+import TestMilkdownEditor from './components/Test/TestMilkdownEditor';
 import RecordPage from './pages/Record/RecordPage';
 import BoardPage from './pages/Board/BoardPage';
 
@@ -83,6 +84,7 @@ function AppContent() {
           <Route path="board" element={isLoggedIn ? <BoardPage /> : <Navigate to="/login" />} />
           <Route path="mypage" element={isLoggedIn ? <MyPage currentUser={currentUser} /> : <Navigate to="/login" />} />
           <Route path="growth-test" element={isLoggedIn ? <GrowthTestPage /> : <Navigate to="/login" />} />
+          <Route path="test-editor" element={isLoggedIn ? <TestMilkdownEditor /> : <Navigate to="/login" />} />
           <Route path="admin" element={isLoggedIn ? <AdminPage /> : <Navigate to="/login" />} />
         </Route>
       </Routes>
