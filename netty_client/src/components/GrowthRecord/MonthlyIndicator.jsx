@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import LoadingButton from '../Common/LoadingButton';
 import AutoResizeTextarea from '../Common/AutoResizeTextarea';
 
-function MonthlyIndicator({ plan, log, month, onUpdateLog }) {
+function MonthlyIndicator({ plan, log, month, previousLog, onUpdateLog }) {
     const [localLog, setLocalLog] = useState(log);
 
     useEffect(() => {
@@ -127,6 +127,30 @@ function MonthlyIndicator({ plan, log, month, onUpdateLog }) {
         onUpdateLog(localLog);
     };
 
+    const handleLoadPreviousLog = () => {
+        if (!previousLog) {
+            alert('불러올 이전 달의 기록이 없습니다.');
+            return;
+        }
+
+        if (window.confirm(`${month - 1}월의 기록을 불러오시겠습니까? 현재 작성 중인 내용은 덮어씌워집니다.`)) {
+            const newActivityLogs = previousLog.activityLogs.map(log => ({
+                activityId: log.activityId,
+                entries: log.entries.map(entry => ({
+                    title: entry.title,
+                    actionPlan: entry.actionPlan,
+                    reflection: entry.reflection,
+                    status: entry.status
+                }))
+            }));
+
+            setLocalLog({
+                ...localLog,
+                activityLogs: newActivityLogs
+            });
+        }
+    };
+
     if (!plan || !localLog) return <div>Loading...</div>;
 
     return (
@@ -134,9 +158,20 @@ function MonthlyIndicator({ plan, log, month, onUpdateLog }) {
             <div className="growth-section">
                 <div className="growth-section__header">
                     <h2 className="growth-section__title">{month}월 성장일지</h2>
-                    <button className="growth-btn growth-btn--save" onClick={handleSave}>
-                        저장하기
-                    </button>
+                    <div className="growth-section__controls">
+                        {month > 1 && (
+                            <button
+                                className="growth-btn growth-btn--secondary"
+                                onClick={handleLoadPreviousLog}
+                                style={{ marginRight: '0.5rem' }}
+                            >
+                                {month - 1}월 기록 불러오기
+                            </button>
+                        )}
+                        <button className="growth-btn growth-btn--save" onClick={handleSave}>
+                            저장하기
+                        </button>
+                    </div>
                 </div>
 
                 <div className="growth-items growth-items--vertical">

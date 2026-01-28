@@ -114,7 +114,8 @@ function GrowthRecordPage() {
             case 'plan':
                 return <YearlyPlan plan={plan} onUpdate={handleUpdatePlan} />;
             case 'indicator':
-                return <MonthlyIndicator plan={plan} log={log} month={month} onUpdateLog={handleUpdateLog} />;
+                const previousLog = allMonthlyLogs.find(l => l.year === year && l.month === month - 1);
+                return <MonthlyIndicator plan={plan} log={log} month={month} previousLog={previousLog} onUpdateLog={handleUpdateLog} />;
             case 'analysis':
                 return <MonthlyAnalysis plan={plan} log={log} onUpdateLog={handleUpdateLog} />;
             case 'overview':
@@ -189,12 +190,7 @@ function GrowthRecordPage() {
                 >
                     월 성장분석
                 </button>
-                <button
-                    className={`growth-tab ${activeTab === 'overview' ? 'active' : ''}`}
-                    onClick={() => setActiveTab('overview')}
-                >
-                    {year}년 한눈에 정리
-                </button>
+
                 <button
                     className={`growth-tab ${activeTab === 'result' ? 'active' : ''}`}
                     onClick={() => setActiveTab('result')}
