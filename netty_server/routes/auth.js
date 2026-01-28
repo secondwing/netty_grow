@@ -58,7 +58,7 @@ router.post('/signup', async (req, res) => {
 });
 
 const jwt = require('jsonwebtoken');
-const auth = require('../middleware/auth');
+const { auth } = require('../middleware/auth');
 
 // Login
 router.post('/login', async (req, res) => {

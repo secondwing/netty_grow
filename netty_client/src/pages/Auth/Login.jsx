@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useNotification } from '../../contexts/NotificationContext';
+import { AuthContext } from '../../contexts/AuthContext';
 import './Auth.css';
 
 function Login({ onLogin }) {
@@ -16,6 +17,7 @@ function Login({ onLogin }) {
     };
 
     const { showNotification } = useNotification();
+    const { login } = useContext(AuthContext);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -33,8 +35,7 @@ function Login({ onLogin }) {
             const data = await response.json();
 
             if (response.ok) {
-                // TODO: Store token/user info properly
-                onLogin(formData.username);
+                login(data.user); // Assuming backend returns user object
                 showNotification('로그인 성공!', 'success');
                 navigate('/');
             } else {

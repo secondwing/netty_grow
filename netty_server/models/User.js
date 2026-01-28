@@ -21,6 +21,7 @@ const UserSchema = new mongoose.Schema({
         takenAt: { type: Date, default: Date.now }
     },
     growthStage: { type: String, default: 'growth_01' }, // growth_01 ~ growth_06
+    role: { type: String, enum: ['user', 'admin'], default: 'user' }, // user, admin
     createdAt: { type: Date, default: Date.now }
 });
 

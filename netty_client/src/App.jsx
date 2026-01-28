@@ -12,57 +12,31 @@ import TestMilkdownEditor from './components/Test/TestMilkdownEditor';
 import RecordPage from './pages/Record/RecordPage';
 import BoardPage from './pages/Board/BoardPage';
 
-import AdminPage from './pages/Admin/AdminPage';
+import AdminRoute from './components/Admin/AdminRoute';
+import AdminLayout from './components/Admin/AdminLayout';
+import AdminDashboard from './pages/Admin/AdminDashboard';
+import UserList from './pages/Admin/UserList';
 import MyPage from './pages/MyPage/MyPage';
 
 import { NotificationProvider, useNotification } from './contexts/NotificationContext';
+import { AuthProvider, AuthContext } from './contexts/AuthContext';
+import { useContext } from 'react';
 
 function AppContent() {
-  // TODO: Replace with real auth state management (Context/Redux)
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [currentUser, setCurrentUser] = useState(null);
-  const [loading, setLoading] = useState(true); // Add loading state
+  const { user, loading, logout } = useContext(AuthContext);
   const { showNotification } = useNotification();
-
-  useEffect(() => {
-    const checkLoginStatus = async () => {
-      try {
-        const response = await fetch('http://localhost:5000/api/auth/me', {
-          credentials: 'include' // Important for cookies
-        });
-        if (response.ok) {
-          const user = await response.json();
-          setIsLoggedIn(true);
-          setCurrentUser(user.username);
-        }
-      } catch (error) {
-        console.error('Auth check failed', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    checkLoginStatus();
-  }, []);
+  const isLoggedIn = !!user;
+  const currentUser = user?.username;
 
   const handleLogin = (username) => {
-    setIsLoggedIn(true);
-    setCurrentUser(username);
+    // This might be redundant if Login component updates context directly, 
+    // but keeping for compatibility if Login calls onLogin prop.
+    // Ideally Login component should use useContext(AuthContext).login()
   };
 
   const handleLogout = async () => {
-    try {
-      await fetch('http://localhost:5000/api/auth/logout', {
-        method: 'POST',
-        credentials: 'include'
-      });
-      setIsLoggedIn(false);
-      setCurrentUser(null);
-      showNotification('로그아웃 되었습니다.', 'success');
-    } catch (error) {
-      console.error('Logout failed', error);
-      showNotification('로그아웃 중 오류가 발생했습니다.', 'error');
-    }
+    await logout();
+    showNotification('로그아웃 되었습니다.', 'success');
   };
 
   if (loading) return <div>Loading...</div>; // Prevent redirect before check finishes
@@ -85,7 +59,15 @@ function AppContent() {
           <Route path="mypage" element={isLoggedIn ? <MyPage currentUser={currentUser} /> : <Navigate to="/login" />} />
           <Route path="growth-test" element={isLoggedIn ? <GrowthTestPage /> : <Navigate to="/login" />} />
           <Route path="test-editor" element={isLoggedIn ? <TestMilkdownEditor /> : <Navigate to="/login" />} />
-          <Route path="admin" element={isLoggedIn ? <AdminPage /> : <Navigate to="/login" />} />
+
+          {/* Admin Routes */}
+          <Route element={<AdminRoute />}>
+            <Route path="admin" element={<AdminLayout />}>
+              <Route index element={<Navigate to="dashboard" replace />} />
+              <Route path="dashboard" element={<AdminDashboard />} />
+              <Route path="users" element={<UserList />} />
+            </Route>
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>
@@ -95,7 +77,9 @@ function AppContent() {
 function App() {
   return (
     <NotificationProvider>
-      <AppContent />
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
     </NotificationProvider>
   );
 }

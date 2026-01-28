@@ -16,4 +16,19 @@ const auth = (req, res, next) => {
     }
 };
 
-module.exports = auth;
+const User = require('../models/User');
+
+const verifyAdmin = async (req, res, next) => {
+    try {
+        const user = await User.findById(req.user.id);
+        if (user && user.role === 'admin') {
+            next();
+        } else {
+            res.status(403).json({ message: 'Admin authorization denied' });
+        }
+    } catch (err) {
+        res.status(500).json({ message: 'Server Error' });
+    }
+};
+
+module.exports = { auth, verifyAdmin };

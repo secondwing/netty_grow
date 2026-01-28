@@ -31,12 +31,14 @@ const recordsRouter = require('./routes/records');
 const postsRouter = require('./routes/posts');
 const growthRouter = require('./routes/growth');
 const aiRouter = require('./routes/ai');
+const adminRouter = require('./routes/admin');
 
 app.use('/api/auth', authRouter);
 app.use('/api/records', recordsRouter);
 app.use('/api/posts', postsRouter);
 app.use('/api/growth', growthRouter);
 app.use('/api/ai', aiRouter);
+app.use('/api/admin', adminRouter);
 
 app.get('/', (req, res) => {
     res.send('Netty Server is running');

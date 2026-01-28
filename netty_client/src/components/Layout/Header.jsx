@@ -1,7 +1,11 @@
+import React, { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../contexts/AuthContext';
 import './Header.css';
 
+// Header component
 function Header({ isLoggedIn, onLogout }) {
+    const { user } = useContext(AuthContext);
     const navigate = useNavigate();
 
     const handleLogout = () => {
@@ -21,6 +25,9 @@ function Header({ isLoggedIn, onLogout }) {
                             <Link to="/" className="header__link">홈</Link>
                             <Link to="/record" className="header__link">나성장</Link>
                             <Link to="/mypage" className="header__link">마이페이지</Link>
+                            {user?.role === 'admin' && (
+                                <Link to="/admin/dashboard" className="header__link">관리자</Link>
+                            )}
                             <button onClick={handleLogout} className="header__button header__button--logout">
                                 로그아웃
                             </button>

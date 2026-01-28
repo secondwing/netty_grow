@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { RotateCcw, RotateCw } from 'lucide-react';
 import useHistory from '../../hooks/useHistory';
 
+// YearlyPlan component
 function YearlyPlan({ plan, onUpdate }) {
     const { state: localPlan, set: setLocalPlan, undo, redo, canUndo, canRedo, clearHistory } = useHistory(plan);
     const [lastSavedPlan, setLastSavedPlan] = useState(plan);

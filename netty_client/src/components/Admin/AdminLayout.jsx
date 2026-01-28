@@ -1,0 +1,36 @@
+import React from 'react';
+import { Outlet, Link, useLocation } from 'react-router-dom';
+import './Admin.css';
+
+const AdminLayout = () => {
+    const location = useLocation();
+
+    const isActive = (path) => {
+        return location.pathname === path ? 'admin-nav-item active' : 'admin-nav-item';
+    };
+
+    return (
+        <div className="admin-layout">
+            <div className="admin-container">
+                <aside className="admin-sidebar">
+                    <div className="admin-sidebar-header">
+                        <h3>관리자</h3>
+                    </div>
+                    <nav className="admin-nav">
+                        <Link to="/admin/dashboard" className={isActive('/admin/dashboard')}>
+                            대시보드
+                        </Link>
+                        <Link to="/admin/users" className={isActive('/admin/users')}>
+                            사용자 관리
+                        </Link>
+                    </nav>
+                </aside>
+                <main className="admin-content">
+                    <Outlet />
+                </main>
+            </div>
+        </div>
+    );
+};
+
+export default AdminLayout;

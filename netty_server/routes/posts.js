@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Post = require('../models/Post');
-const auth = require('../middleware/auth');
+const { auth } = require('../middleware/auth');
 
 // @route   GET api/posts
 // @desc    Get all posts

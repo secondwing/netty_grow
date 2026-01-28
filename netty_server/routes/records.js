@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Record = require('../models/Record');
 
-const auth = require('../middleware/auth');
+const { auth } = require('../middleware/auth');
 
 // GET all records for the logged-in user
 router.get('/', auth, async (req, res) => {
