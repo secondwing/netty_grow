@@ -40,7 +40,7 @@ function MonthlyIndicator({ plan, log, month, onUpdateLog }) {
             return logObj.entries;
         }
         if (logObj.log) {
-            return [{ actionPlan: '', reflection: logObj.log, status: 'neutral' }];
+            return [{ title: '', actionPlan: '', reflection: logObj.log, status: 'neutral' }];
         }
         return [];
     };
@@ -51,7 +51,7 @@ function MonthlyIndicator({ plan, log, month, onUpdateLog }) {
             const currentEntries = getEntriesWithLegacy(logObj);
             return {
                 ...logObj,
-                entries: [...currentEntries, { actionPlan: '', reflection: '', status: 'neutral' }],
+                entries: [...currentEntries, { title: '', actionPlan: '', reflection: '', status: 'neutral' }],
                 log: '' // Clear legacy log as we've migrated/touched entries
             };
         });
@@ -117,7 +117,7 @@ function MonthlyIndicator({ plan, log, month, onUpdateLog }) {
 
         // Legacy Support: If no entries but legacy log exists, create one entry
         if ((!entries || entries.length === 0) && legacyLog) {
-            entries = [{ actionPlan: '', reflection: legacyLog, status: 'neutral' }];
+            entries = [{ title: '', actionPlan: '', reflection: legacyLog, status: 'neutral' }];
         }
 
         return { entries: entries || [] };
@@ -207,43 +207,55 @@ function MonthlyIndicator({ plan, log, month, onUpdateLog }) {
                                                 <div className="growth-log-entries">
                                                     {entries.map((entry, idx) => (
                                                         <div key={idx} className="growth-log-entry-row">
-                                                            <div className="growth-log-input-group">
-                                                                <label className="growth-log-label-small">실천방안</label>
-                                                                <AutoResizeTextarea
-                                                                    className="growth-textarea"
-                                                                    value={entry.actionPlan}
-                                                                    onChange={(e) => handleEntryChange(activity._id, idx, 'actionPlan', e.target.value)}
-                                                                    placeholder="실천방안"
-                                                                    minHeight="60px"
-                                                                />
-                                                            </div>
-                                                            <div className="growth-log-input-group">
-                                                                <label className="growth-log-label-small">활동소감</label>
-                                                                <AutoResizeTextarea
-                                                                    className="growth-textarea"
-                                                                    value={entry.reflection}
-                                                                    onChange={(e) => handleEntryChange(activity._id, idx, 'reflection', e.target.value)}
-                                                                    placeholder="활동소감"
-                                                                    minHeight="60px"
-                                                                />
-                                                            </div>
-                                                            <div className="growth-log-status-group">
-                                                                <label className="growth-log-label-small">상태</label>
+                                                            <div className="growth-log-entry-header">
+                                                                <div className="growth-log-input-group growth-log-title-group">
+                                                                    <input
+                                                                        type="text"
+                                                                        className="growth-input growth-log-title-input"
+                                                                        value={entry.title || ''}
+                                                                        onChange={(e) => handleEntryChange(activity._id, idx, 'title', e.target.value)}
+                                                                        placeholder="제목을 입력하세요"
+                                                                    />
+                                                                </div>
+                                                                <div className="growth-log-status-group">
+                                                                    <button
+                                                                        className={`growth-status-toggle ${getStatusClass(entry.status)}`}
+                                                                        onClick={() => toggleStatus(activity._id, idx)}
+                                                                        title="클릭하여 상태 변경"
+                                                                    >
+                                                                        {getStatusIcon(entry.status)}
+                                                                    </button>
+                                                                </div>
                                                                 <button
-                                                                    className={`growth-status-toggle ${getStatusClass(entry.status)}`}
-                                                                    onClick={() => toggleStatus(activity._id, idx)}
-                                                                    title="클릭하여 상태 변경"
+                                                                    className="growth-btn-icon growth-btn-remove-entry"
+                                                                    onClick={() => handleRemoveEntry(activity._id, idx)}
+                                                                    title="삭제"
                                                                 >
-                                                                    {getStatusIcon(entry.status)}
+                                                                    ×
                                                                 </button>
                                                             </div>
-                                                            <button
-                                                                className="growth-btn-icon growth-btn-remove-entry"
-                                                                onClick={() => handleRemoveEntry(activity._id, idx)}
-                                                                title="삭제"
-                                                            >
-                                                                ×
-                                                            </button>
+                                                            <div className="growth-log-entry-body">
+                                                                <div className="growth-log-input-group">
+                                                                    <label className="growth-log-label-small">실천방안</label>
+                                                                    <AutoResizeTextarea
+                                                                        className="growth-textarea"
+                                                                        value={entry.actionPlan}
+                                                                        onChange={(e) => handleEntryChange(activity._id, idx, 'actionPlan', e.target.value)}
+                                                                        placeholder="실천방안"
+                                                                        minHeight="60px"
+                                                                    />
+                                                                </div>
+                                                                <div className="growth-log-input-group">
+                                                                    <label className="growth-log-label-small">활동소감</label>
+                                                                    <AutoResizeTextarea
+                                                                        className="growth-textarea"
+                                                                        value={entry.reflection}
+                                                                        onChange={(e) => handleEntryChange(activity._id, idx, 'reflection', e.target.value)}
+                                                                        placeholder="활동소감"
+                                                                        minHeight="60px"
+                                                                    />
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     ))}
                                                     {entries.length === 0 && (

@@ -25,6 +25,7 @@ const monthlyLogSchema = new mongoose.Schema({
         activityId: mongoose.Schema.Types.ObjectId, // Refers to activity in GrowthPlan
         log: { type: String, default: '' }, // Legacy field
         entries: [{
+            title: { type: String, default: '' },
             actionPlan: { type: String, default: '' },
             reflection: { type: String, default: '' },
             status: {
