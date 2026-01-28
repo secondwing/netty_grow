@@ -202,12 +202,6 @@ function MonthlyIndicator({ plan, log, month, onUpdateLog }) {
                                                         <span className="growth-activity-badge">활동 {activityIndex + 1}</span>
                                                         <p>{activity.content}</p>
                                                     </div>
-                                                    <button
-                                                        className="growth-btn growth-btn--add-sub"
-                                                        onClick={() => handleAddEntry(activity._id)}
-                                                    >
-                                                        + 기록 추가
-                                                    </button>
                                                 </div>
 
                                                 <div className="growth-log-entries">
@@ -257,6 +251,14 @@ function MonthlyIndicator({ plan, log, month, onUpdateLog }) {
                                                             기록이 없습니다. [+ 기록 추가] 버튼을 눌러 작성해주세요.
                                                         </div>
                                                     )}
+                                                </div>
+                                                <div className="growth-activity-actions">
+                                                    <button
+                                                        className="growth-btn growth-btn--add-sub"
+                                                        onClick={() => handleAddEntry(activity._id)}
+                                                    >
+                                                        + 기록 추가
+                                                    </button>
                                                 </div>
                                             </div>
                                         );
