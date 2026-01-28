@@ -140,7 +140,7 @@ function YearlyPlan({ plan, onUpdate }) {
                                 transition: 'color 0.2s'
                             }}
                         >
-                            <RotateCcw size={20} strokeWidth={2.5} />
+                            <RotateCcw size={20} strokeWidth={1.5} />
                         </button>
                         <button
                             className="growth-btn-icon"
@@ -153,7 +153,7 @@ function YearlyPlan({ plan, onUpdate }) {
                                 transition: 'color 0.2s'
                             }}
                         >
-                            <RotateCw size={20} strokeWidth={2.5} />
+                            <RotateCw size={20} strokeWidth={1.5} />
                         </button>
                         <button className="growth-btn growth-btn--save" onClick={handleSave}>
                             저장하기
