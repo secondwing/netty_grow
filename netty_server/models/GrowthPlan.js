@@ -15,6 +15,7 @@ const growthPlanSchema = new mongoose.Schema({
         desiredSelf: { type: String, default: '' },
         goal: { type: String, default: '' },
         motivation: { type: String, default: '' },
+        outcome: { type: String, default: '' }, // Unified Yearly Result per Item
         isDeleted: { type: Boolean, default: false },
         deletedAt: { type: Date },
         activities: [{

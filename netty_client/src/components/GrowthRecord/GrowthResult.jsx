@@ -8,19 +8,18 @@ function GrowthResult({ plan, onUpdate }) {
         setLocalPlan(plan);
     }, [plan]);
 
-    const handleOutcomeChange = (itemIndex, activityIndex, value) => {
+    const handleOutcomeChange = (itemIndex, value) => {
         const newItems = [...localPlan.items];
-        newItems[itemIndex].activities[activityIndex].outcome = value;
+        newItems[itemIndex].outcome = value;
         setLocalPlan({ ...localPlan, items: newItems });
     };
 
-    const handleDraftAI = async (itemIndex, activityIndex, activityContent) => {
+    const handleDraftAI = async (itemIndex) => {
         try {
-            // We need activityId to be precise, but for now let's pass content.
-            // Actually, we have the activity object in the map loop.
-            // But wait, the server route expects `activityId` to filter logs.
-            // Let's pass activityId.
-            const activityId = localPlan.items[itemIndex].activities[activityIndex]._id;
+            const item = localPlan.items[itemIndex];
+            // Collect all activity IDs and contents
+            const activityIds = item.activities.map(a => a._id);
+            const activityContent = item.activities.map(a => a.content).join(', ');
 
             const response = await fetch('http://localhost:5000/api/ai/draft/yearly-result', {
                 method: 'POST',
@@ -31,7 +30,7 @@ function GrowthResult({ plan, onUpdate }) {
                     userId: plan.userId,
                     year: plan.year,
                     activityContent: activityContent,
-                    activityId: activityId
+                    activityIds: activityIds
                 })
             });
 
@@ -41,7 +40,7 @@ function GrowthResult({ plan, onUpdate }) {
 
             const data = await response.json();
             if (data.draft) {
-                handleOutcomeChange(itemIndex, activityIndex, data.draft);
+                handleOutcomeChange(itemIndex, data.draft);
             }
         } catch (error) {
             console.error('AI Draft Error:', error);
@@ -91,10 +90,7 @@ function GrowthResult({ plan, onUpdate }) {
                                 <div className="growth-activities-log">
                                     {item.activities.map((activity, activityIndex) => {
                                         // Soft Delete Logic for Activities
-                                        if (activity.isDeleted) {
-                                            // Show if it has an outcome recorded
-                                            if (!activity.outcome || activity.outcome.trim() === '') return null;
-                                        }
+                                        if (activity.isDeleted) return null;
 
                                         return (
                                             <div key={activity._id || activityIndex} className="growth-activity-log-row">
@@ -102,26 +98,27 @@ function GrowthResult({ plan, onUpdate }) {
                                                     <span className="growth-activity-badge">활동 {activityIndex + 1}</span>
                                                     <p>{activity.content}</p>
                                                 </div>
-                                                <div className="growth-log-input-wrapper">
-                                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                                                        <label style={{ margin: 0 }}>성장 활동성과 (이뤄낸 일)</label>
-                                                        <LoadingButton
-                                                            className="growth-btn growth-btn--ai"
-                                                            onClick={() => handleDraftAI(itemIndex, activityIndex, activity.content)}
-                                                            style={{ fontSize: '0.8rem', padding: '0.25rem 0.75rem', background: '#e0e7ff', color: '#4f46e5' }}
-                                                        />
-                                                    </div>
-                                                    <textarea
-                                                        className="growth-textarea"
-                                                        value={activity.outcome}
-                                                        onChange={(e) => handleOutcomeChange(itemIndex, activityIndex, e.target.value)}
-                                                        placeholder="1년 동안의 성과를 기록해주세요"
-                                                        rows={3}
-                                                    />
-                                                </div>
                                             </div>
                                         );
                                     })}
+                                </div>
+
+                                <div className="growth-log-input-wrapper" style={{ marginTop: '1.5rem', borderTop: '1px solid #eee', paddingTop: '1rem' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                                        <label style={{ margin: 0, fontWeight: 600, color: '#333' }}>성장 활동성과 (이뤄낸 일)</label>
+                                        <LoadingButton
+                                            className="growth-btn growth-btn--ai"
+                                            onClick={() => handleDraftAI(itemIndex)}
+                                            style={{ fontSize: '0.8rem', padding: '0.25rem 0.75rem', background: '#e0e7ff', color: '#4f46e5' }}
+                                        />
+                                    </div>
+                                    <textarea
+                                        className="growth-textarea"
+                                        value={item.outcome || ''}
+                                        onChange={(e) => handleOutcomeChange(itemIndex, e.target.value)}
+                                        placeholder="1년 동안의 성과를 종합적으로 기록해주세요"
+                                        rows={5}
+                                    />
                                 </div>
                             </div>
                         );
