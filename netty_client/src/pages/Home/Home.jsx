@@ -14,7 +14,7 @@ function Home() {
                     Netty와 함께 기록의 가치를 발견하세요.
                 </p>
                 <div className="home__actions">
-                    <Link to="/signup" className="home__button home__button--primary">
+                    <Link to="/record" className="home__button home__button--primary">
                         시작하기
                     </Link>
                     <a href="#brand-images" className="home__button home__button--secondary">
