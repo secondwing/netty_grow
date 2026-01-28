@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { RotateCcw, RotateCw } from 'lucide-react';
 import useHistory from '../../hooks/useHistory';
 import LoadingButton from '../Common/LoadingButton';
 import AutoResizeTextarea from '../Common/AutoResizeTextarea';
@@ -231,18 +232,26 @@ function MonthlyIndicator({ plan, log, month, previousLog, onUpdateLog }) {
                             onClick={undo}
                             disabled={!canUndo}
                             title="실행 취소 (Ctrl+Z)"
-                            style={{ marginRight: '0.25rem', opacity: canUndo ? 1 : 0.3 }}
+                            style={{
+                                marginRight: '0.25rem',
+                                color: canUndo ? '#6b21a8' : '#808080',
+                                transition: 'color 0.2s'
+                            }}
                         >
-                            ↩️
+                            <RotateCcw size={20} strokeWidth={2.5} />
                         </button>
                         <button
                             className="growth-btn-icon"
                             onClick={redo}
                             disabled={!canRedo}
                             title="다시 실행 (Ctrl+Y)"
-                            style={{ marginRight: '0.5rem', opacity: canRedo ? 1 : 0.3 }}
+                            style={{
+                                marginRight: '0.5rem',
+                                color: canRedo ? '#6b21a8' : '#808080',
+                                transition: 'color 0.2s'
+                            }}
                         >
-                            ↪️
+                            <RotateCw size={20} strokeWidth={2.5} />
                         </button>
                         <button className="growth-btn growth-btn--save" onClick={handleSave}>
                             저장하기
