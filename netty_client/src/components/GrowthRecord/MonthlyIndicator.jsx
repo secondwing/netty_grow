@@ -1,13 +1,61 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import useHistory from '../../hooks/useHistory';
 import LoadingButton from '../Common/LoadingButton';
 import AutoResizeTextarea from '../Common/AutoResizeTextarea';
 
 function MonthlyIndicator({ plan, log, month, previousLog, onUpdateLog }) {
-    const [localLog, setLocalLog] = useState(log);
+    const { state: localLog, set: setLocalLog, undo, redo, canUndo, canRedo, clearHistory } = useHistory(log);
+    const [lastSavedLog, setLastSavedLog] = useState(log);
+    const localLogRef = useRef(log);
+    const containerRef = useRef(null);
 
     useEffect(() => {
-        setLocalLog(log);
-    }, [log]);
+        localLogRef.current = localLog;
+    }, [localLog]);
+
+    // Initial load sync
+    useEffect(() => {
+        if (log) {
+            setLocalLog(log);
+            setLastSavedLog(log);
+            clearHistory();
+        }
+    }, [log?._id, setLocalLog, clearHistory]);
+
+    // Auto-save every 30 seconds
+    useEffect(() => {
+        const intervalId = setInterval(() => {
+            if (JSON.stringify(localLogRef.current) !== JSON.stringify(lastSavedLog)) {
+                console.log("Auto-saving Monthly Indicator...");
+                onUpdateLog(localLogRef.current);
+                setLastSavedLog(localLogRef.current);
+            }
+        }, 30000);
+
+        return () => clearInterval(intervalId);
+    }, [lastSavedLog, onUpdateLog]);
+
+    // Keyboard Shortcuts
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (containerRef.current && containerRef.current.contains(document.activeElement)) {
+                if (e.ctrlKey && e.key === 'z') {
+                    e.preventDefault();
+                    if (e.shiftKey) {
+                        redo();
+                    } else {
+                        undo();
+                    }
+                } else if (e.ctrlKey && e.key === 'y') {
+                    e.preventDefault();
+                    redo();
+                }
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [undo, redo]);
 
     // Helper to get or create activity log object
     const getOrCreateActivityLog = (activityLogs, activityId) => {
@@ -18,23 +66,27 @@ function MonthlyIndicator({ plan, log, month, previousLog, onUpdateLog }) {
         return { logObj: { activityId, entries: [] }, index: -1, isNew: true };
     };
 
-    const updateActivityLog = (activityId, updater) => {
-        if (!localLog) return;
-        const newActivityLogs = [...(localLog.activityLogs || [])];
-        const { logObj, index, isNew } = getOrCreateActivityLog(newActivityLogs, activityId);
+    const updateActivityLog = (activityId, updater, debounce = false) => {
+        setLocalLog(prevLog => {
+            if (!prevLog) return prevLog;
+            const newActivityLogs = [...(prevLog.activityLogs || [])];
+            const { logObj, index, isNew } = getOrCreateActivityLog(newActivityLogs, activityId);
 
-        const updatedLogObj = updater(logObj);
+            // We need to copy logObj before updating it if it exists
+            const logObjCopy = isNew ? logObj : { ...logObj, entries: [...(logObj.entries || [])] };
 
-        if (isNew) {
-            newActivityLogs.push(updatedLogObj);
-        } else {
-            newActivityLogs[index] = updatedLogObj;
-        }
+            const updatedLogObj = updater(logObjCopy);
 
-        setLocalLog({ ...localLog, activityLogs: newActivityLogs });
+            if (isNew) {
+                newActivityLogs.push(updatedLogObj);
+            } else {
+                newActivityLogs[index] = updatedLogObj;
+            }
+
+            return { ...prevLog, activityLogs: newActivityLogs };
+        }, debounce);
     };
 
-    // Helper to handle legacy migration during updates
     const getEntriesWithLegacy = (logObj) => {
         if (logObj.entries && logObj.entries.length > 0) {
             return logObj.entries;
@@ -58,12 +110,17 @@ function MonthlyIndicator({ plan, log, month, previousLog, onUpdateLog }) {
     };
 
     const handleEntryChange = (activityId, index, field, value) => {
+        console.log("handleEntryChange", { activityId, index, field, value });
         updateActivityLog(activityId, (logObj) => {
             const newEntries = [...getEntriesWithLegacy(logObj)];
-            if (!newEntries[index]) return logObj;
+            console.log("currentEntries", newEntries);
+            if (!newEntries[index]) {
+                console.error("Entry not found at index", index);
+                return logObj;
+            }
             newEntries[index] = { ...newEntries[index], [field]: value };
             return { ...logObj, entries: newEntries, log: '' };
-        });
+        }, true); // Debounce text
     };
 
     const handleRemoveEntry = (activityId, index) => {
@@ -125,6 +182,7 @@ function MonthlyIndicator({ plan, log, month, previousLog, onUpdateLog }) {
 
     const handleSave = () => {
         onUpdateLog(localLog);
+        setLastSavedLog(localLog);
     };
 
     const handleLoadPreviousLog = () => {
@@ -154,7 +212,7 @@ function MonthlyIndicator({ plan, log, month, previousLog, onUpdateLog }) {
     if (!plan || !localLog) return <div>Loading...</div>;
 
     return (
-        <div className="growth-content">
+        <div className="growth-content" ref={containerRef}>
             <div className="growth-section">
                 <div className="growth-section__header">
                     <h2 className="growth-section__title">{month}월 성장일지</h2>
@@ -168,6 +226,24 @@ function MonthlyIndicator({ plan, log, month, previousLog, onUpdateLog }) {
                                 {month - 1}월 기록 불러오기
                             </button>
                         )}
+                        <button
+                            className="growth-btn-icon"
+                            onClick={undo}
+                            disabled={!canUndo}
+                            title="실행 취소 (Ctrl+Z)"
+                            style={{ marginRight: '0.25rem', opacity: canUndo ? 1 : 0.3 }}
+                        >
+                            ↩️
+                        </button>
+                        <button
+                            className="growth-btn-icon"
+                            onClick={redo}
+                            disabled={!canRedo}
+                            title="다시 실행 (Ctrl+Y)"
+                            style={{ marginRight: '0.5rem', opacity: canRedo ? 1 : 0.3 }}
+                        >
+                            ↪️
+                        </button>
                         <button className="growth-btn growth-btn--save" onClick={handleSave}>
                             저장하기
                         </button>

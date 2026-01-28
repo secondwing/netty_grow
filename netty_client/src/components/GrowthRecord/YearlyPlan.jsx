@@ -1,22 +1,79 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import useHistory from '../../hooks/useHistory';
 
 function YearlyPlan({ plan, onUpdate }) {
-    const [localPlan, setLocalPlan] = useState(plan);
+    const { state: localPlan, set: setLocalPlan, undo, redo, canUndo, canRedo, clearHistory } = useHistory(plan);
+    const [lastSavedPlan, setLastSavedPlan] = useState(plan);
+    const localPlanRef = useRef(plan);
+    const containerRef = useRef(null);
 
     useEffect(() => {
-        setLocalPlan(plan);
-    }, [plan]);
+        localPlanRef.current = localPlan;
+    }, [localPlan]);
+
+    // Initial load sync
+    useEffect(() => {
+        if (plan) {
+            setLocalPlan(plan);
+            setLastSavedPlan(plan);
+            clearHistory();
+        }
+    }, [plan?._id, setLocalPlan, clearHistory]);
+
+    // Auto-save every 30 seconds
+    useEffect(() => {
+        const intervalId = setInterval(() => {
+            if (JSON.stringify(localPlanRef.current) !== JSON.stringify(lastSavedPlan)) {
+                console.log("Auto-saving Yearly Plan...");
+                onUpdate(localPlanRef.current);
+                setLastSavedPlan(localPlanRef.current);
+            }
+        }, 30000);
+
+        return () => clearInterval(intervalId);
+    }, [lastSavedPlan, onUpdate]);
+
+    // Keyboard Shortcuts
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (containerRef.current && containerRef.current.contains(document.activeElement)) {
+                if (e.ctrlKey && e.key === 'z') {
+                    e.preventDefault();
+                    if (e.shiftKey) {
+                        redo();
+                    } else {
+                        undo();
+                    }
+                } else if (e.ctrlKey && e.key === 'y') {
+                    e.preventDefault();
+                    redo();
+                }
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [undo, redo]);
 
     const handleItemChange = (index, field, value) => {
-        const newItems = [...localPlan.items];
-        newItems[index][field] = value;
-        setLocalPlan({ ...localPlan, items: newItems });
+        setLocalPlan(prevPlan => {
+            const newItems = [...prevPlan.items];
+            newItems[index] = { ...newItems[index], [field]: value };
+            return { ...prevPlan, items: newItems };
+        }, true); // Debounce text
     };
 
     const handleActivityChange = (itemIndex, activityIndex, value) => {
-        const newItems = [...localPlan.items];
-        newItems[itemIndex].activities[activityIndex].content = value;
-        setLocalPlan({ ...localPlan, items: newItems });
+        setLocalPlan(prevPlan => {
+            const newItems = [...prevPlan.items];
+            newItems[itemIndex] = { ...newItems[itemIndex] };
+            newItems[itemIndex].activities = [...newItems[itemIndex].activities];
+            newItems[itemIndex].activities[activityIndex] = {
+                ...newItems[itemIndex].activities[activityIndex],
+                content: value
+            };
+            return { ...prevPlan, items: newItems };
+        }, true); // Debounce text
     };
 
     const handleAddItem = () => {
@@ -60,18 +117,39 @@ function YearlyPlan({ plan, onUpdate }) {
 
     const handleSave = () => {
         onUpdate(localPlan);
+        setLastSavedPlan(localPlan);
     };
 
     if (!localPlan) return null;
 
     return (
-        <div className="growth-content">
+        <div className="growth-content" ref={containerRef}>
             <div className="growth-section">
                 <div className="growth-section__header">
                     <h2 className="growth-section__title">나의 성장계획</h2>
-                    <button className="growth-btn growth-btn--save" onClick={handleSave}>
-                        저장하기
-                    </button>
+                    <div className="growth-section__controls">
+                        <button
+                            className="growth-btn-icon"
+                            onClick={undo}
+                            disabled={!canUndo}
+                            title="실행 취소 (Ctrl+Z)"
+                            style={{ marginRight: '0.25rem', opacity: canUndo ? 1 : 0.3 }}
+                        >
+                            ↩️
+                        </button>
+                        <button
+                            className="growth-btn-icon"
+                            onClick={redo}
+                            disabled={!canRedo}
+                            title="다시 실행 (Ctrl+Y)"
+                            style={{ marginRight: '0.5rem', opacity: canRedo ? 1 : 0.3 }}
+                        >
+                            ↪️
+                        </button>
+                        <button className="growth-btn growth-btn--save" onClick={handleSave}>
+                            저장하기
+                        </button>
+                    </div>
                 </div>
 
                 <div className="growth-items">
