@@ -9,6 +9,7 @@ import YearlyOverview from '../../components/GrowthRecord/YearlyOverview';
 import GrowthResult from '../../components/GrowthRecord/GrowthResult';
 import GrowthReflection from '../../components/GrowthRecord/GrowthReflection';
 import GrowthReportDocument from '../../components/PDF/GrowthReportDocument';
+import ScrollToTopButton from '../../components/Common/ScrollToTopButton';
 import '../../components/GrowthRecord/GrowthRecord.css';
 
 function GrowthRecordPage() {
@@ -206,6 +207,7 @@ function GrowthRecordPage() {
             </div>
 
             {renderContent()}
+            <ScrollToTopButton />
         </div>
     );
 }
