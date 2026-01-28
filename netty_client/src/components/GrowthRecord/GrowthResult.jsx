@@ -87,13 +87,13 @@ function GrowthResult({ plan, onUpdate }) {
                                     </div>
                                 </div>
 
-                                <div className="growth-activities-log">
+                                <div className="growth-activities-log" style={{ display: 'flex', flexDirection: 'row', gap: '1rem' }}>
                                     {item.activities.map((activity, activityIndex) => {
                                         // Soft Delete Logic for Activities
                                         if (activity.isDeleted) return null;
 
                                         return (
-                                            <div key={activity._id || activityIndex} className="growth-activity-log-row">
+                                            <div key={activity._id || activityIndex} className="growth-activity-log-row" style={{ flex: 1, width: 0 }}>
                                                 <div className="growth-activity-content">
                                                     <span className="growth-activity-badge">활동 {activityIndex + 1}</span>
                                                     <p>{activity.content}</p>
