@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import MDEditor from '@uiw/react-md-editor';
+import React, { useState, useEffect, useRef } from 'react';
+import UnicodePicker from './UnicodePicker';
 
 function GrowthReflection({ plan, onUpdate }) {
     const [localPlan, setLocalPlan] = useState(plan);
+    const textareaRef = useRef(null);
 
     useEffect(() => {
         setLocalPlan(plan);
@@ -20,6 +21,24 @@ function GrowthReflection({ plan, onUpdate }) {
 
     const handleSave = () => {
         onUpdate(localPlan);
+    };
+
+    const handleInsertChar = (char) => {
+        const textarea = textareaRef.current;
+        if (textarea) {
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const text = localPlan.reflection?.detail || '';
+            const newText = text.substring(0, start) + char + text.substring(end);
+
+            handleReflectionChange('detail', newText);
+
+            // Restore cursor position and focus
+            setTimeout(() => {
+                textarea.focus();
+                textarea.setSelectionRange(start + char.length, start + char.length);
+            }, 0);
+        }
     };
 
     if (!localPlan) return null;
@@ -47,15 +66,25 @@ function GrowthReflection({ plan, onUpdate }) {
                     </div>
 
                     <div className="growth-form-group">
-                        <label>본문</label>
-                        <div data-color-mode="light">
-                            <MDEditor
-                                value={localPlan.reflection?.detail || ''}
-                                onChange={(value) => handleReflectionChange('detail', value)}
-                                height={500}
-                                preview="live"
-                            />
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                            <label style={{ margin: 0 }}>본문</label>
+                            <UnicodePicker onInsert={handleInsertChar} />
                         </div>
+                        <textarea
+                            ref={textareaRef}
+                            className="growth-textarea"
+                            value={localPlan.reflection?.detail || ''}
+                            onChange={(e) => handleReflectionChange('detail', e.target.value)}
+                            placeholder="성장 소감을 자유롭게 작성해주세요."
+                            rows={20}
+                            style={{
+                                width: '100%',
+                                lineHeight: '1.6',
+                                fontSize: '1rem',
+                                minHeight: '400px',
+                                resize: 'vertical'
+                            }}
+                        />
                     </div>
                 </div>
             </div>
