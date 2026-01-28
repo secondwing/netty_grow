@@ -113,12 +113,41 @@ router.post('/draft/monthly-analysis', async (req, res) => {
 
         const logsText = activityLogs.map(l => `- ${l}`).join("\n");
 
+        let specificInstruction = "";
+        if (type === 'strength') {
+            specificInstruction = `
+Focus ONLY on the "Strength" (잘한 점).
+- Identify what was done well, achievements, and positive habits.
+- Ignore failures or areas that need improvement.
+- Highlight successful execution of action plans.
+`;
+        } else if (type === 'weakness') {
+            specificInstruction = `
+Focus ONLY on the "Weakness" (아쉬운 점).
+- Identify what was lacking, unfulfilled goals, or difficulties.
+- Ignore successes.
+- Highlight where the user struggled or failed to follow the action plan.
+`;
+        } else if (type === 'supplement') {
+            specificInstruction = `
+Focus ONLY on the "Supplement" (보완할 점 / 행동 보완).
+- Suggest concrete improvements for the future.
+- Based on the weaknesses, propose specific actions to take next month.
+- Do not just list problems; offer solutions.
+`;
+        }
+
         const systemPrompt = `
 You are a helpful growth coach.
 Based on the user's monthly activity logs for a specific goal, draft a short analysis.
-The logs now include "Action Plans" (실천방안), "Reflections" (활동소감), and "Status" (achieved/unachieved/neutral).
-Type of analysis: ${type} (Strength: 잘한 점, Weakness: 아쉬운 점, Supplement: 보완할 점).
-Write in Korean, objective and helpful tone.
+The logs include "Action Plans" (실천방안), "Reflections" (활동소감), and "Status" (achieved/unachieved/neutral).
+
+Your task is to write a '${type}' analysis.
+${specificInstruction}
+
+Write in Korean.
+Tone: Objective, helpful, and encouraging (but critical for weakness).
+Keep it concise (3-5 sentences).
 `;
 
         const userPrompt = `
