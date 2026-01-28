@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import LoadingButton from '../Common/LoadingButton';
+import AutoResizeTextarea from '../Common/AutoResizeTextarea';
 
 function GrowthResult({ plan, onUpdate }) {
     const [localPlan, setLocalPlan] = useState(plan);
@@ -112,12 +113,12 @@ function GrowthResult({ plan, onUpdate }) {
                                             style={{ fontSize: '0.8rem', padding: '0.25rem 0.75rem', background: '#e0e7ff', color: '#4f46e5' }}
                                         />
                                     </div>
-                                    <textarea
+                                    <AutoResizeTextarea
                                         className="growth-textarea"
                                         value={item.outcome || ''}
                                         onChange={(e) => handleOutcomeChange(itemIndex, e.target.value)}
                                         placeholder="1년 동안의 성과를 종합적으로 기록해주세요"
-                                        rows={5}
+                                        minHeight="120px"
                                     />
                                 </div>
                             </div>

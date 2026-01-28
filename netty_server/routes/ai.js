@@ -241,25 +241,25 @@ router.post('/draft/yearly-result', async (req, res) => {
         // Actually, MonthlyLog.activityLogs has `activityId`.
         // So if we pass `activityId`, we can filter exactly.
 
-        const { activityId } = req.body;
+        const { activityIds } = req.body;
 
         let relevantLogs = [];
-        if (activityId) {
+        if (activityIds && Array.isArray(activityIds) && activityIds.length > 0) {
             monthlyLogs.forEach(ml => {
-                const log = ml.activityLogs.find(al => al.activityId.toString() === activityId);
-                if (log) {
-                    if (log.entries && log.entries.length > 0) {
-                        const entriesText = log.entries.map(e => `(Status: ${e.status}) Action: ${e.actionPlan}, Reflection: ${e.reflection}`).join("; ");
-                        relevantLogs.push(`[${ml.month}월] ${entriesText}`);
-                    } else if (log.log) {
-                        relevantLogs.push(`[${ml.month}월] ${log.log}`);
+                // Check all activities in this month's log
+                ml.activityLogs.forEach(al => {
+                    if (activityIds.includes(al.activityId.toString())) {
+                        if (al.entries && al.entries.length > 0) {
+                            const entriesText = al.entries.map(e => `(Status: ${e.status}) Action: ${e.actionPlan}, Reflection: ${e.reflection}`).join("; ");
+                            relevantLogs.push(`[${ml.month}월] ${entriesText}`);
+                        } else if (al.log) {
+                            relevantLogs.push(`[${ml.month}월] ${al.log}`);
+                        }
                     }
-                }
+                });
             });
         } else {
-            // Fallback: dump everything? No, that's too much.
-            // Let's just return a message if no ID.
-            return res.json({ draft: "활동 ID가 필요합니다." });
+            return res.json({ draft: "활동 ID 목록이 필요합니다." });
         }
 
         if (relevantLogs.length === 0) {
