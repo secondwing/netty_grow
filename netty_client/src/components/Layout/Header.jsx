@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { Menu, X } from 'lucide-react';
 import { AuthContext } from '../../contexts/AuthContext';
 import './Header.css';
 
@@ -7,26 +8,43 @@ import './Header.css';
 function Header({ isLoggedIn, onLogout }) {
     const { user } = useContext(AuthContext);
     const navigate = useNavigate();
+    const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
     const handleLogout = () => {
         onLogout();
         navigate('/');
+        setIsMenuOpen(false);
+    };
+
+    const toggleMenu = () => {
+        setIsMenuOpen(!isMenuOpen);
+    };
+
+    const closeMenu = () => {
+        setIsMenuOpen(false);
     };
 
     return (
         <header className="header">
             <div className="header__container">
-                <Link to="/" className="header__logo">
+                <Link to="/" className="header__logo" onClick={closeMenu}>
                     <img src="/Netty.svg" alt="Netty" className="header__logo-img" />
                 </Link>
-                <nav className="header__nav">
+
+                {/* Mobile Menu Button */}
+                <button className="header__mobile-toggle" onClick={toggleMenu}>
+                    {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                </button>
+
+                {/* Desktop Nav */}
+                <nav className={`header__nav ${isMenuOpen ? 'header__nav--mobile-open' : ''}`}>
                     {isLoggedIn ? (
                         <>
-                            <Link to="/" className="header__link">홈</Link>
-                            <Link to="/record" className="header__link">나성장</Link>
-                            <Link to="/mypage" className="header__link">마이페이지</Link>
+                            <Link to="/" className="header__link" onClick={closeMenu}>홈</Link>
+                            <Link to="/record" className="header__link" onClick={closeMenu}>나성장</Link>
+                            <Link to="/mypage" className="header__link" onClick={closeMenu}>마이페이지</Link>
                             {user?.role === 'admin' && (
-                                <Link to="/admin/dashboard" className="header__link">관리자</Link>
+                                <Link to="/admin/dashboard" className="header__link" onClick={closeMenu}>관리자</Link>
                             )}
                             <button onClick={handleLogout} className="header__button header__button--logout">
                                 로그아웃
@@ -34,8 +52,8 @@ function Header({ isLoggedIn, onLogout }) {
                         </>
                     ) : (
                         <>
-                            <Link to="/login" className="header__link">로그인</Link>
-                            <Link to="/signup" className="header__button header__button--signup">
+                            <Link to="/login" className="header__link" onClick={closeMenu}>로그인</Link>
+                            <Link to="/signup" className="header__button header__button--signup" onClick={closeMenu}>
                                 회원가입
                             </Link>
                         </>
