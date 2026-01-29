@@ -117,3 +117,31 @@
     color: #333;
     border: 1px solid #eaeaea;
 }
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .home__title {
+        font-size: 2rem;
+        /* Reduced from 3.5rem */
+        padding: 0.75rem 1.5rem;
+    }
+
+    .home__subtitle {
+        font-size: 1rem;
+        /* Reduced from 1.25rem */
+        padding: 0.75rem 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .home__actions {
+        flex-direction: column;
+        width: 100%;
+        max-width: 300px;
+    }
+
+    .home__button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
