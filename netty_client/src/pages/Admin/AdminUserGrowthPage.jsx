@@ -54,9 +54,13 @@ function AdminUserGrowthPage({ user: adminUser }) {
             });
             setLog(response.data);
         } catch (error) {
-            console.error('Failed to fetch log:', error);
-            // It might be 404 if not exists, handle gracefully
-            setLog(null);
+            // Silence 404 errors as they just mean no log exists yet
+            if (error.response && error.response.status === 404) {
+                setLog(null);
+            } else {
+                console.error('Failed to fetch log:', error);
+                setLog(null);
+            }
         }
     };
 
@@ -67,8 +71,13 @@ function AdminUserGrowthPage({ user: adminUser }) {
             });
             setPreviousLog(response.data);
         } catch (error) {
-            console.error('Failed to fetch previous log:', error);
-            setPreviousLog(null);
+            // Silence 404 errors as they just mean no log exists yet
+            if (error.response && error.response.status === 404) {
+                setPreviousLog(null);
+            } else {
+                console.error('Failed to fetch previous log:', error);
+                setPreviousLog(null);
+            }
         }
     };
 
@@ -122,6 +131,8 @@ function AdminUserGrowthPage({ user: adminUser }) {
                     user={adminUser}
                     onUpdateLog={handleUpdateLog}
                     refreshLog={fetchLog}
+                    canAdminFeedback={true}
+                    readOnly={true}
                 />;
             case 'monthly-analysis':
                 return <MonthlyAnalysis
@@ -130,6 +141,8 @@ function AdminUserGrowthPage({ user: adminUser }) {
                     user={adminUser}
                     onUpdateLog={handleUpdateLog}
                     refreshLog={fetchLog}
+                    canAdminFeedback={true}
+                    readOnly={true}
                 />;
             default:
                 return null;
