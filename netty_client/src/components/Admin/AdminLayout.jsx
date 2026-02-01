@@ -9,9 +9,11 @@ const AdminLayout = () => {
         return location.pathname === path ? 'admin-nav-item active' : 'admin-nav-item';
     };
 
+    const isGrowthPage = location.pathname.includes('/growth');
+
     return (
         <div className="admin-layout">
-            <div className="admin-container">
+            <div className={`admin-container ${isGrowthPage ? 'vertical-layout' : ''}`}>
                 <aside className="admin-sidebar">
                     <div className="admin-sidebar-header">
                         <h3>관리자</h3>
