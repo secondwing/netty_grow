@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_BASE_URL } from '../../config';
 
 const affiliationMap = {
     student: '학생',
@@ -19,7 +20,7 @@ const UserList = () => {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const response = await axios.get(`http://localhost:5000/api/admin/users?page=${page}`, {
+                const response = await axios.get(`${API_BASE_URL}/api/admin/users?page=${page}`, {
                     withCredentials: true
                 });
                 setUsers(response.data.users);

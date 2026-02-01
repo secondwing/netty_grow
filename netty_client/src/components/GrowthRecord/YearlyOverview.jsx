@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { API_BASE_URL } from '../../config';
 import LoadingButton from '../Common/LoadingButton';
 
 function YearlyOverview({ plan, onUpdate }) {
@@ -31,7 +32,7 @@ function YearlyOverview({ plan, onUpdate }) {
 
     const handleDraftAI = async (month) => {
         try {
-            const response = await fetch('http://localhost:5000/api/ai/draft/yearly-overview', {
+            const response = await fetch(`${API_BASE_URL}/api/ai/draft/yearly-overview`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

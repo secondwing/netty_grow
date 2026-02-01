@@ -64,6 +64,22 @@
     font-weight: 600;
 }
 
+/* Mobile Tabs Select */
+.growth-tabs-mobile {
+    display: none;
+    /* Hidden by default on desktop */
+    margin-bottom: 1.5rem;
+}
+
+.growth-tabs-mobile-select {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: white;
+}
+
 /* Section Styles */
 .growth-section {
     animation: fadeIn 0.3s ease-out;
@@ -539,6 +555,16 @@
     .growth-record__controls {
         width: 100%;
         justify-content: space-between;
+    }
+
+    /* Hide tabs on mobile */
+    .growth-tabs {
+        display: none;
+    }
+
+    /* Show mobile select on mobile */
+    .growth-tabs-mobile {
+        display: block;
     }
 
     .growth-items {

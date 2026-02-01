@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_BASE_URL } from '../../config';
 import { useNotification } from '../../contexts/NotificationContext';
 
 function PostForm({ onPostCreated, onPostUpdated, onCancel, editingPost }) {
@@ -19,14 +20,14 @@ function PostForm({ onPostCreated, onPostUpdated, onCancel, editingPost }) {
         e.preventDefault();
         try {
             if (editingPost) {
-                const res = await axios.put(`http://localhost:5000/api/posts/${editingPost._id}`,
+                const res = await axios.put(`${API_BASE_URL}/api/posts/${editingPost._id}`,
                     { title, content },
                     { withCredentials: true }
                 );
                 onPostUpdated(res.data);
                 showNotification('게시글이 수정되었습니다.', 'success');
             } else {
-                const res = await axios.post('http://localhost:5000/api/posts',
+                const res = await axios.post(`${API_BASE_URL}/api/posts`,
                     { title, content },
                     { withCredentials: true }
                 );

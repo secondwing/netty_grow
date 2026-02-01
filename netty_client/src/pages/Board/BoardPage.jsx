@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_BASE_URL } from '../../config';
 import PostList from '../../components/Board/PostList';
 import PostForm from '../../components/Board/PostForm';
 import './BoardPage.css';
@@ -15,7 +16,7 @@ function BoardPage() {
 
     const fetchPosts = async () => {
         try {
-            const res = await axios.get('http://localhost:5000/api/posts');
+            const res = await axios.get(`${API_BASE_URL}/api/posts`);
             setPosts(res.data);
         } catch (err) {
             console.error('Error fetching posts:', err);

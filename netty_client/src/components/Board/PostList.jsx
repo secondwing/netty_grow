@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import { API_BASE_URL } from '../../config';
 import { useNotification } from '../../contexts/NotificationContext';
 
 function PostList({ posts, onEdit, onDelete }) {
@@ -8,7 +9,7 @@ function PostList({ posts, onEdit, onDelete }) {
     const handleDelete = async (postId) => {
         if (window.confirm('정말 삭제하시겠습니까?')) {
             try {
-                await axios.delete(`http://localhost:5000/api/posts/${postId}`, {
+                await axios.delete(`${API_BASE_URL}/api/posts/${postId}`, {
                     withCredentials: true
                 });
                 onDelete(postId);

@@ -1,0 +1,150 @@
+.admin-feedback {
+    margin-top: 1rem;
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.admin-feedback.expanded {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border-color: #dee2e6;
+}
+
+.admin-feedback__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background-color: #f1f3f5;
+    cursor: pointer;
+    user-select: none;
+}
+
+.admin-feedback__title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    color: #495057;
+    font-size: 0.95rem;
+}
+
+.admin-feedback__author {
+    font-weight: normal;
+    color: #868e96;
+    font-size: 0.9rem;
+}
+
+.admin-feedback__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.admin-feedback__btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #868e96;
+    padding: 4px;
+    border-radius: 4px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.admin-feedback__btn:hover {
+    background-color: #e9ecef;
+    color: #495057;
+}
+
+.toggle-icon {
+    color: #adb5bd;
+}
+
+.admin-feedback__body {
+    padding: 1rem;
+    background-color: #fff;
+    border-top: 1px solid #e9ecef;
+}
+
+.admin-feedback__content p {
+    margin: 0;
+    line-height: 1.6;
+    color: #212529;
+    white-space: pre-wrap;
+}
+
+.admin-feedback__empty {
+    color: #adb5bd !important;
+    font-style: italic;
+}
+
+.admin-feedback__date {
+    margin-top: 0.5rem !important;
+    font-size: 0.8rem;
+    color: #adb5bd !important;
+    text-align: right;
+}
+
+.admin-feedback__editor {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.admin-feedback__textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 0.75rem;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    resize: vertical;
+}
+
+.admin-feedback__textarea:focus {
+    outline: none;
+    border-color: #748ffc;
+    box-shadow: 0 0 0 2px rgba(116, 143, 252, 0.2);
+}
+
+.admin-feedback__editor-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
+
+.admin-feedback__btn--save,
+.admin-feedback__btn--cancel {
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    border: none;
+}
+
+.admin-feedback__btn--save {
+    background-color: #4dabf7;
+    color: white;
+}
+
+.admin-feedback__btn--save:hover {
+    background-color: #339af0;
+}
+
+.admin-feedback__btn--cancel {
+    background-color: #e9ecef;
+    color: #495057;
+}
+
+.admin-feedback__btn--cancel:hover {
+    background-color: #dee2e6;
+}

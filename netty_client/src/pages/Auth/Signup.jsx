@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Auth.css';
+import { API_BASE_URL } from '../../config';
 import GrowthTestForm from '../../components/Auth/GrowthTestForm';
 
 function Signup() {
@@ -14,7 +15,6 @@ function Signup() {
         birthDate: '',
         phone: '',
         location: '',
-        affiliation: 'student',
         affiliation: 'student',
         termsAgreed: false,
         privacyAgreed: false,
@@ -69,7 +69,7 @@ function Signup() {
         }
 
         try {
-            const response = await fetch('http://localhost:5000/api/auth/signup', {
+            const response = await fetch(`${API_BASE_URL}/api/auth/signup`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

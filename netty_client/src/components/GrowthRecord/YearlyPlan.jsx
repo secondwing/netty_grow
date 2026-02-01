@@ -1,9 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { RotateCcw, RotateCw } from 'lucide-react';
+import axios from 'axios';
+import { API_BASE_URL } from '../../config';
+import { useNotification } from '../../contexts/NotificationContext';
 import useHistory from '../../hooks/useHistory';
+import AdminFeedback from '../Common/AdminFeedback';
 
 // YearlyPlan component
-function YearlyPlan({ plan, onUpdate }) {
+function YearlyPlan({ plan, user, onUpdate, refreshPlan }) {
+    const { showNotification } = useNotification();
     const { state: localPlan, set: setLocalPlan, undo, redo, canUndo, canRedo, clearHistory } = useHistory(plan);
     const [lastSavedPlan, setLastSavedPlan] = useState(plan);
     const localPlanRef = useRef(plan);
@@ -120,6 +125,20 @@ function YearlyPlan({ plan, onUpdate }) {
     const handleSave = () => {
         onUpdate(localPlan);
         setLastSavedPlan(localPlan);
+    };
+
+    const handleSaveFeedback = async (content) => {
+        try {
+            await axios.put(`${API_BASE_URL}/api/growth/plan/${plan._id}/feedback`,
+                { feedback: { content, author: user.name || 'Admin' } },
+                { withCredentials: true }
+            );
+            showNotification('피드백이 저장되었습니다.', 'success');
+            refreshPlan(); // Refresh to show latest feedback
+        } catch (error) {
+            console.error('Error saving feedback:', error);
+            showNotification('피드백 저장 실패', 'error');
+        }
     };
 
     if (!localPlan) return null;
@@ -262,6 +281,12 @@ function YearlyPlan({ plan, onUpdate }) {
                     )}
                 </div>
             </div>
+            <AdminFeedback
+                feedback={plan.adminFeedback}
+                onSave={handleSaveFeedback}
+                canEdit={user?.role === 'admin'}
+                label="성장 계획 피드백"
+            />
         </div>
     );
 }

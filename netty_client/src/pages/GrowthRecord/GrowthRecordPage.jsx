@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { PDFDownloadLink } from '@react-pdf/renderer';
+import { API_BASE_URL } from '../../config';
 import { useNotification } from '../../contexts/NotificationContext';
 import YearlyPlan from '../../components/GrowthRecord/YearlyPlan';
 import MonthlyIndicator from '../../components/GrowthRecord/MonthlyIndicator';
@@ -36,7 +37,7 @@ function GrowthRecordPage() {
 
     const fetchUser = async () => {
         try {
-            const res = await axios.get('http://localhost:5000/api/auth/me', {
+            const res = await axios.get(`${API_BASE_URL}/api/auth/me`, {
                 withCredentials: true
             });
             setUser(res.data);
@@ -47,7 +48,7 @@ function GrowthRecordPage() {
 
     const fetchPlan = async () => {
         try {
-            const res = await axios.get(`http://localhost:5000/api/growth/plan/${year}`, {
+            const res = await axios.get(`${API_BASE_URL}/api/growth/plan/${year}`, {
                 withCredentials: true
             });
             setPlan(res.data);
@@ -59,7 +60,7 @@ function GrowthRecordPage() {
 
     const fetchLog = async () => {
         try {
-            const res = await axios.get(`http://localhost:5000/api/growth/log/${year}/${month}`, {
+            const res = await axios.get(`${API_BASE_URL}/api/growth/log/${year}/${month}`, {
                 withCredentials: true
             });
             setLog(res.data);
@@ -71,7 +72,7 @@ function GrowthRecordPage() {
 
     const fetchAllLogs = async () => {
         try {
-            const res = await axios.get(`http://localhost:5000/api/growth/logs/${year}`, {
+            const res = await axios.get(`${API_BASE_URL}/api/growth/logs/${year}`, {
                 withCredentials: true
             });
             setAllMonthlyLogs(res.data);
@@ -82,7 +83,7 @@ function GrowthRecordPage() {
 
     const handleUpdatePlan = async (data) => {
         try {
-            const res = await axios.put(`http://localhost:5000/api/growth/plan/${plan._id}`, data, {
+            const res = await axios.put(`${API_BASE_URL}/api/growth/plan/${plan._id}`, data, {
                 withCredentials: true
             });
             setPlan(res.data);
@@ -95,7 +96,7 @@ function GrowthRecordPage() {
 
     const handleUpdateLog = async (data) => {
         try {
-            const res = await axios.put(`http://localhost:5000/api/growth/log/${log._id}`, data, {
+            const res = await axios.put(`${API_BASE_URL}/api/growth/log/${log._id}`, data, {
                 withCredentials: true
             });
             setLog(res.data);
@@ -113,12 +114,26 @@ function GrowthRecordPage() {
 
         switch (activeTab) {
             case 'plan':
-                return <YearlyPlan plan={plan} onUpdate={handleUpdatePlan} />;
+                return <YearlyPlan plan={plan} user={user} onUpdate={handleUpdatePlan} refreshPlan={fetchPlan} />;
             case 'indicator':
                 const previousLog = allMonthlyLogs.find(l => l.year === year && l.month === month - 1);
-                return <MonthlyIndicator plan={plan} log={log} month={month} previousLog={previousLog} onUpdateLog={handleUpdateLog} />;
+                return <MonthlyIndicator
+                    plan={plan}
+                    log={log}
+                    month={month}
+                    previousLog={previousLog}
+                    user={user}
+                    onUpdateLog={handleUpdateLog}
+                    refreshLog={fetchLog}
+                />;
             case 'analysis':
-                return <MonthlyAnalysis plan={plan} log={log} onUpdateLog={handleUpdateLog} />;
+                return <MonthlyAnalysis
+                    plan={plan}
+                    log={log}
+                    user={user}
+                    onUpdateLog={handleUpdateLog}
+                    refreshLog={fetchLog}
+                />;
             case 'overview':
                 return <YearlyOverview plan={plan} onUpdate={handleUpdatePlan} />;
             case 'result':
@@ -204,6 +219,21 @@ function GrowthRecordPage() {
                 >
                     성장소감
                 </button>
+            </div>
+
+            {/* Mobile Tab Select */}
+            <div className="growth-tabs-mobile">
+                <select
+                    className="growth-select growth-tabs-mobile-select"
+                    value={activeTab}
+                    onChange={(e) => setActiveTab(e.target.value)}
+                >
+                    <option value="plan">성장 계획</option>
+                    <option value="indicator">월 성장일지</option>
+                    <option value="analysis">월 성장분석</option>
+                    <option value="result">연 결과보고서</option>
+                    <option value="reflection">성장소감</option>
+                </select>
             </div>
 
             {renderContent()}

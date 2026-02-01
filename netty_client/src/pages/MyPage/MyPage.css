@@ -226,3 +226,50 @@ label {
     height: 100%;
     object-fit: cover;
 }
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .my-page {
+        padding: 1rem;
+    }
+
+    .my-page__title {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .my-page__header {
+        padding: 2rem 1.5rem;
+    }
+
+    .my-page__content {
+        padding: 1.5rem;
+    }
+
+    .my-page__row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .my-page__label {
+        font-size: 0.85rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .my-page__value {
+        width: 100%;
+        padding-left: 0.5rem;
+        border-left: 2px solid #e0e7ff;
+    }
+
+    .my-page__actions {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .my-page__button {
+        margin-top: 0.5rem;
+    }
+}

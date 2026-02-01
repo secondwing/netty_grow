@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_BASE_URL } from '../config';
 
 export const AuthContext = createContext();
 
@@ -10,7 +11,7 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         const checkLoginStatus = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/api/auth/me', {
+                const response = await axios.get(`${API_BASE_URL}/api/auth/me`, {
                     withCredentials: true
                 });
                 if (response.status === 200) {
@@ -33,7 +34,7 @@ export const AuthProvider = ({ children }) => {
 
     const logout = async () => {
         try {
-            await axios.post('http://localhost:5000/api/auth/logout', {}, {
+            await axios.post(`${API_BASE_URL}/api/auth/logout`, {}, {
                 withCredentials: true
             });
             setUser(null);

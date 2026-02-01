@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './MyPage.css';
+import { API_BASE_URL } from '../../config';
 
 const MyPage = ({ currentUser }) => {
     const [userInfo, setUserInfo] = useState(null);
@@ -21,7 +22,7 @@ const MyPage = ({ currentUser }) => {
 
     const fetchUserInfo = async () => {
         try {
-            const response = await fetch(`http://localhost:5000/api/auth/user/${currentUser}`);
+            const response = await fetch(`${API_BASE_URL}/api/auth/user/${currentUser}`);
             if (!response.ok) {
                 throw new Error('Failed to fetch user info');
             }
@@ -52,7 +53,7 @@ const MyPage = ({ currentUser }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch(`http://localhost:5000/api/auth/user/${currentUser}`, {
+            const response = await fetch(`${API_BASE_URL}/api/auth/user/${currentUser}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

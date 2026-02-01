@@ -33,13 +33,23 @@ const monthlyLogSchema = new mongoose.Schema({
                 enum: ['achieved', 'unachieved', 'neutral'],
                 default: 'neutral'
             }
-        }]
+        }],
+        adminFeedback: {
+            content: { type: String, default: '' },
+            author: { type: String, default: '' },
+            updatedAt: { type: Date }
+        }
     }],
     itemAnalyses: [{
         itemId: mongoose.Schema.Types.ObjectId, // Refers to item in GrowthPlan
         strength: { type: String, default: '' },
         weakness: { type: String, default: '' },
-        supplement: { type: String, default: '' }
+        supplement: { type: String, default: '' },
+        adminFeedback: {
+            content: { type: String, default: '' },
+            author: { type: String, default: '' },
+            updatedAt: { type: Date }
+        }
     }],
     createdAt: {
         type: Date,

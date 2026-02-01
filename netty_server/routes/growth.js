@@ -109,6 +109,7 @@ router.get('/logs/:year', auth, async (req, res) => {
     }
 });
 
+
 // Update Monthly Log
 router.put('/log/:id', auth, async (req, res) => {
     try {
@@ -122,6 +123,73 @@ router.put('/log/:id', auth, async (req, res) => {
 
         if (!log) return res.status(404).json({ message: 'Log not found' });
 
+        res.json(log);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Server Error' });
+    }
+});
+
+const { verifyAdmin } = require('../middleware/auth');
+
+// Admin Feedback for Growth Plan
+router.put('/plan/:id/feedback', [auth, verifyAdmin], async (req, res) => {
+    try {
+        const { feedback } = req.body; // { content, author }
+
+        const plan = await GrowthPlan.findByIdAndUpdate(
+            req.params.id,
+            {
+                adminFeedback: {
+                    ...feedback,
+                    updatedAt: new Date()
+                }
+            },
+            { new: true }
+        );
+
+        if (!plan) return res.status(404).json({ message: 'Plan not found' });
+        res.json(plan);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Server Error' });
+    }
+});
+
+// Admin Feedback for Monthly Log (Activity or Item)
+router.put('/log/:id/feedback', [auth, verifyAdmin], async (req, res) => {
+    try {
+        const { targetType, targetId, feedback } = req.body;
+        // targetType: 'activity' | 'item'
+        // targetId: activityId | itemId
+        // feedback: { content, author }
+
+        const feedbackData = {
+            ...feedback,
+            updatedAt: new Date()
+        };
+
+        let updateQuery = {};
+        let filter = { _id: req.params.id };
+
+        if (targetType === 'activity') {
+            // Find logic to update specific array element
+            filter['activityLogs.activityId'] = targetId;
+            updateQuery = {
+                $set: { 'activityLogs.$.adminFeedback': feedbackData }
+            };
+        } else if (targetType === 'item') {
+            filter['itemAnalyses.itemId'] = targetId;
+            updateQuery = {
+                $set: { 'itemAnalyses.$.adminFeedback': feedbackData }
+            };
+        } else {
+            return res.status(400).json({ message: 'Invalid target type' });
+        }
+
+        const log = await MonthlyLog.findOneAndUpdate(filter, updateQuery, { new: true });
+
+        if (!log) return res.status(404).json({ message: 'Log or target item not found' });
         res.json(log);
     } catch (err) {
         console.error(err);

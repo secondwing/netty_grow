@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { RotateCcw, RotateCw } from 'lucide-react';
+import { API_BASE_URL } from '../../config';
 import useHistory from '../../hooks/useHistory';
 import LoadingButton from '../Common/LoadingButton';
 import AutoResizeTextarea from '../Common/AutoResizeTextarea';
@@ -73,7 +74,7 @@ function GrowthResult({ plan, onUpdate }) {
             const activityIds = item.activities.map(a => a._id);
             const activityContent = item.activities.map(a => a.content).join(', ');
 
-            const response = await fetch('http://localhost:5000/api/ai/draft/yearly-result', {
+            const response = await fetch(`${API_BASE_URL}/api/ai/draft/yearly-result`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { API_BASE_URL } from '../../config';
 import GrowthTestForm from '../../components/Auth/GrowthTestForm';
 import './Auth.css'; // Reuse auth styles
 
@@ -18,7 +19,7 @@ function GrowthTestPage() {
 
     const fetchGrowthTest = async () => {
         try {
-            const response = await fetch('http://localhost:5000/api/auth/me', {
+            const response = await fetch(`${API_BASE_URL}/api/auth/me`, {
                 credentials: 'include'
             });
             if (response.ok) {
@@ -58,10 +59,10 @@ function GrowthTestPage() {
             // But wait, the user update endpoint requires username in URL.
 
             // First get current user info to get username and other fields
-            const meResponse = await fetch('http://localhost:5000/api/auth/me', { credentials: 'include' });
+            const meResponse = await fetch(`${API_BASE_URL}/api/auth/me`, { credentials: 'include' });
             const me = await meResponse.json();
 
-            const response = await fetch(`http://localhost:5000/api/auth/user/${me.username}`, {
+            const response = await fetch(`${API_BASE_URL}/api/auth/user/${me.username}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

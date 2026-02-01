@@ -41,6 +41,11 @@ const growthPlanSchema = new mongoose.Schema({
     updatedAt: {
         type: Date,
         default: Date.now
+    },
+    adminFeedback: {
+        content: { type: String, default: '' },
+        author: { type: String, default: '' },
+        updatedAt: { type: Date }
     }
 });
 

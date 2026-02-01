@@ -2,6 +2,7 @@ import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useNotification } from '../../contexts/NotificationContext';
 import { AuthContext } from '../../contexts/AuthContext';
+import { API_BASE_URL } from '../../config';
 import './Auth.css';
 
 function Login({ onLogin }) {
@@ -23,7 +24,7 @@ function Login({ onLogin }) {
         e.preventDefault();
 
         try {
-            const response = await fetch('http://localhost:5000/api/auth/login', {
+            const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

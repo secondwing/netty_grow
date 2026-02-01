@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     }
 });
 
-const SectionMonthly = ({ log, plan }) => {
+const SectionMonthly = ({ log, plan, mode = 'all' }) => {
     if (!log) return <Text>기록이 없습니다.</Text>;
 
     // Helper to find activity content by ID
@@ -89,38 +89,46 @@ const SectionMonthly = ({ log, plan }) => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.sectionTitle}>월간 활동 지표</Text>
-            {log.activityLogs && log.activityLogs.map((l, i) => (
-                <View key={i} style={styles.logItem}>
-                    <Text style={styles.activityName}>{getActivityContent(l.activityId)}</Text>
-                    <Text style={styles.logContent}>{l.log || '기록 없음'}</Text>
-                </View>
-            ))}
+            {(mode === 'all' || mode === 'log') && (
+                <>
+                    <Text style={styles.sectionTitle}>월간 활동 지표</Text>
+                    {log.activityLogs && log.activityLogs.map((l, i) => (
+                        <View key={i} style={styles.logItem}>
+                            <Text style={styles.activityName}>{getActivityContent(l.activityId)}</Text>
+                            <Text style={styles.logContent}>{l.log || '기록 없음'}</Text>
+                        </View>
+                    ))}
+                </>
+            )}
 
-            <Text style={styles.sectionTitle}>월간 성장 분석</Text>
-            <View style={styles.analysisGrid}>
-                {log.itemAnalyses && log.itemAnalyses.map((analysis, i) => (
-                    <View key={i} style={{ width: '100%', marginBottom: 15 }}>
-                        <Text style={{ fontSize: 12, fontWeight: 'bold', marginBottom: 5 }}>
-                            목표: {getItemGoal(analysis.itemId)}
-                        </Text>
-                        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                            <View style={styles.analysisBox}>
-                                <Text style={styles.boxLabel}>강점 (잘한 점)</Text>
-                                <Text style={styles.boxContent}>{analysis.strength || '-'}</Text>
+            {(mode === 'all' || mode === 'analysis') && (
+                <>
+                    <Text style={styles.sectionTitle}>월간 성장 분석</Text>
+                    <View style={styles.analysisGrid}>
+                        {log.itemAnalyses && log.itemAnalyses.map((analysis, i) => (
+                            <View key={i} style={{ width: '100%', marginBottom: 15 }} wrap={false}>
+                                <Text style={{ fontSize: 12, fontWeight: 'bold', marginBottom: 5 }}>
+                                    목표: {getItemGoal(analysis.itemId)}
+                                </Text>
+                                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                    <View style={styles.analysisBox}>
+                                        <Text style={styles.boxLabel}>강점 (잘한 점)</Text>
+                                        <Text style={styles.boxContent}>{analysis.strength || '-'}</Text>
+                                    </View>
+                                    <View style={styles.analysisBox}>
+                                        <Text style={styles.boxLabel}>약점 (아쉬운 점)</Text>
+                                        <Text style={styles.boxContent}>{analysis.weakness || '-'}</Text>
+                                    </View>
+                                </View>
+                                <View style={styles.fullWidthBox}>
+                                    <Text style={styles.boxLabel}>보완 (성장 환경조성)</Text>
+                                    <Text style={styles.boxContent}>{analysis.supplement || '-'}</Text>
+                                </View>
                             </View>
-                            <View style={styles.analysisBox}>
-                                <Text style={styles.boxLabel}>약점 (아쉬운 점)</Text>
-                                <Text style={styles.boxContent}>{analysis.weakness || '-'}</Text>
-                            </View>
-                        </View>
-                        <View style={styles.fullWidthBox}>
-                            <Text style={styles.boxLabel}>보완 (성장 환경조성)</Text>
-                            <Text style={styles.boxContent}>{analysis.supplement || '-'}</Text>
-                        </View>
+                        ))}
                     </View>
-                ))}
-            </View>
+                </>
+            )}
         </View>
     );
 };

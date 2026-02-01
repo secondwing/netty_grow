@@ -78,26 +78,9 @@ const SectionYearly = ({ plan }) => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.sectionTitle}>연간 한눈에 정리</Text>
-            <View style={styles.overviewGrid}>
-                {plan.yearlyOverview && plan.yearlyOverview.map((overview, i) => (
-                    <View key={i} style={styles.overviewBox}>
-                        <Text style={styles.monthTitle}>{overview.month}월</Text>
-
-                        <Text style={styles.contentLabel}>활동내용</Text>
-                        <Text style={styles.contentText}>
-                            {overview.content ? (overview.content.length > 50 ? overview.content.substring(0, 50) + '...' : overview.content) : '-'}
-                        </Text>
-
-                        <Text style={styles.contentLabel}>핵심요약</Text>
-                        <Text style={styles.contentText}>{overview.summary || '-'}</Text>
-                    </View>
-                ))}
-            </View>
-
             <Text style={styles.sectionTitle}>연간 결과 보고서</Text>
             {plan.items.map((item, i) => (
-                <View key={i} style={styles.resultItem}>
+                <View key={i} style={styles.resultItem} wrap={false}>
                     <Text style={styles.resultGoal}>목표: {item.goal}</Text>
                     {item.activities.map((act, j) => (
                         <View key={j} style={styles.activityRow}>

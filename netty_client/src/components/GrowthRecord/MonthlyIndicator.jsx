@@ -3,8 +3,13 @@ import { RotateCcw, RotateCw } from 'lucide-react';
 import useHistory from '../../hooks/useHistory';
 import LoadingButton from '../Common/LoadingButton';
 import AutoResizeTextarea from '../Common/AutoResizeTextarea';
+import axios from 'axios';
+import { API_BASE_URL } from '../../config';
+import { useNotification } from '../../contexts/NotificationContext';
+import AdminFeedback from '../Common/AdminFeedback';
 
-function MonthlyIndicator({ plan, log, month, previousLog, onUpdateLog }) {
+function MonthlyIndicator({ plan, log, month, previousLog, user, onUpdateLog, refreshLog }) {
+    const { showNotification } = useNotification();
     const { state: localLog, set: setLocalLog, undo, redo, canUndo, canRedo, clearHistory } = useHistory(log);
     const [lastSavedLog, setLastSavedLog] = useState(log);
     const localLogRef = useRef(log);
@@ -178,7 +183,7 @@ function MonthlyIndicator({ plan, log, month, previousLog, onUpdateLog }) {
             entries = [{ title: '', actionPlan: '', reflection: legacyLog, status: 'neutral' }];
         }
 
-        return { entries: entries || [] };
+        return { entries: entries || [], adminFeedback: logObj.adminFeedback };
     };
 
     const handleSave = () => {
@@ -207,6 +212,24 @@ function MonthlyIndicator({ plan, log, month, previousLog, onUpdateLog }) {
                 ...localLog,
                 activityLogs: newActivityLogs
             });
+        }
+    };
+
+    const handleSaveFeedback = async (activityId, content) => {
+        try {
+            await axios.put(`${API_BASE_URL}/api/growth/log/${log._id}/feedback`,
+                {
+                    targetType: 'activity',
+                    targetId: activityId,
+                    feedback: { content, author: user.name || 'Admin' }
+                },
+                { withCredentials: true }
+            );
+            showNotification('피드백이 저장되었습니다.', 'success');
+            refreshLog();
+        } catch (error) {
+            console.error('Error saving feedback:', error);
+            showNotification('피드백 저장 실패', 'error');
         }
     };
 
@@ -300,7 +323,7 @@ function MonthlyIndicator({ plan, log, month, previousLog, onUpdateLog }) {
                                     {item.activities.map((activity, activityIndex) => {
                                         const isDeleted = activity.isDeleted;
                                         const deletedAt = activity.deletedAt ? new Date(activity.deletedAt) : null;
-                                        const { entries } = getActivityLogData(activity._id);
+                                        const { entries, adminFeedback } = getActivityLogData(activity._id);
                                         const hasLog = entries.length > 0;
 
                                         let shouldShow = !isDeleted;
@@ -392,6 +415,12 @@ function MonthlyIndicator({ plan, log, month, previousLog, onUpdateLog }) {
                                                         + 기록 추가
                                                     </button>
                                                 </div>
+                                                <AdminFeedback
+                                                    feedback={adminFeedback}
+                                                    onSave={(content) => handleSaveFeedback(activity._id, content)}
+                                                    canEdit={user?.role === 'admin'}
+                                                    label="활동 피드백"
+                                                />
                                             </div>
                                         );
                                     })}

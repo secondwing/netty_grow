@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { API_BASE_URL } from '../../config';
 import './RecordInput.css';
 
 function RecordInput({ onRecordCreated }) {
@@ -11,7 +12,7 @@ function RecordInput({ onRecordCreated }) {
 
         setIsSubmitting(true);
         try {
-            const response = await fetch('http://localhost:5000/api/records', {
+            const response = await fetch(`${API_BASE_URL}/api/records`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

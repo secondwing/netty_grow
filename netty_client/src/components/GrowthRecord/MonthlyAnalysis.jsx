@@ -1,10 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { RotateCcw, RotateCw } from 'lucide-react';
+import { API_BASE_URL } from '../../config';
 import useHistory from '../../hooks/useHistory';
 import AutoResizeTextarea from '../Common/AutoResizeTextarea';
 import LoadingButton from '../Common/LoadingButton';
+import { useNotification } from '../../contexts/NotificationContext';
+import AdminFeedback from '../Common/AdminFeedback';
 
-function MonthlyAnalysis({ plan, log, onUpdateLog }) {
+function MonthlyAnalysis({ plan, log, user, onUpdateLog, refreshLog }) {
+    const { showNotification } = useNotification();
     const { state: localLog, set: setLocalLog, undo, redo, canUndo, canRedo, clearHistory } = useHistory(log);
     const [lastSavedLog, setLastSavedLog] = useState(log);
     const localLogRef = useRef(log);
@@ -114,7 +118,7 @@ function MonthlyAnalysis({ plan, log, onUpdateLog }) {
                 return;
             }
 
-            const response = await fetch('http://localhost:5000/api/ai/draft/monthly-analysis', {
+            const response = await fetch(`${API_BASE_URL}/api/ai/draft/monthly-analysis`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -146,6 +150,24 @@ function MonthlyAnalysis({ plan, log, onUpdateLog }) {
     const handleSave = () => {
         onUpdateLog(localLog);
         setLastSavedLog(localLog);
+    };
+
+    const handleSaveFeedback = async (itemId, content) => {
+        try {
+            await axios.put(`${API_BASE_URL}/api/growth/log/${log._id}/feedback`,
+                {
+                    targetType: 'item',
+                    targetId: itemId,
+                    feedback: { content, author: user.name || 'Admin' }
+                },
+                { withCredentials: true }
+            );
+            showNotification('피드백이 저장되었습니다.', 'success');
+            refreshLog();
+        } catch (error) {
+            console.error('Error saving feedback:', error);
+            showNotification('피드백 저장 실패', 'error');
+        }
     };
 
     if (!plan || !localLog) return <div>Loading...</div>;
@@ -280,12 +302,18 @@ function MonthlyAnalysis({ plan, log, onUpdateLog }) {
                                         />
                                     </div>
                                 </div>
+                                <AdminFeedback
+                                    feedback={localLog.itemAnalyses?.find(a => a.itemId === item._id)?.adminFeedback}
+                                    onSave={(content) => handleSaveFeedback(item._id, content)}
+                                    canEdit={user?.role === 'admin'}
+                                    label="성장 분석 피드백"
+                                />
                             </div>
                         );
                     })}
                 </div>
-            </div>
-        </div>
+            </div >
+        </div >
     );
 }
 

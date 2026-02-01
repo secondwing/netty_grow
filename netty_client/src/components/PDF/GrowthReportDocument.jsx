@@ -6,7 +6,8 @@ import SectionPlan from './SectionPlan';
 import SectionMonthly from './SectionMonthly';
 import SectionYearly from './SectionYearly';
 
-// Register Korean Font
+import SectionReflection from './SectionReflection';
+
 // Register Korean Font
 Font.register({
     family: 'NotoSansKR',
@@ -29,19 +30,33 @@ const GrowthReportDocument = ({ plan, monthlyLogs, user }) => {
         <Document>
             <ReportCover year={plan.year} userName={user?.name || '사용자'} />
 
+            {/* 1. Growth Plan */}
             <ReportPage title="성장 계획">
                 <SectionPlan plan={plan} />
             </ReportPage>
 
-            {/* Monthly Logs Loop */}
+            {/* 2. Monthly Logs (Activity Logs) */}
             {monthlyLogs && monthlyLogs.map((log, index) => (
-                <ReportPage key={index} title={`${log.month}월 성장 기록`}>
-                    <SectionMonthly log={log} plan={plan} />
+                <ReportPage key={`log-${index}`} title={`${log.month}월 성장일지`}>
+                    <SectionMonthly log={log} plan={plan} mode="log" />
                 </ReportPage>
             ))}
 
-            <ReportPage title="연간 결과 보고서">
+            {/* 3. Monthly Analysis */}
+            {monthlyLogs && monthlyLogs.map((log, index) => (
+                <ReportPage key={`analysis-${index}`} title={`${log.month}월 성장분석`}>
+                    <SectionMonthly log={log} plan={plan} mode="analysis" />
+                </ReportPage>
+            ))}
+
+            {/* 4. Yearly Result Report */}
+            <ReportPage title="연 결과보고서">
                 <SectionYearly plan={plan} />
+            </ReportPage>
+
+            {/* 5. Growth Reflection */}
+            <ReportPage title="성장 소감">
+                <SectionReflection plan={plan} />
             </ReportPage>
         </Document>
     );

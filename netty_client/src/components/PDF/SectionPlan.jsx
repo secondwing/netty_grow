@@ -57,7 +57,7 @@ const SectionPlan = ({ plan }) => {
     return (
         <View style={styles.container}>
             {plan.items.map((item, index) => (
-                <View key={index} style={styles.item}>
+                <View key={index} style={styles.item} wrap={false}>
                     <View style={styles.header}>
                         <Text style={{ fontSize: 14, fontWeight: 'bold' }}>목표 {index + 1}</Text>
                     </View>

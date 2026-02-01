@@ -88,11 +88,20 @@ router.post('/login', async (req, res) => {
         res.cookie('token', token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production', // Use secure in production
-            sameSite: 'strict',
+            sameSite: 'lax',
             maxAge: 24 * 60 * 60 * 1000 // 24 hours
         });
 
-        res.json({ message: 'Login successful', userId: user._id, name: user.name, username: user.username });
+        res.json({
+            message: 'Login successful',
+            user: {
+                _id: user._id,
+                name: user.name,
+                username: user.username,
+                role: user.role,
+                affiliation: user.affiliation
+            }
+        });
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: '서버 오류' });

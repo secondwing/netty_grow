@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import './DailyRecordPage.css';
+import { API_BASE_URL } from '../../config';
 import RecordInput from '../../components/RecordInput/RecordInput';
 import DailyRecordList from '../../components/DailyRecordList/DailyRecordList';
 import ContributionGraph from '../../components/ContributionGraph/ContributionGraph';
@@ -22,7 +23,7 @@ const DailyRecordPage = () => {
 
     const fetchRecords = async () => {
         try {
-            const response = await fetch('http://localhost:5000/api/records', {
+            const response = await fetch(`${API_BASE_URL}/api/records`, {
                 credentials: 'include'
             });
             if (!response.ok) {
@@ -58,7 +59,7 @@ const DailyRecordPage = () => {
 
     const handleRecordDeleted = async (id) => {
         try {
-            const response = await fetch(`http://localhost:5000/api/records/${id}`, {
+            const response = await fetch(`${API_BASE_URL}/api/records/${id}`, {
                 method: 'DELETE',
                 credentials: 'include'
             });
@@ -77,7 +78,7 @@ const DailyRecordPage = () => {
 
     const handleRecordUpdated = async (id, newContent) => {
         try {
-            const response = await fetch(`http://localhost:5000/api/records/${id}`, {
+            const response = await fetch(`${API_BASE_URL}/api/records/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
