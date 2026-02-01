@@ -111,6 +111,7 @@ function AdminUserGrowthPage({ user: adminUser }) {
                     onUpdate={handleUpdatePlan}
                     refreshPlan={fetchPlan}
                     canAdminFeedback={true}
+                    readOnly={true}
                 />;
             case 'monthly-indicator':
                 return <MonthlyIndicator

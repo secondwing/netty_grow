@@ -7,7 +7,7 @@ import LoadingButton from '../Common/LoadingButton';
 import { useNotification } from '../../contexts/NotificationContext';
 import AdminFeedback from '../Common/AdminFeedback';
 
-function MonthlyAnalysis({ plan, log, user, onUpdateLog, refreshLog, canAdminFeedback = false }) {
+function MonthlyAnalysis({ plan, log, user, onUpdateLog, refreshLog, canAdminFeedback = false, readOnly = false }) {
     const { showNotification } = useNotification();
     const { state: localLog, set: setLocalLog, undo, redo, canUndo, canRedo, clearHistory } = useHistory(log);
     const [lastSavedLog, setLastSavedLog] = useState(log);
@@ -178,35 +178,39 @@ function MonthlyAnalysis({ plan, log, user, onUpdateLog, refreshLog, canAdminFee
                 <div className="growth-section__header">
                     <h2 className="growth-section__title">월 성장분석</h2>
                     <div className="growth-section__controls">
-                        <button
-                            className="growth-btn-icon"
-                            onClick={undo}
-                            disabled={!canUndo}
-                            title="실행 취소 (Ctrl+Z)"
-                            style={{
-                                marginRight: '0.25rem',
-                                color: canUndo ? '#6b21a8' : '#808080',
-                                transition: 'color 0.2s'
-                            }}
-                        >
-                            <RotateCcw size={20} strokeWidth={1.5} />
-                        </button>
-                        <button
-                            className="growth-btn-icon"
-                            onClick={redo}
-                            disabled={!canRedo}
-                            title="다시 실행 (Ctrl+Y)"
-                            style={{
-                                marginRight: '0.5rem',
-                                color: canRedo ? '#6b21a8' : '#808080',
-                                transition: 'color 0.2s'
-                            }}
-                        >
-                            <RotateCw size={20} strokeWidth={1.5} />
-                        </button>
-                        <button className="growth-btn growth-btn--save" onClick={handleSave}>
-                            저장하기
-                        </button>
+                        {!readOnly && (
+                            <>
+                                <button
+                                    className="growth-btn-icon"
+                                    onClick={undo}
+                                    disabled={!canUndo}
+                                    title="실행 취소 (Ctrl+Z)"
+                                    style={{
+                                        marginRight: '0.25rem',
+                                        color: canUndo ? '#6b21a8' : '#808080',
+                                        transition: 'color 0.2s'
+                                    }}
+                                >
+                                    <RotateCcw size={20} strokeWidth={1.5} />
+                                </button>
+                                <button
+                                    className="growth-btn-icon"
+                                    onClick={redo}
+                                    disabled={!canRedo}
+                                    title="다시 실행 (Ctrl+Y)"
+                                    style={{
+                                        marginRight: '0.5rem',
+                                        color: canRedo ? '#6b21a8' : '#808080',
+                                        transition: 'color 0.2s'
+                                    }}
+                                >
+                                    <RotateCw size={20} strokeWidth={1.5} />
+                                </button>
+                                <button className="growth-btn growth-btn--save" onClick={handleSave}>
+                                    저장하기
+                                </button>
+                            </>
+                        )}
                     </div>
                 </div>
 
@@ -253,11 +257,13 @@ function MonthlyAnalysis({ plan, log, user, onUpdateLog, refreshLog, canAdminFee
                                     <div className="growth-analysis-item">
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                                             <label style={{ margin: 0 }}>행동결과 (강점)</label>
-                                            <LoadingButton
-                                                className="growth-btn growth-btn--ai"
-                                                onClick={() => handleDraftAI(item._id, 'strength', item.goal)}
-                                                style={{ fontSize: '0.8rem', padding: '0.25rem 0.75rem', background: '#e0e7ff', color: '#4f46e5' }}
-                                            />
+                                            {!readOnly && (
+                                                <LoadingButton
+                                                    className="growth-btn growth-btn--ai"
+                                                    onClick={() => handleDraftAI(item._id, 'strength', item.goal)}
+                                                    style={{ fontSize: '0.8rem', padding: '0.25rem 0.75rem', background: '#e0e7ff', color: '#4f46e5' }}
+                                                />
+                                            )}
                                         </div>
                                         <AutoResizeTextarea
                                             className="growth-textarea"
@@ -265,16 +271,19 @@ function MonthlyAnalysis({ plan, log, user, onUpdateLog, refreshLog, canAdminFee
                                             onChange={(e) => handleAnalysisChange(item._id, 'strength', e.target.value)}
                                             placeholder="잘한 점, 성과 등을 기록해주세요"
                                             minHeight="100px"
+                                            disabled={readOnly}
                                         />
                                     </div>
                                     <div className="growth-analysis-item">
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                                             <label style={{ margin: 0 }}>행동결과 (약점)</label>
-                                            <LoadingButton
-                                                className="growth-btn growth-btn--ai"
-                                                onClick={() => handleDraftAI(item._id, 'weakness', item.goal)}
-                                                style={{ fontSize: '0.8rem', padding: '0.25rem 0.75rem', background: '#e0e7ff', color: '#4f46e5' }}
-                                            />
+                                            {!readOnly && (
+                                                <LoadingButton
+                                                    className="growth-btn growth-btn--ai"
+                                                    onClick={() => handleDraftAI(item._id, 'weakness', item.goal)}
+                                                    style={{ fontSize: '0.8rem', padding: '0.25rem 0.75rem', background: '#e0e7ff', color: '#4f46e5' }}
+                                                />
+                                            )}
                                         </div>
                                         <AutoResizeTextarea
                                             className="growth-textarea"
@@ -282,16 +291,19 @@ function MonthlyAnalysis({ plan, log, user, onUpdateLog, refreshLog, canAdminFee
                                             onChange={(e) => handleAnalysisChange(item._id, 'weakness', e.target.value)}
                                             placeholder="아쉬운 점, 부족한 점을 기록해주세요"
                                             minHeight="100px"
+                                            disabled={readOnly}
                                         />
                                     </div>
                                     <div className="growth-analysis-item full-width">
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                                             <label style={{ margin: 0 }}>행동보완 (성장 환경조성)</label>
-                                            <LoadingButton
-                                                className="growth-btn growth-btn--ai"
-                                                onClick={() => handleDraftAI(item._id, 'supplement', item.goal)}
-                                                style={{ fontSize: '0.8rem', padding: '0.25rem 0.75rem', background: '#e0e7ff', color: '#4f46e5' }}
-                                            />
+                                            {!readOnly && (
+                                                <LoadingButton
+                                                    className="growth-btn growth-btn--ai"
+                                                    onClick={() => handleDraftAI(item._id, 'supplement', item.goal)}
+                                                    style={{ fontSize: '0.8rem', padding: '0.25rem 0.75rem', background: '#e0e7ff', color: '#4f46e5' }}
+                                                />
+                                            )}
                                         </div>
                                         <AutoResizeTextarea
                                             className="growth-textarea"
@@ -299,6 +311,7 @@ function MonthlyAnalysis({ plan, log, user, onUpdateLog, refreshLog, canAdminFee
                                             onChange={(e) => handleAnalysisChange(item._id, 'supplement', e.target.value)}
                                             placeholder="개선할 점, 앞으로의 계획을 기록해주세요"
                                             minHeight="100px"
+                                            disabled={readOnly}
                                         />
                                     </div>
                                 </div>

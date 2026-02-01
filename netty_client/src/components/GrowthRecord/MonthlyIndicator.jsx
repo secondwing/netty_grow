@@ -8,7 +8,7 @@ import { API_BASE_URL } from '../../config';
 import { useNotification } from '../../contexts/NotificationContext';
 import AdminFeedback from '../Common/AdminFeedback';
 
-function MonthlyIndicator({ plan, log, month, previousLog, user, onUpdateLog, refreshLog, canAdminFeedback = false }) {
+function MonthlyIndicator({ plan, log, month, previousLog, user, onUpdateLog, refreshLog, canAdminFeedback = false, readOnly = false }) {
     const { showNotification } = useNotification();
     const { state: localLog, set: setLocalLog, undo, redo, canUndo, canRedo, clearHistory } = useHistory(log);
     const [lastSavedLog, setLastSavedLog] = useState(log);
@@ -241,44 +241,48 @@ function MonthlyIndicator({ plan, log, month, previousLog, user, onUpdateLog, re
                 <div className="growth-section__header">
                     <h2 className="growth-section__title">{month}월 성장일지</h2>
                     <div className="growth-section__controls">
-                        {month > 1 && (
-                            <button
-                                className="growth-btn growth-btn--secondary"
-                                onClick={handleLoadPreviousLog}
-                                style={{ marginRight: '0.5rem' }}
-                            >
-                                {month - 1}월 기록 불러오기
-                            </button>
+                        {!readOnly && (
+                            <>
+                                {month > 1 && (
+                                    <button
+                                        className="growth-btn growth-btn--secondary"
+                                        onClick={handleLoadPreviousLog}
+                                        style={{ marginRight: '0.5rem' }}
+                                    >
+                                        {month - 1}월 기록 불러오기
+                                    </button>
+                                )}
+                                <button
+                                    className="growth-btn-icon"
+                                    onClick={undo}
+                                    disabled={!canUndo}
+                                    title="실행 취소 (Ctrl+Z)"
+                                    style={{
+                                        marginRight: '0.25rem',
+                                        color: canUndo ? '#6b21a8' : '#808080',
+                                        transition: 'color 0.2s'
+                                    }}
+                                >
+                                    <RotateCcw size={20} strokeWidth={1.5} />
+                                </button>
+                                <button
+                                    className="growth-btn-icon"
+                                    onClick={redo}
+                                    disabled={!canRedo}
+                                    title="다시 실행 (Ctrl+Y)"
+                                    style={{
+                                        marginRight: '0.5rem',
+                                        color: canRedo ? '#6b21a8' : '#808080',
+                                        transition: 'color 0.2s'
+                                    }}
+                                >
+                                    <RotateCw size={20} strokeWidth={1.5} />
+                                </button>
+                                <button className="growth-btn growth-btn--save" onClick={handleSave}>
+                                    저장하기
+                                </button>
+                            </>
                         )}
-                        <button
-                            className="growth-btn-icon"
-                            onClick={undo}
-                            disabled={!canUndo}
-                            title="실행 취소 (Ctrl+Z)"
-                            style={{
-                                marginRight: '0.25rem',
-                                color: canUndo ? '#6b21a8' : '#808080',
-                                transition: 'color 0.2s'
-                            }}
-                        >
-                            <RotateCcw size={20} strokeWidth={1.5} />
-                        </button>
-                        <button
-                            className="growth-btn-icon"
-                            onClick={redo}
-                            disabled={!canRedo}
-                            title="다시 실행 (Ctrl+Y)"
-                            style={{
-                                marginRight: '0.5rem',
-                                color: canRedo ? '#6b21a8' : '#808080',
-                                transition: 'color 0.2s'
-                            }}
-                        >
-                            <RotateCw size={20} strokeWidth={1.5} />
-                        </button>
-                        <button className="growth-btn growth-btn--save" onClick={handleSave}>
-                            저장하기
-                        </button>
                     </div>
                 </div>
 
@@ -358,24 +362,29 @@ function MonthlyIndicator({ plan, log, month, previousLog, user, onUpdateLog, re
                                                                         value={entry.title || ''}
                                                                         onChange={(e) => handleEntryChange(activity._id, idx, 'title', e.target.value)}
                                                                         placeholder="제목을 입력하세요"
+                                                                        disabled={readOnly}
                                                                     />
                                                                 </div>
                                                                 <div className="growth-log-status-group">
                                                                     <button
                                                                         className={`growth-status-toggle ${getStatusClass(entry.status)}`}
-                                                                        onClick={() => toggleStatus(activity._id, idx)}
-                                                                        title="클릭하여 상태 변경"
+                                                                        onClick={() => !readOnly && toggleStatus(activity._id, idx)}
+                                                                        title={readOnly ? "상태 (수정 불가)" : "클릭하여 상태 변경"}
+                                                                        disabled={readOnly}
+                                                                        style={readOnly ? { cursor: 'default', opacity: 1 } : {}}
                                                                     >
                                                                         {getStatusIcon(entry.status)}
                                                                     </button>
                                                                 </div>
-                                                                <button
-                                                                    className="growth-btn-icon growth-btn-remove-entry"
-                                                                    onClick={() => handleRemoveEntry(activity._id, idx)}
-                                                                    title="삭제"
-                                                                >
-                                                                    ×
-                                                                </button>
+                                                                {!readOnly && (
+                                                                    <button
+                                                                        className="growth-btn-icon growth-btn-remove-entry"
+                                                                        onClick={() => handleRemoveEntry(activity._id, idx)}
+                                                                        title="삭제"
+                                                                    >
+                                                                        ×
+                                                                    </button>
+                                                                )}
                                                             </div>
                                                             <div className="growth-log-entry-body">
                                                                 <div className="growth-log-input-group">
@@ -386,6 +395,7 @@ function MonthlyIndicator({ plan, log, month, previousLog, user, onUpdateLog, re
                                                                         onChange={(e) => handleEntryChange(activity._id, idx, 'actionPlan', e.target.value)}
                                                                         placeholder="실천방안"
                                                                         minHeight="60px"
+                                                                        disabled={readOnly}
                                                                     />
                                                                 </div>
                                                                 <div className="growth-log-input-group">
@@ -396,6 +406,7 @@ function MonthlyIndicator({ plan, log, month, previousLog, user, onUpdateLog, re
                                                                         onChange={(e) => handleEntryChange(activity._id, idx, 'reflection', e.target.value)}
                                                                         placeholder="활동소감"
                                                                         minHeight="60px"
+                                                                        disabled={readOnly}
                                                                     />
                                                                 </div>
                                                             </div>
@@ -408,12 +419,14 @@ function MonthlyIndicator({ plan, log, month, previousLog, user, onUpdateLog, re
                                                     )}
                                                 </div>
                                                 <div className="growth-activity-actions">
-                                                    <button
-                                                        className="growth-btn growth-btn--add-sub"
-                                                        onClick={() => handleAddEntry(activity._id)}
-                                                    >
-                                                        + 기록 추가
-                                                    </button>
+                                                    {!readOnly && (
+                                                        <button
+                                                            className="growth-btn growth-btn--add-sub"
+                                                            onClick={() => handleAddEntry(activity._id)}
+                                                        >
+                                                            + 기록 추가
+                                                        </button>
+                                                    )}
                                                 </div>
                                                 <AdminFeedback
                                                     feedback={adminFeedback}

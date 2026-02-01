@@ -7,7 +7,7 @@ import useHistory from '../../hooks/useHistory';
 import AdminFeedback from '../Common/AdminFeedback';
 
 // YearlyPlan component
-function YearlyPlan({ plan, user, onUpdate, refreshPlan, canAdminFeedback = false }) {
+function YearlyPlan({ plan, user, onUpdate, refreshPlan, canAdminFeedback = false, readOnly = false }) {
     const { showNotification } = useNotification();
     const { state: localPlan, set: setLocalPlan, undo, redo, canUndo, canRedo, clearHistory } = useHistory(plan);
     const [lastSavedPlan, setLastSavedPlan] = useState(plan);
@@ -149,35 +149,39 @@ function YearlyPlan({ plan, user, onUpdate, refreshPlan, canAdminFeedback = fals
                 <div className="growth-section__header">
                     <h2 className="growth-section__title">나의 성장계획</h2>
                     <div className="growth-section__controls">
-                        <button
-                            className="growth-btn-icon"
-                            onClick={undo}
-                            disabled={!canUndo}
-                            title="실행 취소 (Ctrl+Z)"
-                            style={{
-                                marginRight: '0.25rem',
-                                color: canUndo ? '#6b21a8' : '#808080',
-                                transition: 'color 0.2s'
-                            }}
-                        >
-                            <RotateCcw size={20} strokeWidth={1.5} />
-                        </button>
-                        <button
-                            className="growth-btn-icon"
-                            onClick={redo}
-                            disabled={!canRedo}
-                            title="다시 실행 (Ctrl+Y)"
-                            style={{
-                                marginRight: '0.5rem',
-                                color: canRedo ? '#6b21a8' : '#808080',
-                                transition: 'color 0.2s'
-                            }}
-                        >
-                            <RotateCw size={20} strokeWidth={1.5} />
-                        </button>
-                        <button className="growth-btn growth-btn--save" onClick={handleSave}>
-                            저장하기
-                        </button>
+                        {!readOnly && (
+                            <>
+                                <button
+                                    className="growth-btn-icon"
+                                    onClick={undo}
+                                    disabled={!canUndo}
+                                    title="실행 취소 (Ctrl+Z)"
+                                    style={{
+                                        marginRight: '0.25rem',
+                                        color: canUndo ? '#6b21a8' : '#808080',
+                                        transition: 'color 0.2s'
+                                    }}
+                                >
+                                    <RotateCcw size={20} strokeWidth={1.5} />
+                                </button>
+                                <button
+                                    className="growth-btn-icon"
+                                    onClick={redo}
+                                    disabled={!canRedo}
+                                    title="다시 실행 (Ctrl+Y)"
+                                    style={{
+                                        marginRight: '0.5rem',
+                                        color: canRedo ? '#6b21a8' : '#808080',
+                                        transition: 'color 0.2s'
+                                    }}
+                                >
+                                    <RotateCw size={20} strokeWidth={1.5} />
+                                </button>
+                                <button className="growth-btn growth-btn--save" onClick={handleSave}>
+                                    저장하기
+                                </button>
+                            </>
+                        )}
                     </div>
                 </div>
 
@@ -193,12 +197,14 @@ function YearlyPlan({ plan, user, onUpdate, refreshPlan, canAdminFeedback = fals
                             <div key={item._id || itemIndex} className="growth-item-card">
                                 <div className="growth-item-card__header">
                                     <h3>성장 목표 {displayIndex}</h3>
-                                    <button
-                                        className="growth-btn growth-btn--delete"
-                                        onClick={() => handleRemoveItem(itemIndex)}
-                                    >
-                                        삭제
-                                    </button>
+                                    {!readOnly && (
+                                        <button
+                                            className="growth-btn growth-btn--delete"
+                                            onClick={() => handleRemoveItem(itemIndex)}
+                                        >
+                                            삭제
+                                        </button>
+                                    )}
                                 </div>
 
                                 <div className="growth-form-group">
@@ -209,6 +215,7 @@ function YearlyPlan({ plan, user, onUpdate, refreshPlan, canAdminFeedback = fals
                                         value={item.desiredSelf}
                                         onChange={(e) => handleItemChange(itemIndex, 'desiredSelf', e.target.value)}
                                         placeholder="예: 건강하고 활기찬 나"
+                                        disabled={readOnly}
                                     />
                                 </div>
 
@@ -220,6 +227,7 @@ function YearlyPlan({ plan, user, onUpdate, refreshPlan, canAdminFeedback = fals
                                         value={item.goal}
                                         onChange={(e) => handleItemChange(itemIndex, 'goal', e.target.value)}
                                         placeholder="예: 체지방 15% 달성"
+                                        disabled={readOnly}
                                     />
                                 </div>
 
@@ -238,23 +246,28 @@ function YearlyPlan({ plan, user, onUpdate, refreshPlan, canAdminFeedback = fals
                                                         value={activity.content}
                                                         onChange={(e) => handleActivityChange(itemIndex, activityIndex, e.target.value)}
                                                         placeholder="구체적인 활동 내용"
+                                                        disabled={readOnly}
                                                     />
-                                                    <button
-                                                        className="growth-btn-icon"
-                                                        onClick={() => handleRemoveActivity(itemIndex, activityIndex)}
-                                                        title="활동 삭제"
-                                                    >
-                                                        ×
-                                                    </button>
+                                                    {!readOnly && (
+                                                        <button
+                                                            className="growth-btn-icon"
+                                                            onClick={() => handleRemoveActivity(itemIndex, activityIndex)}
+                                                            title="활동 삭제"
+                                                        >
+                                                            ×
+                                                        </button>
+                                                    )}
                                                 </div>
                                             );
                                         })}
-                                        <button
-                                            className="growth-btn growth-btn--add-sub"
-                                            onClick={() => handleAddActivity(itemIndex)}
-                                        >
-                                            + 활동 추가
-                                        </button>
+                                        {!readOnly && (
+                                            <button
+                                                className="growth-btn growth-btn--add-sub"
+                                                onClick={() => handleAddActivity(itemIndex)}
+                                            >
+                                                + 활동 추가
+                                            </button>
+                                        )}
                                     </div>
                                 </div>
 
@@ -266,6 +279,7 @@ function YearlyPlan({ plan, user, onUpdate, refreshPlan, canAdminFeedback = fals
                                         onChange={(e) => handleItemChange(itemIndex, 'motivation', e.target.value)}
                                         placeholder="이 목표를 달성하고 싶은 이유를 적어주세요"
                                         rows={3}
+                                        disabled={readOnly}
                                     />
                                 </div>
                             </div>
@@ -274,7 +288,7 @@ function YearlyPlan({ plan, user, onUpdate, refreshPlan, canAdminFeedback = fals
                 </div>
 
                 <div className="growth-actions">
-                    {localPlan.items.filter(item => !item.isDeleted).length < 3 && (
+                    {!readOnly && localPlan.items.filter(item => !item.isDeleted).length < 3 && (
                         <button className="growth-btn growth-btn--add" onClick={handleAddItem}>
                             + 성장 목표 추가
                         </button>
