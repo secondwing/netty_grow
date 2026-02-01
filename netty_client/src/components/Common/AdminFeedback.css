@@ -98,6 +98,8 @@
 
 .admin-feedback__textarea {
     width: 100%;
+    /* Fix overflow by including padding and border in width */
+    box-sizing: border-box;
     min-height: 100px;
     padding: 0.75rem;
     border: 1px solid #ced4da;
