@@ -50,6 +50,7 @@ const UserList = () => {
                             <th>권한</th>
                             <th>소속</th>
                             <th>가입일</th>
+                            <th>관리</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -64,6 +65,14 @@ const UserList = () => {
                                 </td>
                                 <td>{affiliationMap[user.affiliation] || user.affiliation}</td>
                                 <td>{new Date(user.createdAt).toLocaleDateString()}</td>
+                                <td>
+                                    <button
+                                        className="admin-btn-small"
+                                        onClick={() => window.location.href = `/admin/user/${user._id}/growth`}
+                                    >
+                                        성장기록 보기
+                                    </button>
+                                </td>
                             </tr>
                         ))}
                     </tbody>

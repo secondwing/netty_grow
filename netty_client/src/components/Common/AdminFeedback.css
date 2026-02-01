@@ -71,7 +71,7 @@
     border-top: 1px solid #e9ecef;
 }
 
-.admin-feedback__content p {
+.admin-feedback__content .admin-feedback__text {
     margin: 0;
     line-height: 1.6;
     color: #212529;

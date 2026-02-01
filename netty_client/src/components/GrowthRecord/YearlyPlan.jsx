@@ -7,7 +7,7 @@ import useHistory from '../../hooks/useHistory';
 import AdminFeedback from '../Common/AdminFeedback';
 
 // YearlyPlan component
-function YearlyPlan({ plan, user, onUpdate, refreshPlan }) {
+function YearlyPlan({ plan, user, onUpdate, refreshPlan, canAdminFeedback = false }) {
     const { showNotification } = useNotification();
     const { state: localPlan, set: setLocalPlan, undo, redo, canUndo, canRedo, clearHistory } = useHistory(plan);
     const [lastSavedPlan, setLastSavedPlan] = useState(plan);
@@ -284,7 +284,7 @@ function YearlyPlan({ plan, user, onUpdate, refreshPlan }) {
             <AdminFeedback
                 feedback={plan.adminFeedback}
                 onSave={handleSaveFeedback}
-                canEdit={user?.role === 'admin'}
+                canEdit={canAdminFeedback}
                 label="성장 계획 피드백"
             />
         </div>

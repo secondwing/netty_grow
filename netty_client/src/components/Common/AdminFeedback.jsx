@@ -22,9 +22,7 @@ function AdminFeedback({ feedback, onSave, canEdit, label = "관리자 피드백
         setIsEditing(false);
     };
 
-    if (!feedback?.content && !canEdit) {
-        return null;
-    }
+
 
     return (
         <div className={`admin-feedback ${isExpanded ? 'expanded' : ''}`}>
@@ -66,9 +64,9 @@ function AdminFeedback({ feedback, onSave, canEdit, label = "관리자 피드백
                     ) : (
                         <div className="admin-feedback__content">
                             {feedback?.content ? (
-                                <p>{feedback.content}</p>
+                                <div className="admin-feedback__text">{feedback.content}</div>
                             ) : (
-                                <p className="admin-feedback__empty">등록된 피드백이 없습니다.</p>
+                                <div className="admin-feedback__empty">등록된 피드백이 없습니다.</div>
                             )}
                             {feedback?.updatedAt && (
                                 <p className="admin-feedback__date">

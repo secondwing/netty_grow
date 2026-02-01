@@ -8,7 +8,7 @@ import { API_BASE_URL } from '../../config';
 import { useNotification } from '../../contexts/NotificationContext';
 import AdminFeedback from '../Common/AdminFeedback';
 
-function MonthlyIndicator({ plan, log, month, previousLog, user, onUpdateLog, refreshLog }) {
+function MonthlyIndicator({ plan, log, month, previousLog, user, onUpdateLog, refreshLog, canAdminFeedback = false }) {
     const { showNotification } = useNotification();
     const { state: localLog, set: setLocalLog, undo, redo, canUndo, canRedo, clearHistory } = useHistory(log);
     const [lastSavedLog, setLastSavedLog] = useState(log);
@@ -418,7 +418,7 @@ function MonthlyIndicator({ plan, log, month, previousLog, user, onUpdateLog, re
                                                 <AdminFeedback
                                                     feedback={adminFeedback}
                                                     onSave={(content) => handleSaveFeedback(activity._id, content)}
-                                                    canEdit={user?.role === 'admin'}
+                                                    canEdit={canAdminFeedback}
                                                     label="활동 피드백"
                                                 />
                                             </div>

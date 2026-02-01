@@ -7,7 +7,7 @@ import LoadingButton from '../Common/LoadingButton';
 import { useNotification } from '../../contexts/NotificationContext';
 import AdminFeedback from '../Common/AdminFeedback';
 
-function MonthlyAnalysis({ plan, log, user, onUpdateLog, refreshLog }) {
+function MonthlyAnalysis({ plan, log, user, onUpdateLog, refreshLog, canAdminFeedback = false }) {
     const { showNotification } = useNotification();
     const { state: localLog, set: setLocalLog, undo, redo, canUndo, canRedo, clearHistory } = useHistory(log);
     const [lastSavedLog, setLastSavedLog] = useState(log);
@@ -305,7 +305,7 @@ function MonthlyAnalysis({ plan, log, user, onUpdateLog, refreshLog }) {
                                 <AdminFeedback
                                     feedback={localLog.itemAnalyses?.find(a => a.itemId === item._id)?.adminFeedback}
                                     onSave={(content) => handleSaveFeedback(item._id, content)}
-                                    canEdit={user?.role === 'admin'}
+                                    canEdit={canAdminFeedback}
                                     label="성장 분석 피드백"
                                 />
                             </div>
