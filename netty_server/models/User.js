@@ -14,6 +14,7 @@ const UserSchema = new mongoose.Schema({
         required: true
     }, // 소속
     consent: { type: Boolean, required: true }, // 개인정보수집 및 활용 동의
+    description: { type: String, default: '' }, // 한 줄 소개
     growthTestResults: {
         test1: { type: Number }, // 1-4
         test2: { type: Number }, // 1-4

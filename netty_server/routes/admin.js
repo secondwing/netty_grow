@@ -99,6 +99,35 @@ router.put('/users/:id/role', auth, verifyAdmin, async (req, res) => {
     }
 });
 
+// @route   PUT api/admin/users/:id/growth-stage
+// @desc    Update user growth stage
+// @access  Private/Admin
+router.put('/users/:id/growth-stage', auth, verifyAdmin, async (req, res) => {
+    try {
+        const { growthStage } = req.body;
+        // Check if stage exists using the GrowthStage model is ideal, 
+        // but for now, we'll just check if it's a valid string format or trust the admin.
+        // Or we can import GrowthStage to verify.
+
+        // Prevent self-update if needed? Usually admin can update own stage.
+
+        const user = await User.findByIdAndUpdate(
+            req.params.id,
+            { $set: { growthStage } },
+            { new: true }
+        ).select('-password');
+
+        if (!user) {
+            return res.status(404).json({ msg: 'User not found' });
+        }
+
+        res.json(user);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+});
+
 // @route   GET api/admin/payments
 // @desc    Get all payments
 // @access  Private/Admin
