@@ -24,9 +24,14 @@ const verifyAdmin = async (req, res, next) => {
         if (user && user.role === 'admin') {
             next();
         } else {
+            console.log('Admin authorization failed:', {
+                reqUserId: req.user.id,
+                foundUser: user ? { id: user._id, role: user.role } : 'null'
+            });
             res.status(403).json({ message: 'Admin authorization denied' });
         }
     } catch (err) {
+        console.error('Server Error in verifyAdmin:', err);
         res.status(500).json({ message: 'Server Error' });
     }
 };

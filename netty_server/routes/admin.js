@@ -64,4 +64,38 @@ router.get('/users', auth, verifyAdmin, async (req, res) => {
     }
 });
 
+// @route   PUT api/admin/users/:id/role
+// @desc    Update user role
+// @access  Private/Admin
+router.put('/users/:id/role', auth, verifyAdmin, async (req, res) => {
+    try {
+        const { role } = req.body;
+        const validRoles = ['free', 'pro', 'ultra', 'admin'];
+
+        if (!validRoles.includes(role)) {
+            return res.status(400).json({ msg: 'Invalid role specified' });
+        }
+
+        // Prevent self-role text change
+        if (req.user.id === req.params.id) {
+            return res.status(403).json({ msg: 'Cannot change your own role' });
+        }
+
+        const user = await User.findByIdAndUpdate(
+            req.params.id,
+            { $set: { role } },
+            { new: true }
+        ).select('-password');
+
+        if (!user) {
+            return res.status(404).json({ msg: 'User not found' });
+        }
+
+        res.json(user);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+});
+
 module.exports = router;

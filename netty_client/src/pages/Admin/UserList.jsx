@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { API_BASE_URL } from '../../config';
+import { AuthContext } from '../../contexts/AuthContext';
 
 const affiliationMap = {
     student: '학생',
@@ -12,6 +13,7 @@ const affiliationMap = {
 };
 
 const UserList = () => {
+    const { user: currentUser } = useContext(AuthContext);
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(1);
@@ -34,6 +36,24 @@ const UserList = () => {
 
         fetchUsers();
     }, [page]);
+
+    const handleRoleChange = async (userId, newRole) => {
+        if (!window.confirm(`사용자의 권한을 ${newRole}(으)로 변경하시겠습니까?`)) return;
+
+        try {
+            const response = await axios.put(`${API_BASE_URL}/api/admin/users/${userId}/role`,
+                { role: newRole },
+                { withCredentials: true }
+            );
+
+            setUsers(users.map(user =>
+                user._id === userId ? { ...user, role: response.data.role } : user
+            ));
+        } catch (error) {
+            console.error('Failed to update user role:', error);
+            alert('권한 변경에 실패했습니다.');
+        }
+    };
 
     if (loading) return <div>사용자 목록 불러오는 중...</div>;
 
@@ -59,9 +79,18 @@ const UserList = () => {
                                 <td>{user.username}</td>
                                 <td>{user.name}</td>
                                 <td>
-                                    <span className={`role-badge ${user.role}`}>
-                                        {user.role}
-                                    </span>
+                                    <select
+                                        value={user.role}
+                                        onChange={(e) => handleRoleChange(user._id, e.target.value)}
+                                        className={`role-select ${user.role}`}
+                                        disabled={currentUser && currentUser._id === user._id}
+                                        title={currentUser && currentUser._id === user._id ? "자신의 권한은 변경할 수 없습니다." : "권한 변경"}
+                                    >
+                                        <option value="free">Free</option>
+                                        <option value="pro">Pro</option>
+                                        <option value="ultra">Ultra</option>
+                                        <option value="admin">Admin</option>
+                                    </select>
                                 </td>
                                 <td>{affiliationMap[user.affiliation] || user.affiliation}</td>
                                 <td>{new Date(user.createdAt).toLocaleDateString()}</td>
