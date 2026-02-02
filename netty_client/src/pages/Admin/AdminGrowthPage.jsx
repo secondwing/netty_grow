@@ -90,9 +90,8 @@ const AdminGrowthPage = () => {
                                 <thead>
                                     <tr>
                                         <th>사용자 정보</th>
-                                        <th>한 줄 소개</th>
                                         <th style={{ width: '150px' }}>현재 등급</th>
-                                        <th style={{ width: '80px' }}>관리</th>
+                                        <th style={{ width: '140px' }}>관리</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -101,11 +100,6 @@ const AdminGrowthPage = () => {
                                             <td>
                                                 <div style={{ fontWeight: 600 }}>{user.name}</div>
                                                 <div style={{ fontSize: '0.85rem', color: '#64748b' }}>{user.username}</div>
-                                            </td>
-                                            <td>
-                                                <div style={{ color: '#475569', fontSize: '0.9rem' }}>
-                                                    {user.description || '-'}
-                                                </div>
                                             </td>
                                             <td>
                                                 {editingUserGrowth === user._id ? (
@@ -129,9 +123,9 @@ const AdminGrowthPage = () => {
                                             </td>
                                             <td>
                                                 {editingUserGrowth === user._id ? (
-                                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
-                                                        <button onClick={() => handleSaveUserGrowth(user._id)} className="admin-btn-small" style={{ backgroundColor: '#10b981' }}>저장</button>
-                                                        <button onClick={handleCancelUserEdit} className="admin-btn-small" style={{ backgroundColor: '#ef4444' }}>취소</button>
+                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                                        <button onClick={() => handleSaveUserGrowth(user._id)} className="admin-btn-small success">저장</button>
+                                                        <button onClick={handleCancelUserEdit} className="admin-btn-small danger">취소</button>
                                                     </div>
                                                 ) : (
                                                     <button onClick={() => handleEditUserGrowthClick(user)} className="admin-btn-small">수정</button>
