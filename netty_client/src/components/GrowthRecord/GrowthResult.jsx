@@ -4,6 +4,7 @@ import { API_BASE_URL } from '../../config';
 import useHistory from '../../hooks/useHistory';
 import LoadingButton from '../Common/LoadingButton';
 import AutoResizeTextarea from '../Common/AutoResizeTextarea';
+import UnicodePicker from './UnicodePicker';
 
 function GrowthResult({ plan, onUpdate }) {
     const { state: localPlan, set: setLocalPlan, undo, redo, canUndo, canRedo, clearHistory } = useHistory(plan);
@@ -206,6 +207,49 @@ function GrowthResult({ plan, onUpdate }) {
                         );
                     })}
                 </div>
+            </div>
+
+            <div style={{ position: 'fixed', bottom: '2rem', right: '92px', zIndex: 1000 }}>
+                <UnicodePicker onInsert={(char) => {
+                    const copyToClipboard = (text) => {
+                        if (navigator.clipboard && window.isSecureContext) {
+                            return navigator.clipboard.writeText(text);
+                        } else {
+                            let textArea = document.createElement("textarea");
+                            textArea.value = text;
+                            textArea.style.position = "fixed";
+                            textArea.style.left = "-9999px";
+                            textArea.style.top = "0";
+                            document.body.appendChild(textArea);
+                            textArea.focus();
+                            textArea.select();
+                            return new Promise((resolve, reject) => {
+                                try {
+                                    const successful = document.execCommand('copy');
+                                    document.body.removeChild(textArea);
+                                    if (successful) resolve();
+                                    else reject(new Error("Copy command failed"));
+                                } catch (err) {
+                                    document.body.removeChild(textArea);
+                                    reject(err);
+                                }
+                            });
+                        }
+                    };
+
+                    copyToClipboard(char)
+                        .then(() => alert(`${char} 복사완료! 붙여넣기(Ctrl+V) 하세요`)) // Using alert as I need showNotification hook context, wait, GrowthResult HAS useNotification? No...
+                        // Checking GrowthResult source: It doesn't use useNotification?
+                        // Let me check imports.
+                        // Imports: React, RotateCcw, API_BASE_URL, useHistory, LoadingButton, AutoResizeTextarea.
+                        // NO useNotification!
+                        // I need to import useNotification to use it.
+                        // I will add the import in the next tool call.
+                        .catch(err => {
+                            console.error('Copy failed:', err);
+                            alert('복사에 실패했습니다.');
+                        });
+                }} />
             </div>
         </div>
     );

@@ -6,6 +6,7 @@ import AutoResizeTextarea from '../Common/AutoResizeTextarea';
 import LoadingButton from '../Common/LoadingButton';
 import { useNotification } from '../../contexts/NotificationContext';
 import AdminFeedback from '../Common/AdminFeedback';
+import UnicodePicker from './UnicodePicker';
 
 function MonthlyAnalysis({ plan, log, user, onUpdateLog, refreshLog, canAdminFeedback = false, readOnly = false }) {
     const { showNotification } = useNotification();
@@ -326,6 +327,46 @@ function MonthlyAnalysis({ plan, log, user, onUpdateLog, refreshLog, canAdminFee
                     })}
                 </div>
             </div >
+
+            {!readOnly && (
+                <div style={{ position: 'fixed', bottom: '2rem', right: '92px', zIndex: 1000 }}>
+                    <UnicodePicker onInsert={(char) => {
+                        const copyToClipboard = (text) => {
+                            if (navigator.clipboard && window.isSecureContext) {
+                                return navigator.clipboard.writeText(text);
+                            } else {
+                                // Fallback for non-secure contexts (LAN)
+                                let textArea = document.createElement("textarea");
+                                textArea.value = text;
+                                textArea.style.position = "fixed";
+                                textArea.style.left = "-9999px";
+                                textArea.style.top = "0";
+                                document.body.appendChild(textArea);
+                                textArea.focus();
+                                textArea.select();
+                                return new Promise((resolve, reject) => {
+                                    try {
+                                        const successful = document.execCommand('copy');
+                                        document.body.removeChild(textArea);
+                                        if (successful) resolve();
+                                        else reject(new Error("Copy command failed"));
+                                    } catch (err) {
+                                        document.body.removeChild(textArea);
+                                        reject(err);
+                                    }
+                                });
+                            }
+                        };
+
+                        copyToClipboard(char)
+                            .then(() => showNotification(`복사완료! 붙여넣기(Ctrl+V) 하세요`, 'success'))
+                            .catch(err => {
+                                console.error('Copy failed:', err);
+                                showNotification('복사에 실패했습니다.', 'error');
+                            });
+                    }} />
+                </div>
+            )}
         </div >
     );
 }
