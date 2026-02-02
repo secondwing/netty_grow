@@ -25,6 +25,9 @@ const AdminLayout = () => {
                         <Link to="/admin/users" className={isActive('/admin/users')}>
                             사용자 관리
                         </Link>
+                        <Link to="/admin/payments" className={isActive('/admin/payments')}>
+                            결제 내역
+                        </Link>
                     </nav>
                 </aside>
                 <main className="admin-content">

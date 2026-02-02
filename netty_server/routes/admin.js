@@ -4,6 +4,7 @@ const { auth, verifyAdmin } = require('../middleware/auth');
 const User = require('../models/User');
 const GrowthPlan = require('../models/GrowthPlan');
 const MonthlyLog = require('../models/MonthlyLog');
+const Payment = require('../models/Payment');
 
 // @route   GET api/admin/dashboard
 // @desc    Get dashboard stats
@@ -92,6 +93,67 @@ router.put('/users/:id/role', auth, verifyAdmin, async (req, res) => {
         }
 
         res.json(user);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+});
+
+// @route   GET api/admin/payments
+// @desc    Get all payments
+// @access  Private/Admin
+router.get('/payments', auth, verifyAdmin, async (req, res) => {
+    try {
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 20;
+        const skip = (page - 1) * limit;
+
+        const payments = await Payment.find()
+            .populate('user', 'name username email')
+            .sort({ paymentDate: -1 })
+            .skip(skip)
+            .limit(limit);
+
+        const total = await Payment.countDocuments();
+
+        res.json({
+            payments,
+            currentPage: page,
+            totalPages: Math.ceil(total / limit),
+            totalPayments: total
+        });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+});
+
+// @route   POST api/admin/payments
+// @desc    Create a payment manually
+// @access  Private/Admin
+router.post('/payments', auth, verifyAdmin, async (req, res) => {
+    try {
+        const { user, amount, description, method, paymentDate } = req.body;
+
+        if (!user || !amount || !description) {
+            return res.status(400).json({ msg: 'Please provide user, amount, and description' });
+        }
+
+        const newPayment = new Payment({
+            user,
+            amount,
+            description,
+            method: method || 'card', // default to card if not specified
+            status: 'completed', // Admin manual entry is assumed to be completed
+            paymentDate: paymentDate || Date.now()
+        });
+
+        const payment = await newPayment.save();
+
+        // Populate user details for the response
+        await payment.populate('user', 'name username');
+
+        res.json(payment);
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server Error');
