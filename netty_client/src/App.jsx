@@ -18,6 +18,7 @@ import AdminDashboard from './pages/Admin/AdminDashboard';
 import UserList from './pages/Admin/UserList';
 import PaymentList from './pages/Admin/PaymentList';
 import AdminUserGrowthPage from './pages/Admin/AdminUserGrowthPage';
+import AdminGrowthPage from './pages/Admin/AdminGrowthPage';
 import MyPage from './pages/MyPage/MyPage';
 
 import { NotificationProvider, useNotification } from './contexts/NotificationContext';
@@ -69,6 +70,7 @@ function AppContent() {
               <Route path="dashboard" element={<AdminDashboard />} />
               <Route path="users" element={<UserList />} />
               <Route path="payments" element={<PaymentList />} />
+              <Route path="growth" element={<AdminGrowthPage />} />
               <Route path="user/:userId/growth" element={<AdminUserGrowthPage user={user} />} />
             </Route>
           </Route>

@@ -14,11 +14,25 @@ const MyPage = ({ currentUser }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    const [growthStages, setGrowthStages] = useState([]);
+
     useEffect(() => {
         if (currentUser) {
             fetchUserInfo();
         }
+        fetchGrowthStages();
     }, [currentUser]);
+
+    const fetchGrowthStages = async () => {
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/growth-stages`);
+            if (response.ok) {
+                setGrowthStages(await response.json());
+            }
+        } catch (error) {
+            console.error('Failed to fetch growth stages', error);
+        }
+    };
 
     const fetchUserInfo = async () => {
         try {
@@ -97,9 +111,20 @@ const MyPage = ({ currentUser }) => {
         return map[value] || value;
     };
 
-    const calculateGrowthStage = (results) => {
-        if (!results || !results.test1 || !results.test2 || !results.test3) return 'growth_01';
+    // Calculate stage ID based on score if not explicitly set
+    const getStageId = (results) => {
+        if (!results || !results.test1) return 'growth_01';
         const total = results.test1 + results.test2 + results.test3;
+        // Use logic consistent with backend or rely on minScore from loaded stages
+        // For robustness, let's use the loaded stages if available
+        if (growthStages.length > 0) {
+            // Sort by minScore descending to find the highest matching stage
+            const sorted = [...growthStages].sort((a, b) => b.minScore - a.minScore);
+            const match = sorted.find(s => total >= s.minScore && total <= s.maxScore);
+            return match ? match.stageId : 'growth_05'; // Fallback if over max
+        }
+
+        // Fallback hardcoded logic
         if (total <= 4) return 'growth_01';
         if (total <= 7) return 'growth_02';
         if (total <= 10) return 'growth_03';
@@ -107,19 +132,14 @@ const MyPage = ({ currentUser }) => {
         return 'growth_05';
     };
 
-    const currentStage = (() => {
-        // 1. If explicitly set to Admin stage (growth_06), use it.
+    const currentStageId = (() => {
         if (userInfo?.growthStage === 'growth_06') return 'growth_06';
-
-        // 2. If we have test results, calculate the stage dynamically.
-        // This ensures that even if the DB has a default 'growth_01', the actual score is reflected.
-        if (userInfo?.growthTestResults) {
-            return calculateGrowthStage(userInfo.growthTestResults);
-        }
-
-        // 3. Fallback to stored stage or default.
+        if (userInfo?.growthTestResults) return getStageId(userInfo.growthTestResults);
         return userInfo?.growthStage || 'growth_01';
     })();
+
+    const currentStageInfo = growthStages.find(s => s.stageId === currentStageId) ||
+        { imageUrl: `/growth/${currentStageId}.png`, name: 'Unknown' };
 
     if (loading) return <div className="my-page__loading">Loading...</div>;
     if (error) return <div className="my-page__error">Error: {error}</div>;
@@ -133,17 +153,20 @@ const MyPage = ({ currentUser }) => {
                     <div className="my-page__header">
                         <div className="my-page__avatar-wrapper">
                             <img
-                                src={`/growth/${currentStage}.png`}
-                                alt="Growth Stage"
+                                src={currentStageInfo.imageUrl}
+                                alt={currentStageInfo.name || "Growth Stage"}
                                 className="my-page__avatar-image"
                                 onError={(e) => {
                                     e.target.onerror = null;
-                                    e.target.src = '/growth/growth_01.png'; // Fallback
+                                    e.target.src = '/growth/growth_01.png';
                                 }}
                             />
                         </div>
                         <div className="my-page__identity">
                             <h3 className="my-page__name">{userInfo?.name}</h3>
+                            <span className="my-page__growth-name" style={{ display: 'block', fontSize: '0.9rem', color: '#64748b', marginTop: '0.25rem' }}>
+                                {currentStageInfo.name && <span className="stage-badge">{currentStageInfo.name}</span>}
+                            </span>
                             <span className="my-page__username">@{userInfo?.username}</span>
                         </div>
                     </div>
