@@ -63,12 +63,12 @@ const AdminGrowthPage = () => {
 
     // Hardcoded stages for display as requested
     const STAGE_OPTIONS = [
-        { id: 'growth_01', label: '1단계' },
-        { id: 'growth_02', label: '2단계' },
-        { id: 'growth_03', label: '3단계' },
-        { id: 'growth_04', label: '4단계' },
-        { id: 'growth_05', label: '5단계' },
-        { id: 'growth_06', label: '6단계' },
+        { id: 'growth_01', label: '땅' },
+        { id: 'growth_02', label: '씨앗' },
+        { id: 'growth_03', label: '새싹' },
+        { id: 'growth_04', label: '꽃' },
+        { id: 'growth_05', label: '꽃다발' },
+        { id: 'growth_06', label: '정원' },
     ];
 
     const getStageLabel = (stageId) => {

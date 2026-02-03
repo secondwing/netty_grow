@@ -219,7 +219,7 @@ const PaymentList = () => {
                                     value={formData.user}
                                     onChange={handleInputChange}
                                     required
-                                    style={{ width: '100%', padding: '0.75rem', borderRadius: '6px', border: '1px solid #cbd5e1' }}
+                                    style={{ width: '100%', padding: '0.75rem', borderRadius: '6px', border: '1px solid #cbd5e1', boxSizing: 'border-box' }}
                                 >
                                     <option value="">사용자 선택</option>
                                     {users.map(u => (
@@ -228,7 +228,7 @@ const PaymentList = () => {
                                 </select>
                             </div>
 
-                            <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
+                            <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
                                 <div style={{ flex: 1 }}>
                                     <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500, color: '#475569' }}>금액 (KRW)</label>
                                     <input
@@ -238,7 +238,7 @@ const PaymentList = () => {
                                         onChange={handleInputChange}
                                         required
                                         placeholder="50000"
-                                        style={{ width: '100%', padding: '0.75rem', borderRadius: '6px', border: '1px solid #cbd5e1' }}
+                                        style={{ width: '100%', padding: '0.75rem', borderRadius: '6px', border: '1px solid #cbd5e1', boxSizing: 'border-box' }}
                                     />
                                 </div>
                                 <div style={{ flex: 1 }}>
@@ -247,7 +247,7 @@ const PaymentList = () => {
                                         name="method"
                                         value={formData.method}
                                         onChange={handleInputChange}
-                                        style={{ width: '100%', padding: '0.75rem', borderRadius: '6px', border: '1px solid #cbd5e1' }}
+                                        style={{ width: '100%', padding: '0.75rem', borderRadius: '6px', border: '1px solid #cbd5e1', boxSizing: 'border-box' }}
                                     >
                                         <option value="card">카드</option>
                                         <option value="transfer">계좌이체</option>
@@ -266,7 +266,7 @@ const PaymentList = () => {
                                     onChange={handleInputChange}
                                     required
                                     placeholder="예: 12월 컨설팅 비용"
-                                    style={{ width: '100%', padding: '0.75rem', borderRadius: '6px', border: '1px solid #cbd5e1' }}
+                                    style={{ width: '100%', padding: '0.75rem', borderRadius: '6px', border: '1px solid #cbd5e1', boxSizing: 'border-box' }}
                                 />
                             </div>
 
@@ -278,7 +278,7 @@ const PaymentList = () => {
                                     value={formData.paymentDate}
                                     onChange={handleInputChange}
                                     required
-                                    style={{ width: '100%', padding: '0.75rem', borderRadius: '6px', border: '1px solid #cbd5e1' }}
+                                    style={{ width: '100%', padding: '0.75rem', borderRadius: '6px', border: '1px solid #cbd5e1', boxSizing: 'border-box' }}
                                 />
                             </div>
 
