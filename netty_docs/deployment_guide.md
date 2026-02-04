@@ -113,7 +113,7 @@ server {
 
     # 프론트엔드 (정적 파일 서빙)
     location / {
-        root /var/www/netty/netty_client/dist;
+        root /home/ubuntu/netty_grow/netty_client/dist;
         index index.html;
         try_files $uri $uri/ /index.html;
     }
@@ -130,6 +130,9 @@ server {
 }
 ```
 
+**주의**: 위 설정에서 `root` 경로는 실제 `dist` 폴더가 있는 위치여야 합니다. 
+(예: `/home/ubuntu/netty_grow/netty_client/dist`)
+
 설정 활성화 및 Nginx 재시작:
 ```bash
 sudo ln -s /etc/nginx/sites-available/netty /etc/nginx/sites-enabled/
@@ -138,7 +141,20 @@ sudo nginx -t
 sudo systemctl restart nginx
 ```
 
-## 6. 필수 코드 변경 사항 (로컬 확인)
+## 6. HTTPS 설정 (Certbot)
+무료 SSL 인증서(Let's Encrypt)를 적용하여 HTTPS를 활성화합니다. **도메인이 연결되어 있어야 가능합니다.**
+
+```bash
+# Certbot 설치
+sudo apt install -y certbot python3-certbot-nginx
+
+# 인증서 발급 및 Nginx 설정 자동 업데이트
+sudo certbot --nginx -d yourdomain.com
+```
+- 이메일 입력 및 약관 동의를 진행하면 자동으로 HTTPS 설정이 완료됩니다.
+
+## 7. 필수 코드 변경 사항 (로컬 확인)
+
 빌드 전, `netty_client/src/config.js`가 아래와 같이 되어 있어야 합니다:
 ```javascript
 // 프로덕션(빌드) 환경에서는 빈 문자열을 반환하여
@@ -148,7 +164,8 @@ export const API_BASE_URL = import.meta.env.PROD
   : `http://${window.location.hostname}:5000`;
 ```
 
-## 7. 업데이트 워크플로우
+## 8. 업데이트 워크플로우
+
 추후 코드 수정 시 배포 방법:
 
 1.  **로컬**: 코드 수정 후 `git push`.
@@ -168,3 +185,53 @@ export const API_BASE_URL = import.meta.env.PROD
     npm run build
     # Nginx는 정적 파일을 참조하므로 재시작 불필요
     ```
+
+## 9. 트러블슈팅 (Troubleshooting)
+
+### Q: 빌드 중 "JavaScript heap out of memory" 오류 발생
+EC2 프리 티어(t2.micro, t3.micro)나 t3.small 등 메모리가 적은 인스턴스에서 자주 발생합니다. **스왑 메모리(Swap Configuration)**를 설정하여 해결할 수 있습니다.
+
+**해결 방법 (Swap 2GB 추가):**
+```bash
+# 1. 2GB 스왑 파일 생성
+sudo fallocate -l 2G /swapfile
+
+# 2. 권한 설정 (루트만 접근 가능)
+sudo chmod 600 /swapfile
+
+# 3. 스왑 영역 설정
+sudo mkswap /swapfile
+
+# 4. 스왑 활성화
+sudo swapon /swapfile
+
+# 5. 재부팅 후에도 유지되도록 설정 (/etc/fstab 등록)
+echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+
+# 6. 메모리 확인 (Swap 영역이 생겼는지 확인)
+free -h
+```
+이제 다시 `npm run build`를 실행하면 성공할 것입니다.
+
+### Q: 스왑 설정 후에도 여전히 메모리 부족 오류 발생 시
+Node.js가 사용할 수 있는 최대 메모리 힙 크기를 명시적으로 늘려주어야 합니다. 빌드 명령어 앞에 옵션을 추가하세요:
+
+```bash
+# 메모리 제한을 3GB(3072MB)로 늘려서 빌드 (스왑 메모리가 충분해야 함)
+NODE_OPTIONS="--max-old-space-size=3072" npm run build
+```
+
+### Q: 그래도 해결되지 않을 경우 (최후의 수단: 로컬 빌드)
+서버에서 빌드하지 않고, 내 컴퓨터(로컬)에서 빌드한 결과물(`dist` 폴더)만 서버로 전송하는 방법입니다. 가장 확실한 방법입니다.
+
+1.  **로컬 컴퓨터**에서 빌드:
+    ```bash
+    npm run build
+    ```
+2.  **SCP 명령어로 전송** (로컬 터미널에서 실행):
+    ```bash
+    # 예시: key.pem 파일이 있는 경로에서 실행
+    scp -i "path/to/key.pem" -r dist ubuntu@<EC2-IP>:/var/www/netty/netty_client/
+    ```
+3.  **서버**에서는 `npm run build` 생략 가능.
+

@@ -76,6 +76,7 @@ function Signup() {
                 },
                 body: JSON.stringify({
                     ...formData,
+                    consent: formData.privacyAgreed,
                     // Remove confirmPassword before sending
                     confirmPassword: undefined
                 }),
