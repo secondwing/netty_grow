@@ -113,7 +113,7 @@ function GrowthResult({ plan, onUpdate }) {
         <div className="growth-content" ref={containerRef}>
             <div className="growth-section">
                 <div className="growth-section__header">
-                    <h2 className="growth-section__title">연 결과보고서</h2>
+                    <h2 className="growth-section__title">연 성장결과</h2>
                     <div className="growth-section__controls">
                         <button
                             className="growth-btn-icon"

@@ -241,7 +241,7 @@ function GrowthRecordPage() {
                     <option value="plan">성장 계획</option>
                     <option value="indicator">월 성장일지</option>
                     <option value="analysis">월 성장분석</option>
-                    <option value="result">연 결과보고서</option>
+                    <option value="result">연 성장결과</option>
                     <option value="reflection">성장소감</option>
                 </select>
             </div>

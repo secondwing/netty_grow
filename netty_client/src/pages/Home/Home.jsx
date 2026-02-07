@@ -6,12 +6,14 @@ function Home() {
         <div className="home">
             <div className="home__hero">
                 <h1 className="home__title">
-                    나를 알아가는 기록<br />
-                    함께 성장하는 커뮤니티
+                    <span>
+                        기록은 나답게<br />
+                        성장은 확실하게
+                    </span>
                 </h1>
                 <p className="home__subtitle">
-                    Netty는 사람의 가치를 연결하며,<br />
-                    매 순간 나다운 방법과 환경을 함께 만들어가요.
+                    나에 대한 기록을 모아<br />
+                    Netty와 함께 나다운 일상을 만들어가요
                 </p>
                 <div className="home__actions">
                     <Link to="/record" className="home__button home__button--primary">
