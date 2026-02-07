@@ -39,8 +39,8 @@ function GrowthTestForm({ values, onChange, readOnly = false }) {
             <div className="growth-test-item">
                 <h3>Test 2. ‘나’를 원동력으로 살아가고 있나요?</h3>
                 <p className="growth-test-desc">
-                    우리는 자녀, 친구, 학생, 직원 등 사회에서 주는 역할에 익숙합니다.
-                    스스로에게 역할과 할일을 부여하며 자신을 위한 하루를 만들어가고 있나요?
+                    우리는 자녀, 친구, 학생, 직원처럼 여러 역할 속에서 살아갑니다.<br />
+                    그 속에서 나 자신을 위한 하루를 만들고 있나요?
                 </p>
                 <div className="growth-test-options">
                     {[
@@ -67,54 +67,54 @@ function GrowthTestForm({ values, onChange, readOnly = false }) {
             <div className="growth-test-item">
                 <h3>Test 3. '나'는 어떤 성장단계에 있을까요?</h3>
                 <p className="growth-test-desc">
-                    인간은 매순간 성장합니다. 그 과정의 단계를 꽃으로 비유하자면,
-                    당신의 현재 '나' 성장 이미지는 어떠한가요?
+                    사람은 매 순간 변하고, 그 자체로 성장하고 있어요.<br />
+                    지금의 '나'를 꽃의 성장 과정에 비유한다면, 어떤 모습에 가까울까요?
                 </p>
                 <div className="growth-test-table-wrapper">
-                    <table className="growth-test-table">
-                        <thead>
-                            <tr>
-                                <th>땅</th>
-                                <th>씨앗</th>
-                                <th>새싹</th>
-                                <th>꽃</th>
-                                <th>꽃다발</th>
-                                <th>정원</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>나와 본적없는 사이</td>
-                                <td>나와 본적있는 사이</td>
-                                <td>나와 소통하는 사이</td>
-                                <td>나와 사랑하는 사이</td>
-                                <td>나와 회복하는 사이</td>
-                                <td>나와 함께하는 사이</td>
-                            </tr>
-                            <tr>
-                                <td>나를 인지하지못하는 상태</td>
-                                <td>나의 생각과 감정을 인지하는 상태</td>
-                                <td>나에게 관심이 있고 알아가는 상태</td>
-                                <td>나를 있는 그대로 인정하는 상태</td>
-                                <td>새로운 나를 알아가고 인정을 반복하는 상태</td>
-                                <td>매순간 나를 사랑하는 마음을 지속하는 상태</td>
-                            </tr>
-                            <tr>
-                                {[1, 2, 3, 4, 5, 6].map(val => (
-                                    <td key={val} className="text-center">
-                                        <input
-                                            type="radio"
-                                            name="test3"
-                                            value={val}
-                                            checked={values.test3 === val}
-                                            onChange={(e) => handleRadioChange('test3', e.target.value)}
-                                            disabled={readOnly}
-                                        />
-                                    </td>
-                                ))}
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div className="growth-test-tables-container">
+                        {[
+                            [
+                                { id: 1, name: '땅', desc1: '나와 본적없는 사이', desc2: '나를 인지하지못하는 상태' },
+                                { id: 2, name: '씨앗', desc1: '나와 본적있는 사이', desc2: '나의 생각과 감정을 인지하는 상태' },
+                                { id: 3, name: '새싹', desc1: '나와 소통하는 사이', desc2: '나에게 관심이 있고 알아가는 상태' }
+                            ],
+                            [
+                                { id: 4, name: '꽃', desc1: '나와 사랑하는 사이', desc2: '나를 있는 그대로 인정하는 상태' },
+                                { id: 5, name: '꽃다발', desc1: '나와 회복하는 사이', desc2: '새로운 나를 알아가고 인정을 반복하는 상태' },
+                                { id: 6, name: '정원', desc1: '나와 함께하는 사이', desc2: '매순간 나를 사랑하는 마음을 지속하는 상태' }
+                            ]
+                        ].map((group, sectionIndex) => (
+                            <table key={sectionIndex} className="growth-test-table">
+                                <thead>
+                                    <tr>
+                                        {group.map(stage => <th key={stage.id} width="33.33%">{stage.name}</th>)}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        {group.map(stage => <td key={stage.id}>{stage.desc1}</td>)}
+                                    </tr>
+                                    <tr>
+                                        {group.map(stage => <td key={stage.id}>{stage.desc2}</td>)}
+                                    </tr>
+                                    <tr>
+                                        {group.map(stage => (
+                                            <td key={stage.id} className="text-center">
+                                                <input
+                                                    type="radio"
+                                                    name="test3"
+                                                    value={stage.id}
+                                                    checked={values.test3 === stage.id}
+                                                    onChange={(e) => handleRadioChange('test3', e.target.value)}
+                                                    disabled={readOnly}
+                                                />
+                                            </td>
+                                        ))}
+                                    </tr>
+                                </tbody>
+                            </table>
+                        ))}
+                    </div>
                 </div>
             </div>
         </div>

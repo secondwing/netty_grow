@@ -64,11 +64,31 @@
     overflow-x: auto;
 }
 
+.growth-test-tables-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
 .growth-test-table {
     width: 100%;
     border-collapse: collapse;
     background: white;
     font-size: 0.9rem;
+    flex: 1;
+    min-width: 300px;
+    /* Ensure tables don't get too squashed */
+}
+
+@media (max-width: 768px) {
+    .growth-test-tables-container {
+        flex-direction: column;
+    }
+
+    .growth-test-table {
+        width: 100%;
+        min-width: 0;
+    }
 }
 
 .growth-test-table th,
