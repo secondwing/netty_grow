@@ -47,14 +47,14 @@ function Header({ isLoggedIn, onLogout }) {
                                 <Link to="/admin/dashboard" className="header__link" onClick={closeMenu}>관리자</Link>
                             )}
                             <button onClick={handleLogout} className="header__button header__button--logout">
-                                로그아웃
+                                다음에 봐요
                             </button>
                         </>
                     ) : (
                         <>
-                            <Link to="/login" className="header__link" onClick={closeMenu}>로그인</Link>
+                            <Link to="/login" className="header__link" onClick={closeMenu}>함께해요</Link>
                             <Link to="/signup" className="header__button header__button--signup" onClick={closeMenu}>
-                                회원가입
+                                나를 소개해요
                             </Link>
                         </>
                     )}

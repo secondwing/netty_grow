@@ -10,7 +10,9 @@ function Signup() {
         username: '',
         password: '',
         confirmPassword: '',
+
         name: '',
+        nickname: '',
         gender: 'male',
         birthDate: '',
         phone: '',
@@ -98,7 +100,12 @@ function Signup() {
 
     const renderStep1 = () => (
         <div className="auth-step">
-            <h2 className="auth-step__title">기본 인적사항</h2>
+            {/* <h2 className="auth-step__title">나에 대해 알려주세요</h2> */}
+            <p className="auth-step__description">안녕하세요!<br />
+                Netty는 당신에게 맞는 환경을 만들어가고 싶어요.<br />
+                오늘은 기본정보만 알려주세요.<br />
+                더 자세한 이야기는<br />
+                천천히 알아가며 함께 만들어가요.</p>
             <div className="auth-form__group">
                 <label className="auth-form__label">아이디</label>
                 <input
@@ -133,15 +140,29 @@ function Signup() {
                 />
             </div>
             <div className="auth-form__group">
-                <label className="auth-form__label">이름</label>
-                <input
-                    type="text"
-                    name="name"
-                    className="auth-form__input"
-                    value={formData.name}
-                    onChange={handleChange}
-                    required
-                />
+                <label className="auth-form__label">이름 / 닉네임</label>
+                <div style={{ display: 'flex', gap: '10px' }}>
+                    <input
+                        type="text"
+                        name="name"
+                        className="auth-form__input"
+                        value={formData.name}
+                        onChange={handleChange}
+                        placeholder="이름"
+                        required
+                        style={{ flex: 1 }}
+                    />
+                    <input
+                        type="text"
+                        name="nickname"
+                        className="auth-form__input"
+                        value={formData.nickname}
+                        onChange={handleChange}
+                        placeholder="닉네임"
+                        required
+                        style={{ flex: 1 }}
+                    />
+                </div>
             </div>
             <div className="auth-form__group">
                 <label className="auth-form__label">성별</label>
@@ -297,11 +318,11 @@ function Signup() {
 
     return (
         <div className="auth-page">
-            <h1 className="auth-page__title">회원가입</h1>
+            <h1 className="auth-page__title">나를 소개해요</h1>
             <div className="auth-progress">
-                <div className={`auth-progress__step ${step >= 1 ? 'active' : ''}`}>1. 기본정보</div>
+                <div className={`auth-progress__step ${step >= 1 ? 'active' : ''}`}>1. 자기소개 </div>
                 <div className={`auth-progress__line ${step >= 2 ? 'active' : ''}`}></div>
-                <div className={`auth-progress__step ${step >= 2 ? 'active' : ''}`}>2. 성장테스트</div>
+                <div className={`auth-progress__step ${step >= 2 ? 'active' : ''}`}>2. 나성장테스트</div>
             </div>
             <form className="auth-form" onSubmit={handleSubmit}>
                 {step === 1 ? renderStep1() : renderStep2()}

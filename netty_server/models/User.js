@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const UserSchema = new mongoose.Schema({
     username: { type: String, required: true, unique: true }, // 아이디
+    nickname: { type: String, required: true, unique: true }, // 닉네임 (New)
     password: { type: String, required: true }, // 비밀번호 (Hashed)
     name: { type: String, required: true }, // 이름
     gender: { type: String, enum: ['male', 'female'], required: true }, // 성별
