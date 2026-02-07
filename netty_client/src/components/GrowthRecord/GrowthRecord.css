@@ -1029,3 +1029,63 @@
         top: 0.5rem;
     }
 }
+
+/* Icon Styles */
+.icon-heading {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.intro-header .icon-heading {
+    justify-content: center;
+}
+
+.icon-main {
+    color: #10b981;
+    /* Green for Sprout */
+    width: 28px;
+    height: 28px;
+}
+
+.icon-accent {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+}
+
+.intro-about .icon-accent {
+    color: #f59e0b;
+    /* Amber for Sparkles */
+}
+
+.intro-how .icon-accent {
+    color: #4f46e5;
+    /* Indigo for PenTool */
+}
+
+.intro-change .icon-accent {
+    color: #f59e0b;
+    /* Amber for Sparkles */
+}
+
+.intro-timeline .icon-accent {
+    color: #10b981;
+    /* Green for TrendingUp */
+}
+
+.intro-history .icon-accent {
+    color: #8b5cf6;
+    /* Violet for Scroll */
+}
+
+.intro-participation .icon-accent {
+    color: #ef4444;
+    /* Red for Heart */
+}
+
+.icon-sub {
+    color: #6366f1;
+    width: 20px;
+    height: 20px;
+}

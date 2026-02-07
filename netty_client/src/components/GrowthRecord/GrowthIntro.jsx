@@ -1,11 +1,15 @@
 import React from 'react';
+import {
+    Sprout, Sparkles, PenTool, Target, Calendar,
+    BarChart2, FileText, ScrollText, Heart, TrendingUp
+} from 'lucide-react';
 import './GrowthRecord.css';
 
 const GrowthIntro = () => {
     return (
         <div className="growth-section growth-intro-container">
             <div className="intro-header">
-                <h2>🌱 성장 기록</h2>
+                <h2 className="icon-heading"><Sprout className="icon-main" /> 성장 기록</h2>
                 <h3>나를 다루는 법을 배우는 1년 간의 기록 활동</h3>
                 <p>
                     나성장 기록은 <strong>나를 이해하고, 나에게 맞는 삶의 방향을 만들어가는 기록 활동</strong>입니다.
@@ -13,7 +17,7 @@ const GrowthIntro = () => {
             </div>
 
             <div className="intro-card intro-about">
-                <h4>✨ 나성장 기록은 이런 활동이에요</h4>
+                <h4 className="icon-heading"><Sparkles className="icon-accent" /> 나성장 기록은 이런 활동이에요</h4>
                 <p>
                     나성장은 1년을 기준으로 <strong>계획 → 실행 → 점검 → 회복</strong>의 흐름을 반복하며<br />
                     스스로를 다루는 힘을 기르는 자기분석 기록입니다.
@@ -27,29 +31,29 @@ const GrowthIntro = () => {
             </div>
 
             <div className="intro-card intro-how">
-                <h4>📌 이렇게 기록해요</h4>
+                <h4 className="icon-heading"><PenTool className="icon-accent" /> 이렇게 기록해요</h4>
                 <div className="how-grid">
                     <div className="how-item">
-                        <h5>1️⃣ 나의 성장계획</h5>
+                        <h5 className="icon-heading"><Target className="icon-sub" /> 1. 나의 성장계획</h5>
                         <p>원하는 나의 모습과<br />1년간의 성장 목표를 정리합니다.</p>
                     </div>
                     <div className="how-item">
-                        <h5>2️⃣ 월 성장일지</h5>
+                        <h5 className="icon-heading"><Calendar className="icon-sub" /> 2. 월 성장일지</h5>
                         <p>매월 목표를 실천하며<br />행동과 결과, 생각과 감정을 기록합니다.</p>
                     </div>
                     <div className="how-item">
-                        <h5>3️⃣ 월 성장분석</h5>
+                        <h5 className="icon-heading"><BarChart2 className="icon-sub" /> 3. 월 성장분석</h5>
                         <p>기록을 바탕으로<br />나의 반복되는 패턴과 환경을 분석합니다.<br /><span className="text-sm text-gray-500">(AI가 요약·정리를 도와줘요)</span></p>
                     </div>
                     <div className="how-item">
-                        <h5>4️⃣ 연 성장결과 & 성장소감</h5>
+                        <h5 className="icon-heading"><FileText className="icon-sub" /> 4. 연 성장결과 & 성장소감</h5>
                         <p>1년간의 기록을 종합해<br />나만의 성장 결과 보고서를 완성합니다.</p>
                     </div>
                 </div>
             </div>
 
             <div className="intro-card intro-change">
-                <h4>✨ 나성장 기록을 통해 얻는 변화</h4>
+                <h4 className="icon-heading"><Sparkles className="icon-accent" /> 나성장 기록을 통해 얻는 변화</h4>
                 <div className="table-responsive">
                     <table className="intro-table">
                         <thead>
@@ -89,7 +93,7 @@ const GrowthIntro = () => {
             </div>
 
             <div className="intro-card intro-timeline">
-                <h4>🌱 시간이 지나며 나타나는 변화 (월 1회 점검 기준)</h4>
+                <h4 className="icon-heading"><TrendingUp className="icon-accent" /> 시간이 지나며 나타나는 변화 (월 1회 점검 기준)</h4>
                 <p className="timeline-desc">
                     나성장 기록의 변화는 갑작스럽게 오지 않고, <strong>단계적으로 찾아와요.</strong><br />
                     대부분의 참여자가 아래와 같은 흐름을 경험합니다.
@@ -200,7 +204,7 @@ const GrowthIntro = () => {
             </div>
 
             <div className="intro-card intro-history">
-                <h4>📜 나성장 기록 활동 연혁</h4>
+                <h4 className="icon-heading"><ScrollText className="icon-accent" /> 나성장 기록 활동 연혁</h4>
                 <div className="history-list">
                     <div className="history-item">
                         <div className="history-year">2015–2019</div>
@@ -262,7 +266,7 @@ const GrowthIntro = () => {
             </div>
 
             <div className="intro-card intro-participation">
-                <h4>💛 참여방법</h4>
+                <h4 className="icon-heading"><Heart className="icon-accent" /> 참여방법</h4>
                 <p>나성장 기록은 지금의 나에게 맞는 방식으로 참여할 수 있어요.</p>
                 <div className="participation-grid">
                     <div className="participation-card">
