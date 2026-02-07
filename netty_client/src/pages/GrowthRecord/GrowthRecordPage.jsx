@@ -11,10 +11,11 @@ import GrowthResult from '../../components/GrowthRecord/GrowthResult';
 import GrowthReflection from '../../components/GrowthRecord/GrowthReflection';
 import GrowthReportDocument from '../../components/PDF/GrowthReportDocument';
 import ScrollToTopButton from '../../components/Common/ScrollToTopButton';
+import GrowthIntro from '../../components/GrowthRecord/GrowthIntro';
 import '../../components/GrowthRecord/GrowthRecord.css';
 
 function GrowthRecordPage() {
-    const [activeTab, setActiveTab] = useState('plan');
+    const [activeTab, setActiveTab] = useState('intro'); // Default to intro
     const [year, setYear] = useState(new Date().getFullYear());
     const [month, setMonth] = useState(new Date().getMonth() + 1);
     const [plan, setPlan] = useState(null);
@@ -113,6 +114,8 @@ function GrowthRecordPage() {
         if (!plan) return <div>Loading...</div>;
 
         switch (activeTab) {
+            case 'intro':
+                return <GrowthIntro />;
             case 'plan':
                 return <YearlyPlan plan={plan} user={user} onUpdate={handleUpdatePlan} refreshPlan={fetchPlan} />;
             case 'indicator':
@@ -189,6 +192,12 @@ function GrowthRecordPage() {
 
             <div className="growth-tabs">
                 <button
+                    className={`growth-tab ${activeTab === 'intro' ? 'active' : ''}`}
+                    onClick={() => setActiveTab('intro')}
+                >
+                    나성장 소개
+                </button>
+                <button
                     className={`growth-tab ${activeTab === 'plan' ? 'active' : ''}`}
                     onClick={() => setActiveTab('plan')}
                 >
@@ -228,6 +237,7 @@ function GrowthRecordPage() {
                     value={activeTab}
                     onChange={(e) => setActiveTab(e.target.value)}
                 >
+                    <option value="intro">나성장 소개</option>
                     <option value="plan">성장 계획</option>
                     <option value="indicator">월 성장일지</option>
                     <option value="analysis">월 성장분석</option>

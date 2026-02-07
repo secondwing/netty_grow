@@ -50,7 +50,7 @@ function Login({ onLogin }) {
 
     return (
         <div className="auth-page">
-            <h1 className="auth-page__title">로그인</h1>
+            <h1 className="auth-page__title">함께해요</h1>
             <form className="auth-form" onSubmit={handleSubmit}>
                 <div className="auth-form__group">
                     <label className="auth-form__label">아이디</label>

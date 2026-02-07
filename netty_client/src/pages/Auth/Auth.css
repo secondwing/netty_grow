@@ -314,3 +314,133 @@ input[type="date"].auth-form__input {
 .text-center {
     text-align: center;
 }
+
+/* Step 3: Growth Analysis Result */
+.analysis-step {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.analysis-intro {
+    text-align: center;
+    margin-bottom: 3rem;
+    color: #4b5563;
+    line-height: 1.8;
+}
+
+.analysis-intro p {
+    margin: 0.5rem 0;
+    font-size: 1.05rem;
+}
+
+.analysis-intro .highlight {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #4f46e5;
+    margin: 1rem 0;
+}
+
+.analysis-intro .highlight span {
+    font-size: 1.1rem;
+    font-weight: 400;
+    color: #4b5563;
+}
+
+.analysis-card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 2.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    margin-bottom: 2rem;
+}
+
+.analysis-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.analysis-title {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #1f2937;
+    margin: 0 0 0.5rem 0;
+}
+
+.analysis-subtitle {
+    font-size: 1.1rem;
+    color: #6b7280;
+    font-weight: 500;
+    margin: 0;
+}
+
+.analysis-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.analysis-description {
+    line-height: 1.7;
+    color: #374151;
+    font-size: 1.05rem;
+    text-align: center;
+}
+
+.analysis-description p {
+    margin: 0.5rem 0;
+}
+
+.analysis-section {
+    background: #f9fafb;
+    border-radius: 12px;
+    padding: 1.5rem;
+}
+
+.analysis-section h4 {
+    margin: 0 0 1rem 0;
+    font-size: 1.1rem;
+    color: #4f46e5;
+    font-weight: 700;
+}
+
+.tip-section p {
+    margin: 0;
+    color: #4b5563;
+    line-height: 1.6;
+}
+
+.recommend-section ul {
+    margin: 0;
+    padding-left: 1.5rem;
+    color: #4b5563;
+}
+
+.recommend-section li {
+    margin-bottom: 0.5rem;
+    line-height: 1.5;
+}
+
+.start-button {
+    background-color: #10b981;
+    /* Green color to signify start/growth */
+    font-size: 1.1rem;
+    padding: 1rem;
+}
+
+.start-button:hover {
+    background-color: #059669;
+}

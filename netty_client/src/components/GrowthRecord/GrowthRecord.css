@@ -606,3 +606,339 @@
         width: 100%;
     }
 }
+
+/* Growth Intro Styles */
+.growth-intro-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding-bottom: 3rem;
+}
+
+.intro-header {
+    text-align: center;
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+.intro-header h2 {
+    font-size: 1.25rem;
+    color: #4f46e5;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.intro-header h3 {
+    font-size: 2rem;
+    color: #1a1a1a;
+    font-weight: 800;
+    margin: 0 0 1rem 0;
+}
+
+.intro-header p {
+    font-size: 1.1rem;
+    color: #4b5563;
+    line-height: 1.6;
+}
+
+.intro-card {
+    background: white;
+    border-radius: 16px;
+    padding: 2.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border: 1px solid #e5e7eb;
+}
+
+.intro-card h4 {
+    font-size: 1.4rem;
+    color: #1a1a1a;
+    font-weight: 700;
+    margin: 0 0 1.5rem 0;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #f3f4f6;
+}
+
+.intro-about p {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: #374151;
+    margin-bottom: 1.5rem;
+}
+
+.intro-about ul {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+}
+
+.intro-about li {
+    padding: 1rem;
+    background: #f9fafb;
+    border-radius: 8px;
+    font-weight: 500;
+    color: #4b5563;
+    display: flex;
+    align-items: center;
+}
+
+.intro-about li::before {
+    content: "✓";
+    color: #4f46e5;
+    font-weight: 800;
+    margin-right: 0.75rem;
+    font-size: 1.2rem;
+}
+
+.how-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+}
+
+.how-item {
+    background: #fcfcfd;
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid #f3f4f6;
+    transition: transform 0.2s;
+}
+
+.how-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.how-item h5 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0 0 0.75rem 0;
+    color: #4f46e5;
+}
+
+.how-item p {
+    font-size: 0.95rem;
+    color: #4b5563;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+.intro-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.intro-table th,
+.intro-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.intro-table th {
+    background: #f9fafb;
+    font-weight: 600;
+    color: #374151;
+}
+
+.intro-table td:first-child {
+    font-weight: 600;
+    color: #4f46e5;
+    width: 150px;
+}
+
+.timeline-desc {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 1.05rem;
+    color: #4b5563;
+    background: #f3f4f6;
+    padding: 1rem;
+    border-radius: 8px;
+}
+
+.timeline-list {
+    position: relative;
+    padding-left: 2rem;
+}
+
+.timeline-list::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #e5e7eb;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 2.5rem;
+}
+
+.timeline-item:last-child {
+    margin-bottom: 0;
+}
+
+.timeline-item::before {
+    content: "";
+    position: absolute;
+    left: -2rem;
+    top: 0.5rem;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: white;
+    border: 3px solid #4f46e5;
+    transform: translateX(-50%);
+    z-index: 1;
+}
+
+.timeline-marker {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #4f46e5;
+    margin-bottom: 0.25rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.timeline-content h5 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+    color: #1f2937;
+}
+
+.timeline-content ul {
+    margin: 0;
+    padding-left: 1.2rem;
+    color: #4b5563;
+}
+
+.timeline-content li {
+    margin-bottom: 0.25rem;
+}
+
+.participation-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+}
+
+.participation-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: center;
+    background: #fff;
+}
+
+.participation-card.highlight {
+    border: 2px solid #4f46e5;
+    background: #f5f3ff;
+    position: relative;
+    overflow: hidden;
+}
+
+.participation-card.highlight::before {
+    content: "추천";
+    position: absolute;
+    top: 1rem;
+    right: -2rem;
+    background: #4f46e5;
+    color: white;
+    padding: 0.25rem 3rem;
+    transform: rotate(45deg);
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.participation-card h5 {
+    font-size: 1.4rem;
+    font-weight: 800;
+    margin: 0 0 0.5rem 0;
+    color: #1f2937;
+}
+
+.participation-card .desc {
+    color: #6b7280;
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+}
+
+.participation-card .price {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #4f46e5;
+    margin-bottom: 1.5rem;
+    padding: 0.75rem;
+    background: rgba(79, 70, 229, 0.05);
+    border-radius: 8px;
+}
+
+.participation-card ul {
+    list-style: none;
+    padding: 0;
+    text-align: left;
+}
+
+.participation-card li {
+    padding: 0.5rem 0;
+    border-bottom: 1px dashed #e5e7eb;
+    color: #4b5563;
+}
+
+.participation-card li:last-child {
+    border-bottom: none;
+}
+
+@media (max-width: 768px) {
+    .intro-header h3 {
+        font-size: 1.5rem;
+    }
+
+    .intro-card {
+        padding: 1.5rem;
+    }
+
+    .intro-about ul {
+        grid-template-columns: 1fr;
+    }
+
+    .how-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .participation-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.participation-sublist {
+    margin-top: 0.5rem;
+    padding: 0.75rem !important;
+    background: #fdfdfd;
+    border-radius: 8px;
+    border: 1px solid #f3f4f6;
+}
+
+.participation-card .participation-sublist li {
+    border-bottom: none;
+    padding: 0.25rem 0;
+    font-size: 0.9rem;
+    color: #6b7280;
+}
+
+.participation-card .participation-sublist li::before {
+    content: "• ";
+    margin-right: 0.5rem;
+    color: #4f46e5;
+}
