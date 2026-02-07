@@ -199,6 +199,68 @@ const GrowthIntro = () => {
                 </div>
             </div>
 
+            <div className="intro-card intro-history">
+                <h4>📜 나성장 기록 활동 연혁</h4>
+                <div className="history-list">
+                    <div className="history-item">
+                        <div className="history-year">2015–2019</div>
+                        <div className="history-content">
+                            <strong>드림북 개인 기록 활동 시작</strong>
+                            <p>(수기 작성으로 나를 알아가는 기록 실천)</p>
+                        </div>
+                    </div>
+                    <div className="history-item">
+                        <div className="history-year">2020</div>
+                        <div className="history-content">
+                            <strong>나성장계발서 1기 모임 진행</strong>
+                            <p>(지인 모집, 10명) → 기록 양식을 <strong>한글 파일 형태로 구조화</strong></p>
+                        </div>
+                    </div>
+                    <div className="history-item">
+                        <div className="history-year">2021</div>
+                        <div className="history-content">
+                            <strong>나성장계발서 2기 모임 진행</strong>
+                            <p>(소모임 앱 모집, 4명)</p>
+                        </div>
+                    </div>
+                    <div className="history-item">
+                        <div className="history-year">2022</div>
+                        <div className="history-content">
+                            <strong>나성장계발서 3기 모임 진행</strong>
+                            <p>(천안 청년 대상, 8명)</p>
+                        </div>
+                    </div>
+                    <div className="history-item">
+                        <div className="history-year">2023</div>
+                        <div className="history-content">
+                            <strong>나성장계발서 4기 모임 진행</strong>
+                            <p>(천안 청년 대상, 8명)</p>
+                        </div>
+                    </div>
+                    <div className="history-item">
+                        <div className="history-year">2024</div>
+                        <div className="history-content">
+                            <strong>나성장계발서 5기 모임 진행</strong>
+                            <p>(SNS 홍보 모집, 10명)</p>
+                        </div>
+                    </div>
+                    <div className="history-item">
+                        <div className="history-year">2025</div>
+                        <div className="history-content">
+                            <strong>나성장계발서 6기 모임 진행</strong>
+                            <p>(SNS 홍보 모집, 21명)</p>
+                        </div>
+                    </div>
+                    <div className="history-item highlight">
+                        <div className="history-year">2026</div>
+                        <div className="history-content">
+                            <strong>나성장 기록 플랫폼 전환</strong>
+                            <p>(기록의 편의성과 성장 과정의 시각화를 위해 디지털 플랫폼으로 확장)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div className="intro-card intro-participation">
                 <h4>💛 참여방법</h4>
                 <p>나성장 기록은 지금의 나에게 맞는 방식으로 참여할 수 있어요.</p>
