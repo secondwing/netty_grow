@@ -405,7 +405,7 @@ function MonthlyIndicator({ plan, log, month, previousLog, user, onUpdateLog, re
                                                                         className="growth-textarea"
                                                                         value={entry.reflection}
                                                                         onChange={(e) => handleEntryChange(activity._id, idx, 'reflection', e.target.value)}
-                                                                        placeholder="활동소감"
+                                                                        placeholder="계기 - 행동 - 결과 - 생각 - 감정 - 보완점 작성"
                                                                         minHeight="60px"
                                                                         disabled={readOnly}
                                                                     />
