@@ -13,8 +13,8 @@ function Signup() {
 
         name: '',
         nickname: '',
-        gender: 'male',
-        birthDate: '',
+        gender: 'undisclosed',
+        birthYear: '',
         phone: '',
         location: '',
         affiliation: 'student',
@@ -30,10 +30,24 @@ function Signup() {
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: type === 'checkbox' ? checked : value
-        }));
+
+        if (name === 'phone') {
+            const numbers = value.replace(/[^\d]/g, '');
+            let formattedPhone = '';
+            if (numbers.length <= 3) formattedPhone = numbers;
+            else if (numbers.length <= 7) formattedPhone = `${numbers.slice(0, 3)}-${numbers.slice(3)}`;
+            else formattedPhone = `${numbers.slice(0, 3)}-${numbers.slice(3, 7)}-${numbers.slice(7, 11)}`;
+
+            setFormData(prev => ({ ...prev, [name]: formattedPhone }));
+        } else if (name === 'birthYear') {
+            const numbers = value.replace(/[^\d]/g, '').slice(0, 4);
+            setFormData(prev => ({ ...prev, [name]: numbers }));
+        } else {
+            setFormData(prev => ({
+                ...prev,
+                [name]: type === 'checkbox' ? checked : value
+            }));
+        }
     };
 
     const handleTestChange = (testName, value) => {
@@ -140,7 +154,7 @@ function Signup() {
                 />
             </div>
             <div className="auth-form__group">
-                <label className="auth-form__label">이름 / 닉네임</label>
+                <label className="auth-form__label">이름 / 별칭</label>
                 <div style={{ display: 'flex', gap: '10px' }}>
                     <input
                         type="text"
@@ -158,14 +172,14 @@ function Signup() {
                         className="auth-form__input"
                         value={formData.nickname}
                         onChange={handleChange}
-                        placeholder="닉네임"
+                        placeholder="별칭"
                         required
                         style={{ flex: 1 }}
                     />
                 </div>
             </div>
             <div className="auth-form__group">
-                <label className="auth-form__label">성별</label>
+                <label className="auth-form__label">성별 (선택)</label>
                 <select
                     name="gender"
                     className="auth-form__select"
@@ -174,16 +188,19 @@ function Signup() {
                 >
                     <option value="male">남성</option>
                     <option value="female">여성</option>
+                    <option value="undisclosed">미응답</option>
                 </select>
             </div>
             <div className="auth-form__group">
-                <label className="auth-form__label">생년월일</label>
+                <label className="auth-form__label">생년</label>
                 <input
-                    type="date"
-                    name="birthDate"
+                    type="text"
+                    name="birthYear"
                     className="auth-form__input"
-                    value={formData.birthDate}
+                    value={formData.birthYear}
                     onChange={handleChange}
+                    placeholder="YYYY (4자리)"
+                    maxLength={4}
                     required
                 />
             </div>
@@ -196,6 +213,7 @@ function Signup() {
                     value={formData.phone}
                     onChange={handleChange}
                     placeholder="010-0000-0000"
+                    maxLength={13}
                     required
                 />
             </div>
@@ -207,7 +225,7 @@ function Signup() {
                     className="auth-form__input"
                     value={formData.location}
                     onChange={handleChange}
-                    placeholder="도 / 시 / 군 / 동"
+                    placeholder="(시/구)"
                     required
                 />
             </div>
@@ -225,6 +243,7 @@ function Signup() {
                     <option value="freelancer">프리랜서</option>
                     <option value="entrepreneur">창업자</option>
                     <option value="pre_entrepreneur">예비창업자</option>
+                    <option value="resting">휴식</option>
                 </select>
             </div>
             <div className="terms-section">
