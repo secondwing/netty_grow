@@ -6,7 +6,7 @@ const UserSchema = new mongoose.Schema({
     password: { type: String, required: true }, // 비밀번호 (Hashed)
     name: { type: String, required: true }, // 이름
     gender: { type: String, enum: ['male', 'female', 'undisclosed'], required: true }, // 성별
-    birthYear: { type: String, required: true }, // 생년 (YYYY)
+    birthDate: { type: String, required: true }, // 생년월일 (YYYY-MM-DD)
     phone: { type: String, required: true, unique: true }, // 핸드폰 번호
     location: { type: String, required: true }, // 사는 지역 (도/시/군/동)
     affiliation: {

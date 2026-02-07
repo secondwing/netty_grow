@@ -14,7 +14,7 @@ function Signup() {
         name: '',
         nickname: '',
         gender: 'undisclosed',
-        birthYear: '',
+        birthDate: '',
         phone: '',
         location: '',
         affiliation: 'student',
@@ -39,9 +39,14 @@ function Signup() {
             else formattedPhone = `${numbers.slice(0, 3)}-${numbers.slice(3, 7)}-${numbers.slice(7, 11)}`;
 
             setFormData(prev => ({ ...prev, [name]: formattedPhone }));
-        } else if (name === 'birthYear') {
-            const numbers = value.replace(/[^\d]/g, '').slice(0, 4);
-            setFormData(prev => ({ ...prev, [name]: numbers }));
+        } else if (name === 'birthDate') {
+            const numbers = value.replace(/[^\d]/g, '');
+            let formattedDate = '';
+            if (numbers.length <= 4) formattedDate = numbers;
+            else if (numbers.length <= 6) formattedDate = `${numbers.slice(0, 4)}-${numbers.slice(4)}`;
+            else formattedDate = `${numbers.slice(0, 4)}-${numbers.slice(4, 6)}-${numbers.slice(6, 8)}`;
+
+            setFormData(prev => ({ ...prev, [name]: formattedDate }));
         } else {
             setFormData(prev => ({
                 ...prev,
@@ -192,15 +197,15 @@ function Signup() {
                 </select>
             </div>
             <div className="auth-form__group">
-                <label className="auth-form__label">생년</label>
+                <label className="auth-form__label">생년월일</label>
                 <input
                     type="text"
-                    name="birthYear"
+                    name="birthDate"
                     className="auth-form__input"
-                    value={formData.birthYear}
+                    value={formData.birthDate}
                     onChange={handleChange}
-                    placeholder="YYYY (4자리)"
-                    maxLength={4}
+                    placeholder="YYYY-MM-DD"
+                    maxLength={10}
                     required
                 />
             </div>

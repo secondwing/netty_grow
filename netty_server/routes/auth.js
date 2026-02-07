@@ -20,7 +20,7 @@ const calculateGrowthStage = (results) => {
 // Signup
 router.post('/signup', async (req, res) => {
     try {
-        const { username, password, name, nickname, gender, birthYear, phone, location, affiliation, consent, growthTestResults } = req.body;
+        const { username, password, name, nickname, gender, birthDate, phone, location, affiliation, consent, growthTestResults } = req.body;
 
         // Check if user already exists (username, phone, or nickname)
         const existingUser = await User.findOne({ $or: [{ username }, { phone }, { nickname }] });
@@ -42,7 +42,7 @@ router.post('/signup', async (req, res) => {
             name,
             nickname,
             gender,
-            birthYear,
+            birthDate,
             phone,
             location,
             affiliation,
