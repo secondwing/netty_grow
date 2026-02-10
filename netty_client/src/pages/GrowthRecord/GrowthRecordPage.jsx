@@ -13,6 +13,8 @@ import GrowthResult from '../../components/GrowthRecord/GrowthResult';
 import GrowthReflection from '../../components/GrowthRecord/GrowthReflection';
 import GrowthReportDocument from '../../components/PDF/GrowthReportDocument';
 import ScrollToTopButton from '../../components/Common/ScrollToTopButton';
+import KakaoFloatingButton from '../../components/Common/KakaoFloatingButton';
+import FloatingUnicodePicker from '../../components/Common/FloatingUnicodePicker';
 import GrowthIntro from '../../components/GrowthRecord/GrowthIntro';
 import '../../components/GrowthRecord/GrowthRecord.css';
 
@@ -253,6 +255,12 @@ function GrowthRecordPage() {
             </div>
 
             {renderContent()}
+            {activeTab !== 'intro' && (
+                <>
+                    <KakaoFloatingButton />
+                    <FloatingUnicodePicker />
+                </>
+            )}
             <ScrollToTopButton />
         </div>
     );
