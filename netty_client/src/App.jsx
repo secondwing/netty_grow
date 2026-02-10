@@ -54,7 +54,7 @@ function AppContent() {
 
           {/* Public Only Routes */}
           <Route path="login" element={!isLoggedIn ? <Login onLogin={handleLogin} /> : <Navigate to="/" />} />
-          <Route path="signup" element={!isLoggedIn ? <Signup /> : <Navigate to="/" />} />
+          <Route path="signup" element={!isLoggedIn ? <Signup /> : <Navigate to="/record" />} />
 
           {/* Protected Routes */}
           <Route path="record" element={isLoggedIn ? <RecordPage /> : <Navigate to="/login" />} />

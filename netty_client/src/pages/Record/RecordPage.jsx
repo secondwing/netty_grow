@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import DailyRecordPage from '../DailyRecord/DailyRecordPage';
 import GrowthRecordPage from '../GrowthRecord/GrowthRecordPage';
 import './RecordPage.css';
 
 const RecordPage = () => {
-    const [activeTab, setActiveTab] = useState('daily');
+    const location = useLocation();
+    const [activeTab, setActiveTab] = useState(location.state?.tab || 'growth');
 
     return (
         <div className="record-page">

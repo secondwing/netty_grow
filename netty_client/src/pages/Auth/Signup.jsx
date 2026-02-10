@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Auth.css';
 import { API_BASE_URL } from '../../config';
 import MDEditor from '@uiw/react-md-editor';
 import GrowthTestForm from '../../components/Auth/GrowthTestForm';
+import { AuthContext } from '../../contexts/AuthContext';
+import { useNotification } from '../../contexts/NotificationContext';
 
 const TERMS_CONTENT = `##### 제1조 (목적)
 본 약관은 Netty(이하 “서비스”)가 제공하는 기록 및 커뮤니티 서비스의 이용과 관련하여 서비스와 회원 간의 권리, 의무 및 책임사항을 규정함을 목적으로 합니다.
@@ -118,7 +120,7 @@ const GROWTH_ANALYSIS_DATA = {
             "어디서부터 봐야 할지",
             "막막하게 느껴질 수도 있어요.",
             "아무것도 시작하지 못한 상태가 아니라,",
-            "**이제 처음으로 나를 바라보는 관점의 시작** 예요."
+            "이제 처음으로 나를 바라보는 관점의 시작 예요."
         ],
         tip: "나에게 집중하며, 지금 느껴지는 신체 감각, 감정, 생각을 그대로 인지해보세요.",
         recommendation: [
@@ -135,11 +137,11 @@ const GROWTH_ANALYSIS_DATA = {
             "조심스럽게 발견한 씨앗이에요.",
             "아직 선명하진 않지만,",
             "“이게 내 마음일까?”",
-            "“나는 어떤 사람일까?”",
-            "라는 질문이",
+            "“나는 어떤 사람일까?” 라는 질문이",
             "마음속에 자리 잡기 시작했어요.",
-            "이 시기에는",
-            "혼자 있는 시간이 특별해지기도 하고,",
+
+            "이 시기에는 혼자 있는 시간이",
+            "특별해지기도 하고,",
             "반대로 외롭고 불안해질 수도 있어요.",
             "그건 아주 자연스러운 과정이에요."
         ],
@@ -244,6 +246,8 @@ function Signup() {
         }
     });
     const navigate = useNavigate();
+    const { login } = useContext(AuthContext);
+    const { showNotification } = useNotification();
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -342,20 +346,26 @@ function Signup() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                credentials: 'include',
                 body: JSON.stringify({
                     username: formData.username,
                     password: formData.password
                 }),
             });
 
+            const data = await response.json();
+
             if (response.ok) {
-                navigate('/'); // 홈 또는 메인 화면으로 이동
+                login(data.user);
+                showNotification('가입을 환영합니다! 자동 로그인되었습니다.', 'success');
+                navigate('/record', { state: { tab: 'growth' } }); // 성장 기록 페이지로 이동
             } else {
-                alert('자동 로그인에 실패했습니다. 로그인 페이지로 이동합니다.');
+                showNotification('자동 로그인에 실패했습니다. 로그인 페이지로 이동합니다.', 'error');
                 navigate('/login');
             }
         } catch (error) {
             console.error('Auto login error:', error);
+            showNotification('자동 로그인 중 오류가 발생했습니다.', 'error');
             navigate('/login');
         }
     };
@@ -615,7 +625,7 @@ function Signup() {
                         <div className="analysis-description">
                             {analysis.description.map((line, index) => (
                                 <p key={index} dangerouslySetInnerHTML={{
-                                    __html: line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                                    __html: line.trim() === '' ? '&nbsp;' : line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
                                 }} />
                             ))}
                         </div>
