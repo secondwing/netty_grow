@@ -153,17 +153,14 @@ const GROWTH_ANALYSIS_DATA = {
         title: "3단계 · 새싹",
         subtitle: "“나와 소통하기 시작한 상태”",
         description: [
-            "나는 이제",
-            "내 생각과 감정을",
+            "나는 이제 내 생각과 감정을",
             "이전보다 빠르게 알아차리고 있어요.",
             "기분이 왜 변했는지,",
             "어떤 환경에서 편안해지는지도",
             "조금씩 보이기 시작했어요.",
-            "아직은 흔들리고,",
-            "확신이 들었다가도",
+            "아직은 흔들리고, 확신이 들었다가도",
             "다시 헷갈릴 수 있어요.",
-            "하지만 새싹은",
-            "이미 자라기 시작했어요."
+            "하지만 새싹은 이미 자라기 시작했어요."
         ],
         tip: "매일 나에게 “고마워, 미안해, 사랑해” 라고 말하며 나를 인정해보세요.",
         recommendation: [
@@ -596,12 +593,10 @@ function Signup() {
             <div className="auth-step analysis-step">
                 <div className="analysis-intro">
                     <p>나를 아는 만큼 성장해요.</p>
-                    <p>Netty는 그 과정을</p>
-                    <p className="highlight">성장도감<span>으로 표현했어요.</span></p>
-                    <p><br />꽃은 혼자서도 피지만,</p>
+                    <p>Netty는 그 과정을 <span className="highlight">성장도감</span>으로 표현했어요.</p><br />
+                    <p>꽃은 혼자서도 피지만,</p>
                     <p>함께할 때 더 빨리, 더 오래 피어납니다.</p>
-                    <p>때가 되면,</p>
-                    <p>꽃이 가득한 정원에서 만나요.</p>
+                    <p>때가 되면, 꽃이 가득한 정원에서 만나요.</p>
                 </div>
 
                 <div className="analysis-card">
@@ -609,6 +604,12 @@ function Signup() {
                         <h3 className="analysis-title">{analysis.title}</h3>
                         <p className="analysis-subtitle">{analysis.subtitle}</p>
                     </div>
+
+                    <img
+                        src={`/growth/growth_0${stage}.png`}
+                        alt={`${analysis.title} growth stage`}
+                        className="analysis-image"
+                    />
 
                     <div className="analysis-content">
                         <div className="analysis-description">
@@ -625,7 +626,7 @@ function Signup() {
                         </div>
 
                         <div className="analysis-section recommend-section">
-                            <h4>추천 기록 방향</h4>
+                            <h4>추천 기록법</h4>
                             <ul>
                                 {analysis.recommendation.map((item, index) => (
                                     <li key={index}>{item}</li>
@@ -637,7 +638,7 @@ function Signup() {
 
                 <div className="auth-buttons">
                     <button type="button" onClick={handleAutoLogin} className="auth-form__button start-button">
-                        [나성장 기록] 시작하기
+                        나성장 기록하기
                     </button>
                 </div>
             </div>
@@ -652,7 +653,7 @@ function Signup() {
                 <div className={`auth-progress__line ${step >= 2 ? 'active' : ''}`}></div>
                 <div className={`auth-progress__step ${step >= 2 ? 'active' : ''}`}>2. 나성장테스트</div>
                 <div className={`auth-progress__line ${step >= 3 ? 'active' : ''}`}></div>
-                <div className={`auth-progress__step ${step >= 3 ? 'active' : ''}`}>3. 결과</div>
+                <div className={`auth-progress__step ${step >= 3 ? 'active' : ''}`}>3. 나의 성장도감</div>
             </div>
             <form className="auth-form" onSubmit={handleSubmit}>
                 {step === 1 ? renderStep1() : (step === 2 ? renderStep2() : renderStep3())}

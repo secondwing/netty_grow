@@ -6,10 +6,8 @@ function Home() {
         <div className="home">
             <div className="home__hero">
                 <h1 className="home__title">
-                    <span>
-                        기록은 나답게<br />
-                        성장은 확실하게
-                    </span>
+                    기록은 나답게<br />
+                    성장은 확실하게
                 </h1>
                 <p className="home__subtitle">
                     나에 대한 기록을 모아<br />

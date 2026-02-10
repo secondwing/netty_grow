@@ -42,12 +42,12 @@ function Header({ isLoggedIn, onLogout }) {
                         <>
                             <Link to="/" className="header__link" onClick={closeMenu}>홈</Link>
                             <Link to="/record" className="header__link" onClick={closeMenu}>나성장</Link>
-                            <Link to="/mypage" className="header__link" onClick={closeMenu}>마이페이지</Link>
+                            <Link to="/mypage" className="header__link" onClick={closeMenu}>성장도감</Link>
                             {user?.role === 'admin' && (
                                 <Link to="/admin/dashboard" className="header__link" onClick={closeMenu}>관리자</Link>
                             )}
                             <button onClick={handleLogout} className="header__button header__button--logout">
-                                다음에 봐요
+                                다음에 봐요🖐️
                             </button>
                         </>
                     ) : (

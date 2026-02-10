@@ -340,15 +340,14 @@ input[type="date"].auth-form__input {
 }
 
 .analysis-intro p {
-    margin: 0.5rem 0;
+    margin: 0.1rem 0;
     font-size: 1.05rem;
 }
 
 .analysis-intro .highlight {
-    font-size: 1.5rem;
+    /* font-size: 1.5rem; */
     font-weight: 700;
     color: #4f46e5;
-    margin: 1rem 0;
 }
 
 .analysis-intro .highlight span {
@@ -385,6 +384,13 @@ input[type="date"].auth-form__input {
     color: #6b7280;
     font-weight: 500;
     margin: 0;
+}
+
+.analysis-image {
+    width: 120px;
+    height: auto;
+    margin: 2rem auto;
+    display: block;
 }
 
 .analysis-content {
@@ -435,12 +441,12 @@ input[type="date"].auth-form__input {
 }
 
 .start-button {
-    background-color: #10b981;
-    /* Green color to signify start/growth */
+    background-color: #F472B6;
+    /* Lighter Pink color */
     font-size: 1.1rem;
     padding: 1rem;
 }
 
 .start-button:hover {
-    background-color: #059669;
+    background-color: #EC4899;
 }
