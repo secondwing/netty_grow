@@ -19,8 +19,7 @@ const GrowthIntro = () => {
             <div className="intro-card intro-about">
                 <h4 className="icon-heading"><Sparkles className="icon-accent" /> 나성장 기록은 이런 활동이에요</h4>
                 <p>
-                    나성장은 1년을 기준으로 <strong>계획 → 실행 → 점검 → 회복</strong>의 흐름을 반복하며<br />
-                    스스로를 다루는 힘을 기르는 자기분석 기록입니다.
+                    나성장은 1년을 기준으로 <strong>계획 → 실행 → 점검 → 회복</strong>의 흐름을 반복하며 스스로를 다루는 힘을 기르는 자기분석 기록입니다.
                 </p>
                 <ul>
                     <li>나로 부터 동기화하고</li>
@@ -46,14 +45,14 @@ const GrowthIntro = () => {
                         <p>기록을 바탕으로<br />나의 반복되는 패턴과 환경을 분석합니다.<br /><span className="text-sm text-gray-500">(AI가 요약·정리를 도와줘요)</span></p>
                     </div>
                     <div className="how-item">
-                        <h5 className="icon-heading"><FileText className="icon-sub" /> 4. 연 성장결과 & 성장소감</h5>
+                        <h5 className="icon-heading"><FileText className="icon-sub" /> 4. 연 성장결과 & 소감</h5>
                         <p>1년간의 기록을 종합해<br />나만의 성장 결과 보고서를 완성합니다.</p>
                     </div>
                 </div>
             </div>
 
             <div className="intro-card intro-change">
-                <h4 className="icon-heading"><Sparkles className="icon-accent" /> 나성장 기록을 통해 얻는 변화</h4>
+                <h4 className="icon-heading"><Sparkles className="icon-accent" /> 나성장을 통해 얻는 변화</h4>
                 <div className="table-responsive">
                     <table className="intro-table">
                         <thead>
@@ -65,27 +64,27 @@ const GrowthIntro = () => {
                         <tbody>
                             <tr>
                                 <td><strong>성장 계획</strong></td>
-                                <td>내가 원하는 삶의 방향이 분명해지면서 안정감을 느껴요.</td>
+                                <td>내가 원하는 삶의 방향이 분명해지면서 <strong>안정감</strong>을 느껴요.</td>
                             </tr>
                             <tr>
                                 <td><strong>월간 기록</strong></td>
-                                <td>감정·생각·행동을 구분해 바라보며 나를 객관적으로 인식하게 돼요</td>
+                                <td>감정·생각·행동을 구분해 바라보며 <strong>나를 객관적으로 인식</strong>하게 돼요</td>
                             </tr>
                             <tr>
                                 <td><strong>월간 점검</strong></td>
-                                <td>매달 스스로를 점검하며 나에게 맞는 환경을 만들어가요.</td>
+                                <td>매달 스스로를 점검하며 <strong>나에게 맞는 환경</strong>을 만들어가요.</td>
                             </tr>
                             <tr>
                                 <td><strong>기록 반복</strong></td>
-                                <td>나의 반복되는 강점과 약점의 패턴을 이해하며, 나를 다루는 힘이 생겨요.</td>
+                                <td>나의 반복되는 강점과 약점의 패턴을 이해하며, <strong>나를 다루는 힘</strong>이 생겨요.</td>
                             </tr>
                             <tr>
                                 <td><strong>연간 정리</strong></td>
-                                <td>1년의 성장을 시각화·문서화하며 성취감과 안정감을 느껴요</td>
+                                <td>1년의 성장을 <strong>시각화·문서화하며 성취감</strong>과 안정감을 느껴요</td>
                             </tr>
                             <tr>
                                 <td><strong>커뮤니티 참여</strong></td>
-                                <td>혼자가 아니라 함께 독려하며 기록을 지속할 수 있어요</td>
+                                <td>혼자가 아니라 <strong>함께 독려하며 기록을 지속</strong>할 수 있어요</td>
                             </tr>
                         </tbody>
                     </table>
@@ -93,7 +92,7 @@ const GrowthIntro = () => {
             </div>
 
             <div className="intro-card intro-timeline">
-                <h4 className="icon-heading"><TrendingUp className="icon-accent" /> 시간이 지나며 나타나는 변화 (월 1회 점검 기준)</h4>
+                <h4 className="icon-heading"><TrendingUp className="icon-accent" /> 1년간의 나성장 과정 (월 1회 점검 기준)</h4>
                 <p className="timeline-desc">
                     나성장 기록의 변화는 갑작스럽게 오지 않고, <strong>단계적으로 찾아와요.</strong><br />
                     대부분의 참여자가 아래와 같은 흐름을 경험합니다.
@@ -204,7 +203,7 @@ const GrowthIntro = () => {
             </div>
 
             <div className="intro-card intro-history">
-                <h4 className="icon-heading"><ScrollText className="icon-accent" /> 나성장 기록 활동 연혁</h4>
+                <h4 className="icon-heading"><ScrollText className="icon-accent" /> 나성장 활동 연혁</h4>
                 <div className="history-list">
                     <div className="history-item">
                         <div className="history-year">2015–2019</div>
@@ -266,7 +265,7 @@ const GrowthIntro = () => {
             </div>
 
             <div className="intro-card intro-participation">
-                <h4 className="icon-heading"><Heart className="icon-accent" /> 참여방법</h4>
+                <h4 className="icon-heading"><Heart className="icon-accent" /> 나성장 참여방법</h4>
                 <p>나성장 기록은 지금의 나에게 맞는 방식으로 참여할 수 있어요.</p>
                 <div className="participation-grid">
                     <div className="participation-card">
