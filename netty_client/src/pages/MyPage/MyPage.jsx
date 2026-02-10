@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './MyPage.css';
 import { API_BASE_URL } from '../../config';
+import GrowthTestResult from '../../components/GrowthRecord/GrowthTestResult';
 
 const MyPage = ({ currentUser }) => {
     const [userInfo, setUserInfo] = useState(null);
@@ -290,18 +291,8 @@ const MyPage = ({ currentUser }) => {
                                 {userInfo?.growthTestResults && (
                                     <div className="my-page__growth-results">
                                         <h3 className="my-page__section-title">성장 테스트 결과</h3>
-                                        <div className="my-page__result-item">
-                                            <span className="my-page__result-label">Test 1. 거주지 인식</span>
-                                            <span className="my-page__result-value">{userInfo.growthTestResults.test1}점</span>
-                                        </div>
-                                        <div className="my-page__result-item">
-                                            <span className="my-page__result-label">Test 2. 자아 원동력</span>
-                                            <span className="my-page__result-value">{userInfo.growthTestResults.test2}점</span>
-                                        </div>
-                                        <div className="my-page__result-item">
-                                            <span className="my-page__result-label">Test 3. 성장 단계</span>
-                                            <span className="my-page__result-value">{userInfo.growthTestResults.test3}단계 ({userInfo.growthTestResults.test3}점)</span>
-                                        </div>
+                                        <GrowthTestResult stage={userInfo.growthTestResults.test3} />
+
                                         <div style={{ marginTop: '1rem', textAlign: 'right' }}>
                                             <a href="/growth-test" className="my-page__link-button">
                                                 성장 테스트 다시 보기
