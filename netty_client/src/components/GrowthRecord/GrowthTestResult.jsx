@@ -1,8 +1,40 @@
 import React from 'react';
 import { GROWTH_ANALYSIS_DATA } from '../../data/growthAnalysisData';
 
-const GrowthTestResult = ({ stage }) => {
+const GrowthTestResult = ({ stage, guidanceOnly = false }) => {
     const analysis = GROWTH_ANALYSIS_DATA[stage] || GROWTH_ANALYSIS_DATA[1];
+
+    const content = (
+        <div className="analysis-content">
+            {!guidanceOnly && (
+                <div className="analysis-description">
+                    {analysis.description.map((line, index) => (
+                        <p key={index} dangerouslySetInnerHTML={{
+                            __html: line.trim() === '' ? '&nbsp;' : line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                        }} />
+                    ))}
+                </div>
+            )}
+
+            <div className="analysis-section tip-section">
+                <h4>👉 성장tip</h4>
+                <p>{analysis.tip}</p>
+            </div>
+
+            <div className="analysis-section recommend-section">
+                <h4>추천 기록법</h4>
+                <ul>
+                    {analysis.recommendation.map((item, index) => (
+                        <li key={index}>{item}</li>
+                    ))}
+                </ul>
+            </div>
+        </div>
+    );
+
+    if (guidanceOnly) {
+        return content;
+    }
 
     return (
         <div className="analysis-card">
@@ -21,29 +53,7 @@ const GrowthTestResult = ({ stage }) => {
                 }}
             />
 
-            <div className="analysis-content">
-                <div className="analysis-description">
-                    {analysis.description.map((line, index) => (
-                        <p key={index} dangerouslySetInnerHTML={{
-                            __html: line.trim() === '' ? '&nbsp;' : line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                        }} />
-                    ))}
-                </div>
-
-                <div className="analysis-section tip-section">
-                    <h4>👉 성장tip</h4>
-                    <p>{analysis.tip}</p>
-                </div>
-
-                <div className="analysis-section recommend-section">
-                    <h4>추천 기록법</h4>
-                    <ul>
-                        {analysis.recommendation.map((item, index) => (
-                            <li key={index}>{item}</li>
-                        ))}
-                    </ul>
-                </div>
-            </div>
+            {content}
         </div>
     );
 };

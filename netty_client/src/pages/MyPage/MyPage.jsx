@@ -290,14 +290,13 @@ const MyPage = ({ currentUser }) => {
 
                                 {userInfo?.growthTestResults && (
                                     <div className="my-page__growth-results">
-                                        <h3 className="my-page__section-title">성장 테스트 결과</h3>
-                                        <GrowthTestResult stage={userInfo.growthTestResults.test3} />
+                                        <GrowthTestResult stage={userInfo.growthTestResults.test3} guidanceOnly={true} />
 
-                                        <div style={{ marginTop: '1rem', textAlign: 'right' }}>
+                                        {/* <div style={{ marginTop: '1rem', textAlign: 'right' }}>
                                             <a href="/growth-test" className="my-page__link-button">
                                                 성장 테스트 다시 보기
                                             </a>
-                                        </div>
+                                        </div> */}
                                     </div>
                                 )}
                             </div>
