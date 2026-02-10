@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import { API_BASE_URL } from '../../config';
+import { AuthContext } from '../../contexts/AuthContext';
 import { useNotification } from '../../contexts/NotificationContext';
 import YearlyPlan from '../../components/GrowthRecord/YearlyPlan';
 import MonthlyIndicator from '../../components/GrowthRecord/MonthlyIndicator';
@@ -21,31 +23,31 @@ function GrowthRecordPage() {
     const [plan, setPlan] = useState(null);
     const [log, setLog] = useState(null);
     const [allMonthlyLogs, setAllMonthlyLogs] = useState([]);
-    const [user, setUser] = useState(null);
+
+    // Use user from AuthContext instead of fetching locally
+    const { user } = useContext(AuthContext);
     const { showNotification } = useNotification();
 
+    const navigate = useNavigate();
+
+    // Removed fetchUser useEffect as it's handled in AuthContext
+
     useEffect(() => {
-        fetchPlan();
-        fetchAllLogs();
-        fetchUser();
-    }, [year]);
+        if (user) {
+            fetchPlan();
+            fetchAllLogs();
+        }
+    }, [user, year]);
 
     useEffect(() => {
         if (activeTab === 'indicator' || activeTab === 'analysis') {
-            fetchLog();
+            if (user) {
+                fetchLog();
+            }
         }
-    }, [year, month, activeTab]);
+    }, [year, month, activeTab, user]);
 
-    const fetchUser = async () => {
-        try {
-            const res = await axios.get(`${API_BASE_URL}/api/auth/me`, {
-                withCredentials: true
-            });
-            setUser(res.data);
-        } catch (err) {
-            console.error('Error fetching user:', err);
-        }
-    };
+    // Removed fetchUser function
 
     const fetchPlan = async () => {
         try {
@@ -111,11 +113,15 @@ function GrowthRecordPage() {
     };
 
     const renderContent = () => {
-        if (!plan) return <div>Loading...</div>;
+        if (activeTab === 'intro') return <GrowthIntro />;
+
+        // For other tabs, we need the plan loaded
+        if (!plan) {
+            if (!user) return <div className="growth-message">로그인이 필요한 메뉴입니다.</div>;
+            return <div>Loading...</div>;
+        }
 
         switch (activeTab) {
-            case 'intro':
-                return <GrowthIntro />;
             case 'plan':
                 return <YearlyPlan plan={plan} user={user} onUpdate={handleUpdatePlan} refreshPlan={fetchPlan} />;
             case 'indicator':
@@ -197,37 +203,27 @@ function GrowthRecordPage() {
                 >
                     나성장 소개
                 </button>
-                <button
-                    className={`growth-tab ${activeTab === 'plan' ? 'active' : ''}`}
-                    onClick={() => setActiveTab('plan')}
-                >
-                    성장 계획
-                </button>
-                <button
-                    className={`growth-tab ${activeTab === 'indicator' ? 'active' : ''}`}
-                    onClick={() => setActiveTab('indicator')}
-                >
-                    월 성장일지
-                </button>
-                <button
-                    className={`growth-tab ${activeTab === 'analysis' ? 'active' : ''}`}
-                    onClick={() => setActiveTab('analysis')}
-                >
-                    월 성장분석
-                </button>
-
-                <button
-                    className={`growth-tab ${activeTab === 'result' ? 'active' : ''}`}
-                    onClick={() => setActiveTab('result')}
-                >
-                    연 성장결과
-                </button>
-                <button
-                    className={`growth-tab ${activeTab === 'reflection' ? 'active' : ''}`}
-                    onClick={() => setActiveTab('reflection')}
-                >
-                    성장소감
-                </button>
+                {['plan', 'indicator', 'analysis', 'result', 'reflection'].map(tab => (
+                    <button
+                        key={tab}
+                        className={`growth-tab ${activeTab === tab ? 'active' : ''}`}
+                        onClick={() => {
+                            if (!user) {
+                                if (window.confirm('로그인이 필요한 서비스입니다.\n로그인 페이지로 이동하시겠습니까?')) {
+                                    navigate('/login');
+                                }
+                                return;
+                            }
+                            setActiveTab(tab);
+                        }}
+                    >
+                        {tab === 'plan' && '성장 계획'}
+                        {tab === 'indicator' && '월 성장일지'}
+                        {tab === 'analysis' && '월 성장분석'}
+                        {tab === 'result' && '연 성장결과'}
+                        {tab === 'reflection' && '성장소감'}
+                    </button>
+                ))}
             </div>
 
             {/* Mobile Tab Select */}
@@ -235,7 +231,17 @@ function GrowthRecordPage() {
                 <select
                     className="growth-select growth-tabs-mobile-select"
                     value={activeTab}
-                    onChange={(e) => setActiveTab(e.target.value)}
+                    onChange={(e) => {
+                        const tab = e.target.value;
+                        if (tab !== 'intro' && !user) {
+                            if (window.confirm('로그인이 필요한 서비스입니다.\n로그인 페이지로 이동하시겠습니까?')) {
+                                navigate('/login');
+                            }
+                            // Reset select to intro ideally, but activeTab state won't change so it should stick
+                            return;
+                        }
+                        setActiveTab(tab);
+                    }}
                 >
                     <option value="intro">나성장 소개</option>
                     <option value="plan">성장 계획</option>

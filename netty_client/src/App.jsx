@@ -57,7 +57,7 @@ function AppContent() {
           <Route path="signup" element={!isLoggedIn ? <Signup /> : <Navigate to="/record" />} />
 
           {/* Protected Routes */}
-          <Route path="record" element={isLoggedIn ? <RecordPage /> : <Navigate to="/login" />} />
+          <Route path="record" element={<RecordPage />} />
           <Route path="board" element={isLoggedIn ? <BoardPage /> : <Navigate to="/login" />} />
           <Route path="mypage" element={isLoggedIn ? <MyPage currentUser={currentUser} /> : <Navigate to="/login" />} />
           <Route path="growth-test" element={isLoggedIn ? <GrowthTestPage /> : <Navigate to="/login" />} />
