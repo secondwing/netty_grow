@@ -11,6 +11,7 @@ import GrowthTestPage from './pages/Auth/GrowthTestPage';
 import TestMilkdownEditor from './components/Test/TestMilkdownEditor';
 import RecordPage from './pages/Record/RecordPage';
 import BoardPage from './pages/Board/BoardPage';
+import ProApplicationPage from './pages/Application/ProApplicationPage';
 
 import AdminRoute from './components/Admin/AdminRoute';
 import AdminLayout from './components/Admin/AdminLayout';
@@ -19,6 +20,7 @@ import UserList from './pages/Admin/UserList';
 import PaymentList from './pages/Admin/PaymentList';
 import AdminUserGrowthPage from './pages/Admin/AdminUserGrowthPage';
 import AdminGrowthPage from './pages/Admin/AdminGrowthPage';
+import AdminApplicationList from './pages/Admin/AdminApplicationList';
 import MyPage from './pages/MyPage/MyPage';
 
 import { NotificationProvider, useNotification } from './contexts/NotificationContext';
@@ -61,6 +63,7 @@ function AppContent() {
           <Route path="board" element={isLoggedIn ? <BoardPage /> : <Navigate to="/login" />} />
           <Route path="mypage" element={isLoggedIn ? <MyPage currentUser={currentUser} /> : <Navigate to="/login" />} />
           <Route path="growth-test" element={isLoggedIn ? <GrowthTestPage /> : <Navigate to="/login" />} />
+          <Route path="application/pro" element={isLoggedIn ? <ProApplicationPage /> : <Navigate to="/login" />} />
           <Route path="test-editor" element={isLoggedIn ? <TestMilkdownEditor /> : <Navigate to="/login" />} />
 
           {/* Admin Routes */}
@@ -71,6 +74,7 @@ function AppContent() {
               <Route path="users" element={<UserList />} />
               <Route path="payments" element={<PaymentList />} />
               <Route path="growth" element={<AdminGrowthPage />} />
+              <Route path="applications" element={<AdminApplicationList />} />
               <Route path="user/:userId/growth" element={<AdminUserGrowthPage user={user} />} />
             </Route>
           </Route>

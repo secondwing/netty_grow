@@ -28,6 +28,9 @@ const AdminLayout = () => {
                         <Link to="/admin/payments" className={isActive('/admin/payments')}>
                             결제 내역
                         </Link>
+                        <Link to="/admin/applications" className={isActive('/admin/applications')}>
+                            신청서 관리
+                        </Link>
                         <Link to="/admin/growth" className={isActive('/admin/growth')}>
                             성장 도감 관리
                         </Link>

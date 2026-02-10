@@ -41,6 +41,7 @@ app.use('/api/ai', aiRouter);
 app.use('/api/admin', adminRouter);
 app.use('/api/payments', require('./routes/payments'));
 app.use('/api/growth-stages', require('./routes/growthStages'));
+app.use('/api/application', require('./routes/application'));
 
 app.get('/', (req, res) => {
     res.send('Netty Server is running');

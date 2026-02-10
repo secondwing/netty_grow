@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../contexts/AuthContext';
 import {
     Sprout, Sparkles, PenTool, Target, Calendar,
     BarChart2, FileText, ScrollText, Heart, TrendingUp
@@ -6,6 +8,27 @@ import {
 import './GrowthRecord.css';
 
 const GrowthIntro = () => {
+    const navigate = useNavigate();
+    const { user } = useContext(AuthContext);
+
+    const handlePersonalClick = () => {
+        if (user) {
+            navigate('/record', { state: { tab: 'plan' } });
+        } else {
+            navigate('/signup'); // or login? Req says signup/login. Let's send to signup to encourage new users.
+        }
+    };
+
+    const handleCommunityClick = () => {
+        if (user) {
+            navigate('/application/pro');
+        } else {
+            if (window.confirm('로그인이 필요한 서비스입니다.\n로그인 페이지로 이동하시겠습니까?')) {
+                navigate('/login'); // Should ideally redirect back to application after login, but basic login needed first
+            }
+        }
+    };
+
     return (
         <div className="growth-section growth-intro-container">
             <div className="intro-header">
@@ -268,9 +291,10 @@ const GrowthIntro = () => {
                 <h4 className="icon-heading"><Heart className="icon-accent" /> 나성장 참여방법</h4>
                 <p>나성장 기록은 지금의 나에게 맞는 방식으로 참여할 수 있어요.</p>
                 <div className="participation-grid">
-                    <div className="participation-card">
+                    <div className="participation-card" onClick={handlePersonalClick} style={{ cursor: 'pointer' }}>
                         <h5>개인</h5>
                         <p className="desc">기록은 혼자서도 충분히 시작할 수 있어요.</p>
+                        <button className="btn-participate">시작하기</button>
                         <div className="price">무료</div>
                         <ul>
                             <li>일상기록 & 나성장 기록 작성</li>
@@ -278,9 +302,10 @@ const GrowthIntro = () => {
                             <li>PDF 다운로드 가능</li>
                         </ul>
                     </div>
-                    <div className="participation-card highlight">
+                    <div className="participation-card highlight" onClick={handleCommunityClick} style={{ cursor: 'pointer' }}>
                         <h5>커뮤니티</h5>
                         <p className="desc">혼자서 조금 어렵게 느껴진다면, 함께 성장해요!</p>
+                        <button className="btn-participate highlight">신청하기</button>
                         <div className="price">월 5만원 / 6개월 25만원</div>
                         <ul>
                             <li>일상·성장기록 + AI 성장분석 + PDF</li>
