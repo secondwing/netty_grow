@@ -145,7 +145,7 @@ const UserList = () => {
                                 <td>
                                     <button
                                         className="admin-btn-small"
-                                        onClick={() => window.open(`/mypage?userId=${user._id}`, '_blank')}
+                                        onClick={() => window.open(`/mypage?username=${user.username}`, '_blank')}
                                     >
                                         성장도감 보기
                                     </button>

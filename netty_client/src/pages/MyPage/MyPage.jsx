@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import './MyPage.css';
 import { API_BASE_URL } from '../../config';
 import GrowthTestResult from '../../components/GrowthRecord/GrowthTestResult';
 
 const MyPage = ({ currentUser }) => {
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const targetUsername = queryParams.get('username') || currentUser;
+    const isViewingOther = targetUsername && targetUsername !== currentUser;
     const [userInfo, setUserInfo] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState({
@@ -19,11 +24,11 @@ const MyPage = ({ currentUser }) => {
     const [growthStages, setGrowthStages] = useState([]);
 
     useEffect(() => {
-        if (currentUser) {
+        if (targetUsername) {
             fetchUserInfo();
         }
         fetchGrowthStages();
-    }, [currentUser]);
+    }, [targetUsername]);
 
     const fetchGrowthStages = async () => {
         try {
@@ -38,7 +43,7 @@ const MyPage = ({ currentUser }) => {
 
     const fetchUserInfo = async () => {
         try {
-            const response = await fetch(`${API_BASE_URL}/api/auth/user/${currentUser}`);
+            const response = await fetch(`${API_BASE_URL}/api/auth/user/${targetUsername}`);
             if (!response.ok) {
                 throw new Error('Failed to fetch user info');
             }
@@ -70,7 +75,7 @@ const MyPage = ({ currentUser }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch(`${API_BASE_URL}/api/auth/user/${currentUser}`, {
+            const response = await fetch(`${API_BASE_URL}/api/auth/user/${targetUsername}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -301,9 +306,11 @@ const MyPage = ({ currentUser }) => {
                                     <span className="my-page__value">{getAffiliationLabel(userInfo?.affiliation)}</span>
                                 </div>
 
-                                <button className="my-page__button my-page__button--edit" onClick={() => setIsEditing(true)}>
-                                    프로필 수정
-                                </button>
+                                {!isViewingOther && (
+                                    <button className="my-page__button my-page__button--edit" onClick={() => setIsEditing(true)}>
+                                        프로필 수정
+                                    </button>
+                                )}
 
                                 {userInfo?.growthTestResults && (
                                     <div className="my-page__growth-results">
