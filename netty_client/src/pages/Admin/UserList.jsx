@@ -93,7 +93,7 @@ const UserList = () => {
 
     return (
         <div className="user-list-page">
-            <h2 className="admin-page-title">사용자 관리</h2>
+            <h2 className="admin-page-title">나성장 관리</h2>
 
             <div className="table-container">
                 <table className="user-table">
