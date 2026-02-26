@@ -27,6 +27,37 @@ const AdminApplicationList = () => {
         }
     };
 
+    const handlePaymentStatusChange = async (appId, newStatus) => {
+        if (!window.confirm('결제 상태를 변경하시겠습니까?')) return;
+        try {
+            await axios.put(`${API_BASE_URL}/api/application/${appId}/status`,
+                { paymentStatus: newStatus },
+                { withCredentials: true }
+            );
+            setApplications(applications.map(app =>
+                app._id === appId ? { ...app, paymentStatus: newStatus } : app
+            ));
+            showNotification('결제 상태가 변경되었습니다.', 'success');
+        } catch (error) {
+            console.error('Error updating payment status:', error);
+            showNotification('결제 상태 변경에 실패했습니다.', 'error');
+        }
+    };
+
+    const handleDelete = async (appId) => {
+        if (!window.confirm('이 신청서를 정말 삭제하시겠습니까? 복구할 수 없습니다.')) return;
+        try {
+            await axios.delete(`${API_BASE_URL}/api/application/${appId}`, {
+                withCredentials: true
+            });
+            setApplications(applications.filter(app => app._id !== appId));
+            showNotification('신청서가 삭제되었습니다.', 'success');
+        } catch (error) {
+            console.error('Error deleting application:', error);
+            showNotification('신청서 삭제에 실패했습니다.', 'error');
+        }
+    };
+
     if (loading) return <div>Loading...</div>;
 
     return (
@@ -47,6 +78,7 @@ const AdminApplicationList = () => {
                                 <th>납부상태</th>
                                 <th>독려모임</th>
                                 <th>상태</th>
+                                <th>관리</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -61,9 +93,19 @@ const AdminApplicationList = () => {
                                         {app.paymentType === '1month' ? '1개월 (5만원)' : '6개월 (25만원)'}
                                     </td>
                                     <td>
-                                        <span className={`status-badge ${app.paymentStatus === 'paid' ? 'success' : app.paymentStatus === 'free_event' ? 'info' : 'warning'}`}>
-                                            {app.paymentStatus === 'paid' ? '납부완료' : app.paymentStatus === 'free_event' ? '무료혜택' : '미납'}
-                                        </span>
+                                        <select
+                                            value={app.paymentStatus}
+                                            onChange={(e) => handlePaymentStatusChange(app._id, e.target.value)}
+                                            className="role-select"
+                                            style={{
+                                                minWidth: '100px',
+                                                backgroundColor: app.paymentStatus === 'paid' ? '#dcfce7' : app.paymentStatus === 'free_event' ? '#e0f2fe' : '#fee2e2'
+                                            }}
+                                        >
+                                            <option value="pending">미납</option>
+                                            <option value="paid">납부완료</option>
+                                            <option value="free_event">무료혜택</option>
+                                        </select>
                                     </td>
                                     <td>
                                         {app.communityParticipation === 'yes' ? '참여' : app.communityParticipation === 'later' ? '고민중' : '불참'}
@@ -72,6 +114,14 @@ const AdminApplicationList = () => {
                                         <span className={`status-badge ${app.status === 'submitted' ? 'info' : app.status === 'approved' ? 'success' : 'error'}`}>
                                             {app.status}
                                         </span>
+                                    </td>
+                                    <td>
+                                        <button
+                                            className="admin-btn-small danger"
+                                            onClick={() => handleDelete(app._id)}
+                                        >
+                                            삭제
+                                        </button>
                                     </td>
                                 </tr>
                             ))}
