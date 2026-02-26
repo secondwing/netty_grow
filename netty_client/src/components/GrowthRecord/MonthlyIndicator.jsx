@@ -325,119 +325,124 @@ function MonthlyIndicator({ plan, log, month, previousLog, user, onUpdateLog, re
                                 </div>
 
                                 <div className="growth-activities-log">
-                                    {item.activities.map((activity, activityIndex) => {
-                                        const isDeleted = activity.isDeleted;
-                                        const deletedAt = activity.deletedAt ? new Date(activity.deletedAt) : null;
-                                        const { entries, adminFeedback } = getActivityLogData(activity._id);
-                                        const hasLog = entries.length > 0;
+                                    {(() => {
+                                        let displayActivityIndex = 0;
+                                        return item.activities.map((activity, activityIndex) => {
+                                            const isDeleted = activity.isDeleted;
+                                            const deletedAt = activity.deletedAt ? new Date(activity.deletedAt) : null;
+                                            const { entries, adminFeedback } = getActivityLogData(activity._id);
+                                            const hasLog = entries.length > 0;
 
-                                        let shouldShow = !isDeleted;
+                                            let shouldShow = !isDeleted;
 
-                                        if (isDeleted) {
-                                            if (hasLog) {
-                                                shouldShow = true;
-                                            } else if (deletedAt && deletedAt > currentMonthEnd) {
-                                                shouldShow = true;
+                                            if (isDeleted) {
+                                                if (hasLog) {
+                                                    shouldShow = true;
+                                                } else if (deletedAt && deletedAt > currentMonthEnd) {
+                                                    shouldShow = true;
+                                                }
                                             }
-                                        }
 
-                                        if (!shouldShow) return null;
+                                            if (!shouldShow) return null;
 
-                                        return (
-                                            <div key={activity._id || activityIndex} className="growth-activity-log-row">
-                                                <div className="growth-activity-header-row">
-                                                    <div className="growth-activity-content">
-                                                        <span className="growth-activity-badge">활동 {activityIndex + 1}</span>
-                                                        <p>{activity.content}</p>
+                                            displayActivityIndex++; // Increment only if it's going to be shown
+
+                                            return (
+                                                <div key={activity._id || activityIndex} className="growth-activity-log-row">
+                                                    <div className="growth-activity-header-row">
+                                                        <div className="growth-activity-content">
+                                                            <span className="growth-activity-badge">활동 {displayActivityIndex}</span>
+                                                            <p>{activity.content}</p>
+                                                        </div>
                                                     </div>
-                                                </div>
 
-                                                <div className="growth-log-entries">
-                                                    {entries.map((entry, idx) => (
-                                                        <div key={idx} className="growth-log-entry-row">
-                                                            <div className="growth-log-entry-header">
-                                                                <div className="growth-log-input-group growth-log-title-group">
-                                                                    <input
-                                                                        type="text"
-                                                                        className="growth-input growth-log-title-input"
-                                                                        value={entry.title || ''}
-                                                                        onChange={(e) => handleEntryChange(activity._id, idx, 'title', e.target.value)}
-                                                                        placeholder="제목을 입력하세요"
-                                                                        disabled={readOnly}
-                                                                    />
+                                                    <div className="growth-log-entries">
+                                                        {entries.map((entry, idx) => (
+                                                            <div key={idx} className="growth-log-entry-row">
+                                                                <div className="growth-log-entry-header">
+                                                                    <div className="growth-log-input-group growth-log-title-group">
+                                                                        <input
+                                                                            type="text"
+                                                                            className="growth-input growth-log-title-input"
+                                                                            value={entry.title || ''}
+                                                                            onChange={(e) => handleEntryChange(activity._id, idx, 'title', e.target.value)}
+                                                                            placeholder="제목을 입력하세요"
+                                                                            disabled={readOnly}
+                                                                        />
+                                                                    </div>
+                                                                    <div className="growth-log-status-group">
+                                                                        <button
+                                                                            className={`growth-status-toggle ${getStatusClass(entry.status)}`}
+                                                                            onClick={() => !readOnly && toggleStatus(activity._id, idx)}
+                                                                            title={readOnly ? "상태 (수정 불가)" : "클릭하여 상태 변경"}
+                                                                            disabled={readOnly}
+                                                                            style={readOnly ? { cursor: 'default', opacity: 1 } : {}}
+                                                                        >
+                                                                            {getStatusIcon(entry.status)}
+                                                                        </button>
+                                                                    </div>
+                                                                    {!readOnly && (
+                                                                        <button
+                                                                            className="growth-btn-icon growth-btn-remove-entry"
+                                                                            onClick={() => handleRemoveEntry(activity._id, idx)}
+                                                                            title="삭제"
+                                                                        >
+                                                                            ×
+                                                                        </button>
+                                                                    )}
                                                                 </div>
-                                                                <div className="growth-log-status-group">
-                                                                    <button
-                                                                        className={`growth-status-toggle ${getStatusClass(entry.status)}`}
-                                                                        onClick={() => !readOnly && toggleStatus(activity._id, idx)}
-                                                                        title={readOnly ? "상태 (수정 불가)" : "클릭하여 상태 변경"}
-                                                                        disabled={readOnly}
-                                                                        style={readOnly ? { cursor: 'default', opacity: 1 } : {}}
-                                                                    >
-                                                                        {getStatusIcon(entry.status)}
-                                                                    </button>
+                                                                <div className="growth-log-entry-body">
+                                                                    <div className="growth-log-input-group">
+                                                                        <label className="growth-log-label-small">실천방안</label>
+                                                                        <AutoResizeTextarea
+                                                                            className="growth-textarea"
+                                                                            value={entry.actionPlan}
+                                                                            onChange={(e) => handleEntryChange(activity._id, idx, 'actionPlan', e.target.value)}
+                                                                            placeholder="실천방안"
+                                                                            minHeight="60px"
+                                                                            disabled={readOnly}
+                                                                        />
+                                                                    </div>
+                                                                    <div className="growth-log-input-group">
+                                                                        <label className="growth-log-label-small">활동소감</label>
+                                                                        <AutoResizeTextarea
+                                                                            className="growth-textarea"
+                                                                            value={entry.reflection}
+                                                                            onChange={(e) => handleEntryChange(activity._id, idx, 'reflection', e.target.value)}
+                                                                            placeholder="계기 - 행동 - 결과 - 생각 - 감정 - 보완점 작성"
+                                                                            minHeight="60px"
+                                                                            disabled={readOnly}
+                                                                        />
+                                                                    </div>
                                                                 </div>
-                                                                {!readOnly && (
-                                                                    <button
-                                                                        className="growth-btn-icon growth-btn-remove-entry"
-                                                                        onClick={() => handleRemoveEntry(activity._id, idx)}
-                                                                        title="삭제"
-                                                                    >
-                                                                        ×
-                                                                    </button>
-                                                                )}
                                                             </div>
-                                                            <div className="growth-log-entry-body">
-                                                                <div className="growth-log-input-group">
-                                                                    <label className="growth-log-label-small">실천방안</label>
-                                                                    <AutoResizeTextarea
-                                                                        className="growth-textarea"
-                                                                        value={entry.actionPlan}
-                                                                        onChange={(e) => handleEntryChange(activity._id, idx, 'actionPlan', e.target.value)}
-                                                                        placeholder="실천방안"
-                                                                        minHeight="60px"
-                                                                        disabled={readOnly}
-                                                                    />
-                                                                </div>
-                                                                <div className="growth-log-input-group">
-                                                                    <label className="growth-log-label-small">활동소감</label>
-                                                                    <AutoResizeTextarea
-                                                                        className="growth-textarea"
-                                                                        value={entry.reflection}
-                                                                        onChange={(e) => handleEntryChange(activity._id, idx, 'reflection', e.target.value)}
-                                                                        placeholder="계기 - 행동 - 결과 - 생각 - 감정 - 보완점 작성"
-                                                                        minHeight="60px"
-                                                                        disabled={readOnly}
-                                                                    />
-                                                                </div>
+                                                        ))}
+                                                        {entries.length === 0 && (
+                                                            <div className="growth-log-empty-state">
+                                                                기록이 없습니다. [+ 기록 추가] 버튼을 눌러 작성해주세요.
                                                             </div>
-                                                        </div>
-                                                    ))}
-                                                    {entries.length === 0 && (
-                                                        <div className="growth-log-empty-state">
-                                                            기록이 없습니다. [+ 기록 추가] 버튼을 눌러 작성해주세요.
-                                                        </div>
-                                                    )}
+                                                        )}
+                                                    </div>
+                                                    <div className="growth-activity-actions">
+                                                        {!readOnly && (
+                                                            <button
+                                                                className="growth-btn growth-btn--add-sub"
+                                                                onClick={() => handleAddEntry(activity._id)}
+                                                            >
+                                                                + 기록 추가
+                                                            </button>
+                                                        )}
+                                                    </div>
+                                                    <AdminFeedback
+                                                        feedback={adminFeedback}
+                                                        onSave={(content) => handleSaveFeedback(activity._id, content)}
+                                                        canEdit={canAdminFeedback}
+                                                        label="활동 피드백"
+                                                    />
                                                 </div>
-                                                <div className="growth-activity-actions">
-                                                    {!readOnly && (
-                                                        <button
-                                                            className="growth-btn growth-btn--add-sub"
-                                                            onClick={() => handleAddEntry(activity._id)}
-                                                        >
-                                                            + 기록 추가
-                                                        </button>
-                                                    )}
-                                                </div>
-                                                <AdminFeedback
-                                                    feedback={adminFeedback}
-                                                    onSave={(content) => handleSaveFeedback(activity._id, content)}
-                                                    canEdit={canAdminFeedback}
-                                                    label="활동 피드백"
-                                                />
-                                            </div>
-                                        );
-                                    })}
+                                            );
+                                        })
+                                    })()}
                                 </div>
                             </div>
                         );
