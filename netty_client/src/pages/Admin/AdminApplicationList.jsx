@@ -102,8 +102,8 @@ const AdminApplicationList = () => {
                     신청자들의 상세 정보를 확인하고 관리합니다.
                 </p>
 
-                <div className="table-container">
-                    <table className="user-table">
+                <div className="table-container applications-table-wrapper">
+                    <table className="user-table applications-table">
                         <thead>
                             <tr>
                                 <th>신청일</th>

@@ -134,6 +134,16 @@
     /* Ensure table doesn't squash too much */
 }
 
+/* Applications Table Specific Styles */
+.applications-table-wrapper {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.applications-table {
+    min-width: 800px;
+}
+
 .user-table th {
     background: #f8fafc;
     padding: 1rem;
