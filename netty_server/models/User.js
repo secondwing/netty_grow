@@ -2,12 +2,12 @@ const mongoose = require('mongoose');
 
 const UserSchema = new mongoose.Schema({
     username: { type: String, required: true, unique: true }, // 아이디
-    nickname: { type: String, required: true, unique: true }, // 닉네임 (New)
+    nickname: { type: String, required: true }, // 닉네임 (New)
     password: { type: String, required: true }, // 비밀번호 (Hashed)
     name: { type: String, required: true }, // 이름
     gender: { type: String, enum: ['male', 'female', 'undisclosed'], required: true }, // 성별
     birthDate: { type: String, required: true }, // 생년월일 (YYYY-MM-DD)
-    phone: { type: String, required: true, unique: true }, // 핸드폰 번호
+    phone: { type: String, required: true }, // 핸드폰 번호
     location: { type: String, required: true }, // 사는 지역 (도/시/군/동)
     affiliation: {
         type: String,

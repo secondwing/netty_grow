@@ -22,10 +22,10 @@ router.post('/signup', async (req, res) => {
     try {
         const { username, password, name, nickname, gender, birthDate, phone, location, affiliation, consent, growthTestResults } = req.body;
 
-        // Check if user already exists (username, phone, or nickname)
-        const existingUser = await User.findOne({ $or: [{ username }, { phone }, { nickname }] });
+        // Check if user already exists (username only)
+        const existingUser = await User.findOne({ username });
         if (existingUser) {
-            return res.status(400).json({ message: 'User already exists (ID, Phone, or Nickname)' });
+            return res.status(400).json({ message: 'User already exists (ID)' });
         }
 
         // Hash password
