@@ -11,7 +11,17 @@ const RecordPage = () => {
     const navigate = useNavigate();
     const { user } = useContext(AuthContext);
     const { showNotification } = useNotification();
-    const [activeTab, setActiveTab] = useState(location.state?.tab || 'growth');
+
+    const isDaily = location.state?.tab === 'daily';
+    const [activeTab, setActiveTab] = useState(isDaily ? 'daily' : 'growth');
+
+    useEffect(() => {
+        if (location.state?.tab === 'daily') {
+            setActiveTab('daily');
+        } else if (location.state?.tab && ['plan', 'indicator', 'analysis', 'overview', 'result', 'reflection', 'intro'].includes(location.state.tab)) {
+            setActiveTab('growth');
+        }
+    }, [location.state]);
 
     const handleTabChange = (tab) => {
         if (tab === 'daily' && !user) {

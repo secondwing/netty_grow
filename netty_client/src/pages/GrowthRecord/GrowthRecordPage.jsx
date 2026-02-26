@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import { API_BASE_URL } from '../../config';
@@ -19,9 +19,19 @@ import GrowthIntro from '../../components/GrowthRecord/GrowthIntro';
 import '../../components/GrowthRecord/GrowthRecord.css';
 
 function GrowthRecordPage() {
-    const [activeTab, setActiveTab] = useState('intro'); // Default to intro
+    const location = useLocation();
+    const validTabs = ['intro', 'plan', 'indicator', 'analysis', 'overview', 'result', 'reflection'];
+    const initialTab = (location.state && location.state.tab && validTabs.includes(location.state.tab)) ? location.state.tab : 'intro';
+
+    const [activeTab, setActiveTab] = useState(initialTab); // Default to intro
     const [year, setYear] = useState(new Date().getFullYear());
     const [month, setMonth] = useState(new Date().getMonth() + 1);
+
+    useEffect(() => {
+        if (location.state && location.state.tab && validTabs.includes(location.state.tab)) {
+            setActiveTab(location.state.tab);
+        }
+    }, [location.state]);
     const [plan, setPlan] = useState(null);
     const [log, setLog] = useState(null);
     const [allMonthlyLogs, setAllMonthlyLogs] = useState([]);
