@@ -8,13 +8,14 @@ const { auth } = require('../middleware/auth');
 // @access  Private
 router.post('/', auth, async (req, res) => {
     try {
-        const { paymentType, paymentStatus, communityParticipation } = req.body;
+        const { paymentType, paymentStatus, communityParticipation, reason } = req.body;
 
         const newApplication = new ProApplication({
             user: req.user.id,
             paymentType,
             paymentStatus,
-            communityParticipation
+            communityParticipation,
+            reason
         });
 
         const application = await newApplication.save();

@@ -13,13 +13,17 @@ const ProApplicationSchema = new mongoose.Schema({
     },
     paymentStatus: {
         type: String,
-        enum: ['paid', 'pending'], // paid: 납부완료, pending: 아직 안함
+        enum: ['paid', 'pending', 'free_event'], // paid: 납부완료, pending: 아직 안함, free_event: 무료혜택
         required: true
     },
     communityParticipation: {
         type: String,
-        enum: ['yes', 'no'], // yes: 참여, no: 불참
+        enum: ['yes', 'no', 'later'], // yes: 참여, no: 불참, later: 고민해 보겠습니다
         required: true
+    },
+    reason: {
+        type: String, // from checkboxes: 혜택1, 혜택2...
+        required: false
     },
     status: {
         type: String,
