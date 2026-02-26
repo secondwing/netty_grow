@@ -45,14 +45,19 @@ router.get('/users', auth, verifyAdmin, async (req, res) => {
         const limit = parseInt(req.query.limit) || 10;
         const skip = (page - 1) * limit;
 
-        const users = await User.find()
+        const query = {};
+        if (req.query.role) {
+            query.role = { $in: req.query.role.split(',') };
+        }
+
+        const users = await User.find(query)
             .select('-password') // Exclude password
             .sort({ createdAt: -1 })
             .skip(skip)
             .limit(limit)
             .lean(); // Use lean for modifying objects
 
-        const total = await User.countDocuments();
+        const total = await User.countDocuments(query);
 
         // Enrich users with feedback needs
         for (let user of users) {

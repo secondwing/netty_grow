@@ -17,6 +17,7 @@ import AdminRoute from './components/Admin/AdminRoute';
 import AdminLayout from './components/Admin/AdminLayout';
 import AdminDashboard from './pages/Admin/AdminDashboard';
 import UserList from './pages/Admin/UserList';
+import MemberList from './pages/Admin/MemberList';
 
 import AdminUserGrowthPage from './pages/Admin/AdminUserGrowthPage';
 
@@ -72,6 +73,7 @@ function AppContent() {
               <Route index element={<Navigate to="dashboard" replace />} />
               <Route path="dashboard" element={<AdminDashboard />} />
               <Route path="users" element={<UserList />} />
+              <Route path="members" element={<MemberList />} />
 
 
               <Route path="applications" element={<AdminApplicationList />} />

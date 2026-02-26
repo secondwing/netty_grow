@@ -23,11 +23,13 @@ const AdminLayout = () => {
                             대시보드
                         </Link>
                         <Link to="/admin/users" className={isActive('/admin/users')}>
-                            사용자 관리
+                            나성장 관리
                         </Link>
-
                         <Link to="/admin/applications" className={isActive('/admin/applications')}>
                             신청서 관리
+                        </Link>
+                        <Link to="/admin/members" className={isActive('/admin/members')}>
+                            멤버십 관리
                         </Link>
 
                     </nav>
