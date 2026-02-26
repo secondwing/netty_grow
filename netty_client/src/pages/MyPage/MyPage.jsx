@@ -8,6 +8,7 @@ const MyPage = ({ currentUser }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState({
         name: '',
+        nickname: '',
         phone: '',
         gender: '',
         birthDate: ''
@@ -45,6 +46,7 @@ const MyPage = ({ currentUser }) => {
             setUserInfo(data);
             setFormData({
                 name: data.name,
+                nickname: data.nickname || '',
                 phone: data.phone,
                 gender: data.gender,
                 birthDate: data.birthDate ? data.birthDate.split('T')[0] : '',
@@ -92,6 +94,7 @@ const MyPage = ({ currentUser }) => {
         setIsEditing(false);
         setFormData({
             name: userInfo.name,
+            nickname: userInfo.nickname || '',
             phone: userInfo.phone,
             gender: userInfo.gender,
             birthDate: userInfo.birthDate ? userInfo.birthDate.split('T')[0] : '',
@@ -148,7 +151,7 @@ const MyPage = ({ currentUser }) => {
     return (
         <div className="my-page">
             <div className="my-page__container">
-                <h2 className="my-page__title">마이 페이지</h2>
+                <h2 className="my-page__title">성장도감</h2>
 
                 <div className="my-page__card">
                     <div className="my-page__header">
@@ -181,6 +184,16 @@ const MyPage = ({ currentUser }) => {
                                         type="text"
                                         name="name"
                                         value={formData.name}
+                                        onChange={handleChange}
+                                        className="my-page__input"
+                                    />
+                                </div>
+                                <div className="my-page__field">
+                                    <label>별칭</label>
+                                    <input
+                                        type="text"
+                                        name="nickname"
+                                        value={formData.nickname}
                                         onChange={handleChange}
                                         className="my-page__input"
                                     />
@@ -258,6 +271,10 @@ const MyPage = ({ currentUser }) => {
                                 <div className="my-page__row">
                                     <span className="my-page__label">이름</span>
                                     <span className="my-page__value">{userInfo?.name}</span>
+                                </div>
+                                <div className="my-page__row">
+                                    <span className="my-page__label">별칭</span>
+                                    <span className="my-page__value">{userInfo?.nickname}</span>
                                 </div>
                                 <div className="my-page__row">
                                     <span className="my-page__label">전화번호</span>
