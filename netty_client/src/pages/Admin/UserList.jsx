@@ -7,8 +7,8 @@ const growthStageMap = {
     'growth_01': '땅',
     'growth_02': '씨앗',
     'growth_03': '새싹',
-    'growth_04': '줄기',
-    'growth_05': '잎',
+    'growth_04': '꽃',
+    'growth_05': '꽃다발',
     'growth_06': '정원'
 };
 
@@ -135,7 +135,7 @@ const UserList = () => {
                                     <select
                                         value={user.growthStage || 'growth_01'}
                                         onChange={(e) => handleGrowthStageChange(user._id, e.target.value)}
-                                        className="growth-select"
+                                        className={`role-select ${user.growthStage || 'growth_01'}`}
                                     >
                                         {Object.entries(growthStageMap).map(([key, value]) => (
                                             <option key={key} value={key}>{value}</option>

@@ -31,16 +31,16 @@ const stages = [
     },
     {
         stageId: 'growth_04',
-        name: '줄기',
-        description: '비바람을 견디며 단단하게 자라나는 줄기입니다.',
+        name: '꽃',
+        description: '아름답게 피어나는 꽃입니다.',
         imageUrl: '/growth/growth_04.png',
         minScore: 11,
         maxScore: 12
     },
     {
         stageId: 'growth_05',
-        name: '잎',
-        description: '햇살을 받으며 풍성하게 펼쳐진 잎입니다.',
+        name: '꽃다발',
+        description: '여러 송이가 모여 풍성한 꽃다발이 되었습니다.',
         imageUrl: '/growth/growth_05.png',
         minScore: 13,
         maxScore: 100 // Open ended high score
