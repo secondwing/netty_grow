@@ -73,6 +73,7 @@
     border-radius: 12px;
     padding: 2rem;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    min-width: 0;
 }
 
 /* Admin Dashboard & Pages */
@@ -117,17 +118,16 @@
     background: white;
     border-radius: 12px;
     border: 1px solid #e2e8f0;
-    overflow: hidden;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    max-width: 100%;
     overflow-x: auto;
-    /* Allow horizontal scroll */
 }
 
 .user-table {
     width: 100%;
     border-collapse: collapse;
     text-align: left;
-    min-width: 600px;
+    min-width: 1200px;
     /* Ensure table doesn't squash too much */
 }
 

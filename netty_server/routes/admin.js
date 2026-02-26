@@ -37,7 +37,7 @@ router.get('/dashboard', auth, verifyAdmin, async (req, res) => {
 });
 
 // @route   GET api/admin/users
-// @desc    Get all users
+// @desc    Get all users with computed stats
 // @access  Private/Admin
 router.get('/users', auth, verifyAdmin, async (req, res) => {
     try {
@@ -49,9 +49,54 @@ router.get('/users', auth, verifyAdmin, async (req, res) => {
             .select('-password') // Exclude password
             .sort({ createdAt: -1 })
             .skip(skip)
-            .limit(limit);
+            .limit(limit)
+            .lean(); // Use lean for modifying objects
 
         const total = await User.countDocuments();
+
+        // Enrich users with feedback needs
+        for (let user of users) {
+            // Basic structure for feedback stats
+            user.feedbackNeeded = 0;
+            user.hasPlan = false;
+
+            // Check Growth Plans
+            const plans = await GrowthPlan.find({ userId: user._id }).lean();
+            if (plans.length > 0) {
+                user.hasPlan = true;
+            }
+
+            for (const plan of plans) {
+                if (!plan.adminFeedback || !plan.adminFeedback.content) {
+                    // Need feedback on the plan itself if desired, but let's count Monthly Logs mostly
+                }
+            }
+
+            // Check Monthly Logs
+            const logs = await MonthlyLog.find({ userId: user._id }).lean();
+            for (const log of logs) {
+                // Check Activity Logs
+                if (log.activityLogs && Array.isArray(log.activityLogs)) {
+                    for (const al of log.activityLogs) {
+                        const hasEntry = al.entries && al.entries.length > 0;
+                        const hasFeedback = al.adminFeedback && al.adminFeedback.content;
+                        if (hasEntry && !hasFeedback) {
+                            user.feedbackNeeded++;
+                        }
+                    }
+                }
+                // Check Item Analyses
+                if (log.itemAnalyses && Array.isArray(log.itemAnalyses)) {
+                    for (const ia of log.itemAnalyses) {
+                        const hasAnalysis = ia.strength || ia.weakness || ia.supplement;
+                        const hasFeedback = ia.adminFeedback && ia.adminFeedback.content;
+                        if (hasAnalysis && !hasFeedback) {
+                            user.feedbackNeeded++;
+                        }
+                    }
+                }
+            }
+        }
 
         res.json({
             users,
@@ -71,7 +116,7 @@ router.get('/users', auth, verifyAdmin, async (req, res) => {
 router.put('/users/:id/role', auth, verifyAdmin, async (req, res) => {
     try {
         const { role } = req.body;
-        const validRoles = ['free', 'pro', 'ultra', 'admin'];
+        const validRoles = ['guest', 'member', 'admin'];
 
         if (!validRoles.includes(role)) {
             return res.status(400).json({ msg: 'Invalid role specified' });

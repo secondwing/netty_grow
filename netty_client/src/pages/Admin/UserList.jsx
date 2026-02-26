@@ -3,13 +3,13 @@ import axios from 'axios';
 import { API_BASE_URL } from '../../config';
 import { AuthContext } from '../../contexts/AuthContext';
 
-const affiliationMap = {
-    student: '학생',
-    job_seeker: '취업준비생',
-    worker: '직장인',
-    freelancer: '프리랜서',
-    entrepreneur: '창업가',
-    pre_entrepreneur: '예비창업가'
+const growthStageMap = {
+    'growth_01': '땅',
+    'growth_02': '씨앗',
+    'growth_03': '새싹',
+    'growth_04': '줄기',
+    'growth_05': '잎',
+    'growth_06': '정원'
 };
 
 const UserList = () => {
@@ -38,7 +38,7 @@ const UserList = () => {
     }, [page]);
 
     const handleRoleChange = async (userId, newRole) => {
-        if (!window.confirm(`사용자의 권한을 ${newRole}(으)로 변경하시겠습니까?`)) return;
+        if (!window.confirm(`사용자의 권한을 변경하시겠습니까?`)) return;
 
         try {
             const response = await axios.put(`${API_BASE_URL}/api/admin/users/${userId}/role`,
@@ -55,6 +55,40 @@ const UserList = () => {
         }
     };
 
+    const handleGrowthStageChange = async (userId, newStage) => {
+        if (!window.confirm(`사용자의 성장 단계를 변경하시겠습니까?`)) return;
+
+        try {
+            const response = await axios.put(`${API_BASE_URL}/api/admin/users/${userId}/growth-stage`,
+                { growthStage: newStage },
+                { withCredentials: true }
+            );
+
+            setUsers(users.map(user =>
+                user._id === userId ? { ...user, growthStage: response.data.growthStage } : user
+            ));
+        } catch (error) {
+            console.error('Failed to update growth stage:', error);
+            alert('성장 단계 변경에 실패했습니다.');
+        }
+    };
+
+    const handleInspectionChange = async (userId, newStatus) => {
+        try {
+            const response = await axios.put(`${API_BASE_URL}/api/admin/users/${userId}/inspection`,
+                { inspectionStatus: newStatus },
+                { withCredentials: true }
+            );
+
+            setUsers(users.map(user =>
+                user._id === userId ? { ...user, inspectionStatus: response.data.inspectionStatus } : user
+            ));
+        } catch (error) {
+            console.error('Failed to update inspection status:', error);
+            alert('점검 상태 변경에 실패했습니다.');
+        }
+    };
+
     if (loading) return <div>사용자 목록 불러오는 중...</div>;
 
     return (
@@ -67,10 +101,15 @@ const UserList = () => {
                         <tr>
                             <th>아이디</th>
                             <th>이름</th>
+                            <th>별칭</th>
                             <th>권한</th>
-                            <th>소속</th>
+                            <th>나성장</th>
+                            <th>성장도감</th>
+                            <th>성장기록</th>
+                            <th>피드백</th>
+                            <th>점검</th>
+                            <th>참여활동</th>
                             <th>가입일</th>
-                            <th>관리</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -78,6 +117,7 @@ const UserList = () => {
                             <tr key={user._id}>
                                 <td>{user.username}</td>
                                 <td>{user.name}</td>
+                                <td>{user.nickname}</td>
                                 <td>
                                     <select
                                         value={user.role}
@@ -86,22 +126,54 @@ const UserList = () => {
                                         disabled={currentUser && currentUser._id === user._id}
                                         title={currentUser && currentUser._id === user._id ? "자신의 권한은 변경할 수 없습니다." : "권한 변경"}
                                     >
-                                        <option value="free">Free</option>
-                                        <option value="pro">Pro</option>
-                                        <option value="ultra">Ultra</option>
-                                        <option value="admin">Admin</option>
+                                        <option value="guest">게스트</option>
+                                        <option value="member">멤버</option>
+                                        <option value="admin">관리자</option>
                                     </select>
                                 </td>
-                                <td>{affiliationMap[user.affiliation] || user.affiliation}</td>
-                                <td>{new Date(user.createdAt).toLocaleDateString()}</td>
+                                <td>
+                                    <select
+                                        value={user.growthStage || 'growth_01'}
+                                        onChange={(e) => handleGrowthStageChange(user._id, e.target.value)}
+                                        className="growth-select"
+                                    >
+                                        {Object.entries(growthStageMap).map(([key, value]) => (
+                                            <option key={key} value={key}>{value}</option>
+                                        ))}
+                                    </select>
+                                </td>
+                                <td>
+                                    <button
+                                        className="admin-btn-small"
+                                        onClick={() => window.open(`/mypage?userId=${user._id}`, '_blank')}
+                                    >
+                                        성장도감 보기
+                                    </button>
+                                </td>
                                 <td>
                                     <button
                                         className="admin-btn-small"
                                         onClick={() => window.location.href = `/admin/user/${user._id}/growth`}
                                     >
-                                        성장기록 보기
+                                        관리
                                     </button>
                                 </td>
+                                <td style={{ textAlign: 'center', fontWeight: 'bold', color: user.feedbackNeeded > 0 ? '#e11d48' : '#6b7280' }}>
+                                    {user.feedbackNeeded || 0}
+                                </td>
+                                <td>
+                                    <select
+                                        value={user.inspectionStatus || 'pending'}
+                                        onChange={(e) => handleInspectionChange(user._id, e.target.value)}
+                                        className="role-select"
+                                        style={{ backgroundColor: user.inspectionStatus === 'completed' ? '#dcfce7' : '#fef9c3' }}
+                                    >
+                                        <option value="pending">점검대기</option>
+                                        <option value="completed">점검완료</option>
+                                    </select>
+                                </td>
+                                <td style={{ color: '#9ca3af' }}>준비중</td>
+                                <td>{new Date(user.createdAt).toLocaleDateString()}</td>
                             </tr>
                         ))}
                     </tbody>

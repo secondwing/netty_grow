@@ -23,7 +23,8 @@ const UserSchema = new mongoose.Schema({
         takenAt: { type: Date, default: Date.now }
     },
     growthStage: { type: String, default: 'growth_01' }, // growth_01 ~ growth_06
-    role: { type: String, enum: ['free', 'pro', 'ultra', 'admin'], default: 'free' }, // free, pro, ultra, admin
+    role: { type: String, enum: ['guest', 'member', 'admin'], default: 'guest' }, // guest, member, admin
+    inspectionStatus: { type: String, enum: ['pending', 'completed'], default: 'pending' }, // 점검 진행 여부
     createdAt: { type: Date, default: Date.now }
 });
 
