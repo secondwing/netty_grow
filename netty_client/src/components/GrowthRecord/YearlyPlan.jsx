@@ -65,22 +65,25 @@ function YearlyPlan({ plan, user, onUpdate, refreshPlan, canAdminFeedback = fals
 
     const handleItemChange = (index, field, value) => {
         setLocalPlan(prevPlan => {
-            const newItems = [...prevPlan.items];
-            newItems[index] = { ...newItems[index], [field]: value };
-            return { ...prevPlan, items: newItems };
+            const newPlan = { ...prevPlan };
+            newPlan.items = prevPlan.items.map((item, i) =>
+                i === index ? { ...item, [field]: value } : item
+            );
+            return newPlan;
         }, true); // Debounce text
     };
 
     const handleActivityChange = (itemIndex, activityIndex, value) => {
         setLocalPlan(prevPlan => {
-            const newItems = [...prevPlan.items];
-            newItems[itemIndex] = { ...newItems[itemIndex] };
-            newItems[itemIndex].activities = [...newItems[itemIndex].activities];
-            newItems[itemIndex].activities[activityIndex] = {
-                ...newItems[itemIndex].activities[activityIndex],
-                content: value
-            };
-            return { ...prevPlan, items: newItems };
+            const newPlan = { ...prevPlan };
+            newPlan.items = prevPlan.items.map((item, i) => {
+                if (i !== itemIndex) return item;
+                const newActivities = item.activities.map((act, j) =>
+                    j === activityIndex ? { ...act, content: value } : act
+                );
+                return { ...item, activities: newActivities };
+            });
+            return newPlan;
         }, true); // Debounce text
     };
 
@@ -102,25 +105,38 @@ function YearlyPlan({ plan, user, onUpdate, refreshPlan, canAdminFeedback = fals
     };
 
     const handleRemoveItem = (index) => {
-        const newItems = [...localPlan.items];
-        // Soft delete: set isDeleted to true
-        newItems[index].isDeleted = true;
-        newItems[index].deletedAt = new Date();
-        setLocalPlan({ ...localPlan, items: newItems });
+        setLocalPlan(prevPlan => {
+            const newPlan = { ...prevPlan };
+            newPlan.items = prevPlan.items.map((item, i) =>
+                i === index ? { ...item, isDeleted: true, deletedAt: new Date() } : item
+            );
+            return newPlan;
+        });
     };
 
     const handleAddActivity = (itemIndex) => {
-        const newItems = [...localPlan.items];
-        newItems[itemIndex].activities.push({ content: '', outcome: '' });
-        setLocalPlan({ ...localPlan, items: newItems });
+        setLocalPlan(prevPlan => {
+            const newPlan = { ...prevPlan };
+            newPlan.items = prevPlan.items.map((item, i) => {
+                if (i !== itemIndex) return item;
+                return { ...item, activities: [...item.activities, { content: '', outcome: '' }] };
+            });
+            return newPlan;
+        });
     };
 
     const handleRemoveActivity = (itemIndex, activityIndex) => {
-        const newItems = [...localPlan.items];
-        // Soft delete: set isDeleted to true
-        newItems[itemIndex].activities[activityIndex].isDeleted = true;
-        newItems[itemIndex].activities[activityIndex].deletedAt = new Date();
-        setLocalPlan({ ...localPlan, items: newItems });
+        setLocalPlan(prevPlan => {
+            const newPlan = { ...prevPlan };
+            newPlan.items = prevPlan.items.map((item, i) => {
+                if (i !== itemIndex) return item;
+                const newActivities = item.activities.map((act, j) =>
+                    j === activityIndex ? { ...act, isDeleted: true, deletedAt: new Date() } : act
+                );
+                return { ...item, activities: newActivities };
+            });
+            return newPlan;
+        });
     };
 
     const handleSave = () => {
