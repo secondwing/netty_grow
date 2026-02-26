@@ -30,7 +30,7 @@ const AdminApplicationList = () => {
     const handlePaymentStatusChange = async (appId, newStatus) => {
         if (!window.confirm('결제 상태를 변경하시겠습니까?')) return;
         try {
-            await axios.put(`${API_BASE_URL}/api/application/${appId}/status`,
+            await axios.put(`${API_BASE_URL}/api/application/${appId}/payment`,
                 { paymentStatus: newStatus },
                 { withCredentials: true }
             );
@@ -41,6 +41,40 @@ const AdminApplicationList = () => {
         } catch (error) {
             console.error('Error updating payment status:', error);
             showNotification('결제 상태 변경에 실패했습니다.', 'error');
+        }
+    };
+
+    const handleParticipationChange = async (appId, newStatus) => {
+        if (!window.confirm('독려모임 참여 여부를 변경하시겠습니까?')) return;
+        try {
+            await axios.put(`${API_BASE_URL}/api/application/${appId}/participation`,
+                { communityParticipation: newStatus },
+                { withCredentials: true }
+            );
+            setApplications(applications.map(app =>
+                app._id === appId ? { ...app, communityParticipation: newStatus } : app
+            ));
+            showNotification('독려모임 상태가 변경되었습니다.', 'success');
+        } catch (error) {
+            console.error('Error updating participation:', error);
+            showNotification('독려모임 상태 변경에 실패했습니다.', 'error');
+        }
+    };
+
+    const handleStatusChange = async (appId, newStatus) => {
+        if (!window.confirm('신청 상태를 변경하시겠습니까?')) return;
+        try {
+            await axios.put(`${API_BASE_URL}/api/application/${appId}/status`,
+                { status: newStatus },
+                { withCredentials: true }
+            );
+            setApplications(applications.map(app =>
+                app._id === appId ? { ...app, status: newStatus } : app
+            ));
+            showNotification('신청 상태가 변경되었습니다.', 'success');
+        } catch (error) {
+            console.error('Error updating status:', error);
+            showNotification('신청 상태 변경에 실패했습니다.', 'error');
         }
     };
 
@@ -108,12 +142,34 @@ const AdminApplicationList = () => {
                                         </select>
                                     </td>
                                     <td>
-                                        {app.communityParticipation === 'yes' ? '참여' : app.communityParticipation === 'later' ? '고민중' : '불참'}
+                                        <select
+                                            value={app.communityParticipation}
+                                            onChange={(e) => handleParticipationChange(app._id, e.target.value)}
+                                            className="role-select"
+                                            style={{
+                                                minWidth: '100px',
+                                                backgroundColor: app.communityParticipation === 'yes' ? '#dcfce7' : app.communityParticipation === 'later' ? '#fef9c3' : '#f3f4f6'
+                                            }}
+                                        >
+                                            <option value="yes">참여</option>
+                                            <option value="later">고민중</option>
+                                            <option value="no">불참</option>
+                                        </select>
                                     </td>
                                     <td>
-                                        <span className={`status-badge ${app.status === 'submitted' ? 'info' : app.status === 'approved' ? 'success' : 'error'}`}>
-                                            {app.status}
-                                        </span>
+                                        <select
+                                            value={app.status || 'submitted'}
+                                            onChange={(e) => handleStatusChange(app._id, e.target.value)}
+                                            className="role-select"
+                                            style={{
+                                                minWidth: '100px',
+                                                backgroundColor: app.status === 'approved' ? '#dcfce7' : app.status === 'rejected' ? '#fee2e2' : '#e0f2fe'
+                                            }}
+                                        >
+                                            <option value="submitted">신청됨</option>
+                                            <option value="approved">승인됨</option>
+                                            <option value="rejected">반려됨</option>
+                                        </select>
                                     </td>
                                     <td>
                                         <button
